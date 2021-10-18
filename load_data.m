@@ -1,9 +1,12 @@
 %% NOTES BEFORE RUNNING
 % Make sure current folder is DropBox 
-% adds all MATLAB tools
+% Make sure to add all folders in ApnexDetection_Project
+% Make sure to add nlid_tools and utility_tools from reklab public
 
 % addpath('/MATLAB tools/jsonlab-2.0/')
-addpath('/Users/lauracarlton/Documents/Github/reklab_public/')
+% addpath('/Users/lauracarlton/Documents/Github/reklab_public/')
+
+
 %% load raw data from the json file 
 clc
 clear all
