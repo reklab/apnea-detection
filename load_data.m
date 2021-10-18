@@ -2,16 +2,15 @@
 % Make sure current folder is DropBox 
 % adds all MATLAB tools
 
-addpath('MATLAB tools/jsonlab-2.0/')
-addpath('MATLAB tools/nlid_tools/')
-addpath('MATLAB tools/utility_tools/')
-%%
+% addpath('/MATLAB tools/jsonlab-2.0/')
+addpath('/Users/lauracarlton/Documents/Github/reklab_public/')
+%% load raw data from the json file 
 clc
 clear all
 tic 
 baseDir = 'trials_data_json/ANNE_data_trial';
-descrip_path ='intermittentBreathing_voluntary';
-ntrial = '002';
+descrip_path ='normalBreathing';
+ntrial = '001';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 %savepath = ['trials_data_json/Export/figures_v1/' ntrial];
@@ -19,10 +18,10 @@ if  0 %~exist(savepath, 'file')
     %mkdir(savepath)
 end
 
-description = "voluntary intermittent breathing";
+description = "normal breathing";
 raw_data = loadjson(filename);
 
-
+fprintf('Data loaded \n')
 %% go through each cell in the raw data and assign it to a structure
 package_gap_counter =1;
 duplicate_data_counter = 1;
@@ -49,8 +48,8 @@ for a = 1:length(raw_data)
         Ts = mean(time_diff);
         
         %CHECKING FOR PACKAGE SIZED GAPS
-        %STILL NEED TO COMPARE TO HISTOGRAMS OF TIME GAPS, CHANGE COUNTER,
-        %...
+        %STILL NEED TO COMPARE TO HISTOGRAMS OF TIME GAPS
+        
         if cell.timestamp >1.5*Ts*length(cell.timestamp)+all_data.(sensor).(datatype)(end-1).timestamp
 %             fprintf('GAP in the data - sensor: %s datatype: %s \n', sensor, datatype)
             package_gap_counter = package_gap_counter+1;
@@ -78,7 +77,7 @@ for a = 1:length(raw_data)
     end
 end
 
-
+fprintf('Data converted to structure \n')
 %% convert data to nldat
 sensor_list = fieldnames(all_data);
 
@@ -94,7 +93,7 @@ for n = 1:length(sensor_list)
         vars = fieldnames(all_data.(sensor).(datatype));
         a = find(vars=="address");
         vars(a:end) = [];
-
+ 
         for v = 1:length(vars)
             var = vars{v};
             
@@ -114,7 +113,7 @@ for n = 1:length(sensor_list)
             hold_time=hold_time-hold_time(1,1);
             
             hold_nldat = nldat(hold_data);
-            set(hold_nldat, 'DomainValues', hold_time,'DomainName', "Time (ms)", 'ChanNames', string(var), 'comment', [sensor ' ' datatype])
+            set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
 
             if v > 1
                 eval(['nldat_' sensor '_' datatype '=cat(2,hold_nldat,  nldat_' sensor '_' datatype ');'])
@@ -131,6 +130,4 @@ for n = 1:length(sensor_list)
     end
 end
 
-    
-
-toc/60
+fprintf('Data converted to nldat objects \n')
