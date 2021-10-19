@@ -125,11 +125,6 @@ for n = 1:length(sensor_list)
                 eval ([ 'nldat_' sensor '_' datatype '= hold_nldat;']);
             end
         end
-        if exist(['nldat_' sensor '_' datatype], 'var')
-            figure()
-            eval(['plot(nldat_' sensor '_' datatype ')'])
-            %savefig([savepath, 'trial' num2str(ntrial), '_', descrip_path '_' datatype sensor])
-        end
     end
 end
 
