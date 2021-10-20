@@ -3,8 +3,9 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-% addpath('/MATLAB tools/jsonlab-2.0/')
-% addpath('/Users/lauracarlton/Documents/Github/reklab_public/')
+% addpath('/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+% addpath('/Users/lauracarlton/Documents/Github/reklab_public/utility_tools/')
+% addpath('/Users/lauracarlton/Documents/Github/reklab_public/NLIC_tools/')
 
 
 %% load raw data from the json file 
@@ -16,9 +17,9 @@ descrip_path ='normalBreathing';
 ntrial = '001';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-%savepath = ['trials_data_json/Export/figures_v1/' ntrial];
-if  0 %~exist(savepath, 'file')
-    %mkdir(savepath)
+savepath = ['trials_data_json/Export/figures_v2/' ntrial '/'];
+if ~exist(savepath, 'file')
+    mkdir(savepath)
 end
 
 description = "normal breathing";
@@ -127,5 +128,14 @@ for n = 1:length(sensor_list)
         end
     end
 end
-
 fprintf('Data converted to nldat objects \n')
+
+%% analysis 
+% this is where we should do the segment ID and then we can call the
+% accel_analysis function for each segment - we can also alter savepath for
+% each segment and then call the accel_analysis w the new savepath 
+save_figs = 1;
+
+accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
+
+
