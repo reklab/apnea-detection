@@ -13,8 +13,8 @@ clc
 clear all
 tic 
 baseDir = 'trials_data_json/ANNE_data_trial';
-descrip_path ='normalBreathing';
-ntrial = '001';
+descrip_path ='intermittentBreathing_obstruction';
+ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['trials_data_json/Export/figures_v2/' ntrial '/'];
@@ -147,7 +147,7 @@ fprintf('Data converted to nldat objects \n')
 % each segment and then call the accel_analysis w the new savepath 
 %save_figs = 1;
 
-[segment_loc]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, 'C3892', pkg_gap)
+%[segm_loc, seg_data1, seg_time1 seg_data2, seg_time2]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, 'C3892', pkg_gap)
 
 %accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
 
