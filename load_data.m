@@ -4,8 +4,8 @@
 % Make sure to add nlid_tools and utility_tools from reklab public
 
 % addpath('/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/lauracarlton/Documents/Github/reklab_public/utility_tools/')
-% addpath('/Users/lauracarlton/Documents/Github/reklab_public/NLIC_tools/')
+addpath('/Users/lauracarlton/Documents/Github/reklab_public/utility_tools/')
+addpath('/Users/lauracarlton/Documents/Github/reklab_public/nlid_tools/')
 
 
 %% load raw data from the json file 
@@ -104,7 +104,7 @@ for n = 1:length(sensor_list)
         datatype = data_list{d};
         y = all_data.(sensor).(datatype);
         pkg_length = length(y);
-        
+       
         vars = fieldnames(all_data.(sensor).(datatype));
         a = find(vars=="address");
         vars(a:end) = [];
@@ -126,6 +126,7 @@ for n = 1:length(sensor_list)
             hold_data=transpose(reshape(hold_data,1,[]));
             hold_time=transpose(reshape(hold_time,1,[]));
             hold_time=hold_time-hold_time(1,1);
+            hold_time = hold_time/1000;
             
             hold_nldat = nldat(hold_data);
             set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
