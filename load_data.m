@@ -27,6 +27,7 @@ raw_data = loadjson(filename);
 
 fprintf('Data loaded \n')
 %% go through each cell in the raw data and assign it to a structure
+pkg_gap=[];
 package_gap_counter =1;
 duplicate_data_counter = 1;
 for a = 1:length(raw_data)
@@ -41,6 +42,7 @@ for a = 1:length(raw_data)
         all_data.(sensor).(datatype)(end+1) = cell;
     catch
         all_data.(sensor).(datatype) = cell;
+        pkg_gap.(sensor).(datatype) = struct('gap_start', 0, 'gap_end', 0);
     end
     
     if length(all_data.(sensor).(datatype)) >= 2
@@ -57,6 +59,15 @@ for a = 1:length(raw_data)
         if cell.timestamp >1.5*Ts*length(cell.timestamp)+all_data.(sensor).(datatype)(end-1).timestamp
 %             fprintf('GAP in the data - sensor: %s datatype: %s \n', sensor, datatype)
             package_gap_counter = package_gap_counter+1;
+            T1=all_data.(sensor).(datatype)(1).timestamp(1,1);
+            TS=all_data.(sensor).(datatype)(end-1).timestamp(end);
+            if pkg_gap.(sensor).(datatype)(1).gap_start==0
+                pkg_gap.(sensor).(datatype)(1).gap_start=TS-T1;
+                pkg_gap.(sensor).(datatype)(1).gap_end=cell.timestamp(1,1)-T1;
+            else
+                pkg_gap.(sensor).(datatype)(end+1).gap_start=TS-T1;
+                pkg_gap.(sensor).(datatype)(end).gap_end=cell.timestamp(1,1)-T1;
+            end
         elseif cell.timestamp == all_data.(sensor).(datatype)(end-1).timestamp
             vars = fieldnames(cell);
             p = find(vars == "address");
@@ -134,8 +145,9 @@ fprintf('Data converted to nldat objects \n')
 % this is where we should do the segment ID and then we can call the
 % accel_analysis function for each segment - we can also alter savepath for
 % each segment and then call the accel_analysis w the new savepath 
-save_figs = 1;
+%save_figs = 1;
 
-accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
+[segment_loc]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, 'C3892', pkg_gap)
 
+%accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
 
