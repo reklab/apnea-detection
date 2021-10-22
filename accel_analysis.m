@@ -4,11 +4,11 @@
 % 
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor 
 
-function accel_analysis(nldat_accel1, nldat_accel2, ntrial, savepath, save_figs)
+% function accel_analysis(nldat_accel1, nldat_accel2, ntrial, savepath, save_figs)
 %%
 
-% nldat_accel1 = nldat_C3898_ACCEL;
-% nldat_accel2 = nldat_C3892_ACCEL;
+nldat_accel1 = nldat_C3898_ACCEL;
+nldat_accel2 = nldat_C3892_ACCEL;
 time1 = nldat_accel1.domainValues;
 time2 = nldat_accel2.domainValues;
 ts = time1(2)-time2(1);
@@ -16,11 +16,12 @@ fs = 1/ts;
 sampleLength = time1(end);
 time = 0:ts:sampleLength;
 
+%%
 nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
-nldat_accel1.dataSet = zscore(nldat_accel1.dataSet);
+%nldat_accel1.dataSet = zscore(nldat_accel1.dataSet);
 set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts);
 nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
-nldat_accel2.dataSet = zscore(nldat_accel2.dataSet);
+%nldat_accel2.dataSet = zscore(nldat_accel2.dataSet);
 set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts);
 
 names = get(nldat_accel1, "chanNames");
@@ -33,16 +34,20 @@ nldat_velocity1 = nldat;    nldat_velocity2 = nldat;
 nldat_disp1 = nldat;    nldat_disp2 = nldat;
 
 nldat_velocity1.dataSet = cumtrapz(time, nldat_accel1.dataSet);
-nldat_velocity1 = detrend(nldat_velocity1, 'linear'); nldat_velocity1.dataSet = zscore(nldat_velocity1.dataSet);
+nldat_velocity1 = detrend(nldat_velocity1, 'linear'); 
+%nldat_velocity1.dataSet = zscore(nldat_velocity1.dataSet);
 
 nldat_velocity2.dataSet = cumtrapz(time, nldat_accel2.dataSet);
-nldat_velocity2 = detrend(nldat_velocity2, 'linear'); nldat_velocity2.dataSet = zscore(nldat_velocity2.dataSet);
+nldat_velocity2 = detrend(nldat_velocity2, 'linear'); 
+%nldat_velocity2.dataSet = zscore(nldat_velocity2.dataSet);
 
 nldat_disp1.dataSet = cumtrapz(time, nldat_velocity1.dataSet);
-nldat_disp1 = detrend(nldat_disp1, 'linear'); nldat_disp1.dataSet = zscore(nldat_disp1.dataSet);
+nldat_disp1 = detrend(nldat_disp1, 'linear'); 
+%nldat_disp1.dataSet = zscore(nldat_disp1.dataSet);
 
 nldat_disp2.dataSet = cumtrapz(time, nldat_velocity2.dataSet);
-nldat_disp2 = detrend(nldat_disp2, 'linear'); nldat_disp2.dataSet = zscore(nldat_disp2.dataSet);
+nldat_disp2 = detrend(nldat_disp2, 'linear'); 
+%nldat_disp2.dataSet = zscore(nldat_disp2.dataSet);
 
 velocity_names = {"VELOCITY X", "VELCOTIY Y", "VELOCITY Z"};
 disp_names = {"DISP X", "DISP Y", "DISP Z"};
@@ -104,7 +109,7 @@ for v = 1:nChans
     eval(['plot(nldat_disp_' dir ', "plotmode", "xy" )'])
     title(['Scatter of displacement of both sensors in ' dir '-' dir ' direction'])
     hold on
-    eval(['nldatDouble = nldat_disp_' dir '.dataSet'])
+    eval(['nldatDouble = nldat_disp_' dir '.dataSet;'])
     start1 = nldatDouble(1,1);  start2 = nldatDouble(1,2);
     end1 = nldatDouble(end,1);  end2 = nldatDouble(end,2);
     k = scatter(start1, start2, 'g', 'filled');
@@ -174,4 +179,4 @@ if save_figs
 end
 
 
-end
+% end
