@@ -3,17 +3,20 @@
 %nldat_accel1 must be sensor that was tapped
 %sensor1 and sensor 2 should be string
 
-%function [locs,segmented_data1,segmented_time1, segmented_data2,segmented_time2]=segment_accel(nldat_accel1, nldat_accel2, sensor2, pkg_gap)
+function [locs,segmented_data1,segmented_time1, segmented_data2,segmented_time2]=segment_accel(nldat_accel1, nldat_accel2, sensor2, pkg_gap,ntrial, savepath)
+% nldat_accel1=nldat_C3898_ACCEL;
+% nldat_accel2=nldat_C3892_ACCEL;
 
-%datatype= 'ACCEL';
-%sensor= 'C3898';
+datatype= 'ACCEL';
+sensor= 'C3898';
+sensor2='C3892';
 
 %currently only set up to test for taps on sensor 3898 and only observes
 %z_accel data
 
 
-data_1 = get(nldat_C3898_ACCEL, "dataSet");
-time_1 = get(nldat_C3898_ACCEL, "domainValues");
+data_1 = get(nldat_accel1, "dataSet");
+time_1 = get(nldat_accel1, "domainValues");
 
 Zdata_1 = data_1(:,3);
 
@@ -25,7 +28,7 @@ Zdata_1 = data_1(:,3);
 %%
 std_pks=std(pks);
 mean_pks=mean(pks);
-cut_off=mean_pks+1.2*std_pks;
+cut_off=mean_pks+5*std_pks;
 locs(pks<cut_off)=[];
 pks(pks<cut_off)=[];
 
@@ -37,7 +40,7 @@ hold off
  %% Select ONLY important peaks       
 for i=2:length(pks)
     for j=2:i
-    if locs(i)<locs(j-1)+500
+    if locs(i)<locs(j-1)+0.5
         locs(i)=0;
     end
     end
@@ -99,8 +102,8 @@ locs(locs==0)=[];
 %can change datatype and sensor if desired
 sensor2="C3892";
 datatype="ACCEL";
-data_2= get(nldat_C3892_ACCEL, "dataSet");
-time_2= get(nldat_C3892_ACCEL, "domainValues");
+data_2= get(nldat_accel2, "dataSet");
+time_2= get(nldat_accel2, "domainValues");
 
 
 %%
@@ -128,15 +131,15 @@ for i=1:length(pks)+1
     end
     if i==1
         x_min=-0.01;
-        x_max=locs(i)-100;
+        x_max=locs(i)-0.1;
         patch([x_min x_max x_max x_min], [ymax ymax ymin ymin], C, 'LineStyle', 'none')
     elseif i==length(pks)+1
-        x_min=locs(i-1)+100;
+        x_min=locs(i-1)+0.1;
         x_max=time_2(end);
         patch([x_min x_max x_max x_min], [ymax ymax ymin ymin], C, 'LineStyle', 'none');
     else
-        x_min=locs(i-1)+100;
-        x_max=locs(i)-100;
+        x_min=locs(i-1)+0.1;
+        x_max=locs(i)-0.1;
         patch([x_min x_max x_max x_min], [ymax ymax ymin ymin], C, 'LineStyle', 'none');
     end
 end
@@ -154,10 +157,11 @@ ylim([ymin ymax])
 hold off
 end   
 
+savefig([savepath, 'segmented_acceldata'])
 
 
 %% Segment data and create nldats
-chan=get(nldat_C3898_ACCEL, "chanNames");
+chan=get(nldat_accel1, "chanNames");
 for i=1:length(pks)+1
      segment=append('seg', num2str(i));
      if i==1
@@ -166,14 +170,14 @@ for i=1:length(pks)+1
         segmented_data1.(segment)=data_1(1:L2,:);
         segmented_time1.(segment)=time_1(1:L2,1);
         hold_nldat = nldat(segmented_data1.(segment));
-        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (ms)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
+        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor
         [~,L2]=min(abs(time_2 - locs(i)));
         segmented_data2.(segment)=data_2(1:L2,:);
         segmented_time2.(segment)=time_2(1:L2,1);
         hold_nldat = nldat(segmented_data2.(segment));
-        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (ms)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
+        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
     elseif i==length(pks)+1
         %tapped sensor
@@ -181,14 +185,14 @@ for i=1:length(pks)+1
         segmented_data1.(segment)=data_1(L1:end,:);
         segmented_time1.(segment)=time_1(L1:end,1);
         hold_nldat = nldat(segmented_data1.(segment));
-        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (ms)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
+        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor
         [~,L1]=min(abs(time_2 - locs(i-1)));
         segmented_data2.(segment)=data_2(L1:end,:);
         segmented_time2.(segment)=time_2(L1:end,1);
         hold_nldat = nldat(segmented_data2.(segment));
-        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (ms)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
+        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
      else
         %tapped sensor
@@ -197,7 +201,7 @@ for i=1:length(pks)+1
         segmented_data1.(segment)=data_1(L1:L2,:);
         segmented_time1.(segment)=time_1(L1:L2,1);
         hold_nldat = nldat(segmented_data1.(segment));
-        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (ms)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
+        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor 
         [~,L1]=min(abs(time_2 - locs(i-1)));
@@ -205,7 +209,7 @@ for i=1:length(pks)+1
         segmented_data2.(segment)=data_2(L1:L2,j);
         segmented_time2.(segment)=time_2(L1:L2,1);
         hold_nldat = nldat(segmented_data2.(segment));
-        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (ms)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
+        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
     end
 end
@@ -225,13 +229,16 @@ end
 %option3 passsegmented_data and segmented_time
     %would need to change accel_analysis
 
-for i=1:1
+for i=1:length(locs)+1
     segment=append('seg', num2str(i));
     hold_nldat1=segment_nldat1.(segment);
     hold_nldat2=segment_nldat2.(segment);
     %need to change save path
-    savepath=['C:\Users\vstur\OneDrive\Documents\FALL 2021\470'];
+    savepath2=[savepath ntrial '/segment_' num2str(i) '/'];
+    if ~exist(savepath2, 'file')
+        mkdir(savepath2)
+    end
     savefigs=1;
-    accel_analysis(hold_nldat1,hold_nldat2,ntrial,savepath,savefigs)
+    accel_analysis(hold_nldat1,hold_nldat2,ntrial,savepath2,savefigs)
 end
-%end
+end
