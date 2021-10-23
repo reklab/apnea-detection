@@ -4,8 +4,8 @@
 %sensor1 and sensor 2 should be string
 
 function [locs,segment_nldat1 segment_nldat2]=segment_accel(nldat_accel1, nldat_accel2, sensor2, pkg_gap,ntrial, savepath)
-% nldat_accel1=nldat_C3898_ACCEL;
-% nldat_accel2=nldat_C3892_ACCEL;
+%nldat_accel1=nldat_C3898_ACCEL;
+%nldat_accel2=nldat_C3892_ACCEL;
 
 datatype= 'ACCEL';
 sensor= 'C3898';
@@ -159,6 +159,18 @@ end
 
 savefig([savepath, 'segmented_acceldata'])
 
+%%
+ts=0.0024;
+time = 0:ts:160;
+time=time';
+
+nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
+data_1= get(nldat_accel1, "dataSet");
+
+nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
+data_2= get(nldat_accel2, "dataSet");
+
+
 
 %% Segment data and create nldats
 chan=get(nldat_accel1, "chanNames");
@@ -166,48 +178,48 @@ for i=1:length(pks)+1
      segment=append('seg', num2str(i));
      if i==1
         %tapped sensor
-        [~,L2]=min(abs(time_1 - (locs(i)-0.5)));
+        [~,L2]=min(abs(time - (locs(i)-0.5)));
         segmented_data1.(segment)=data_1(1:L2,:);
-        segmented_time1.(segment)=time_1(1:L2,1);
+        segmented_time1.(segment)=time(1:L2,1);
         hold_nldat = nldat(segmented_data1.(segment));
         set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor
-        [~,L2]=min(abs(time_2 - (locs(i)-0.5)));
+        [~,L2]=min(abs(time - (locs(i)-0.5)));
         segmented_data2.(segment)=data_2(1:(L2),:);
-        segmented_time2.(segment)=time_2(1:(L2),1);
+        segmented_time2.(segment)=time(1:(L2),1);
         hold_nldat = nldat(segmented_data2.(segment));
         set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
     elseif i==length(pks)+1
         %tapped sensor
-        [~,L1]=min(abs(time_1 - (locs(i-1)+1)));
+        [~,L1]=min(abs(time - (locs(i-1)+1)));
         segmented_data1.(segment)=data_1((L1):end,:);
-        segmented_time1.(segment)=time_1((L1):end,1);
+        segmented_time1.(segment)=time((L1):end,1);
         hold_nldat = nldat(segmented_data1.(segment));
         set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor
-        [~,L1]=min(abs(time_2 - (locs(i-1)+1)));
+        [~,L1]=min(abs(time - (locs(i-1)+1)));
         segmented_data2.(segment)=data_2((L1):end,:);
-        segmented_time2.(segment)=time_2((L1):end,1);
+        segmented_time2.(segment)=time((L1):end,1);
         hold_nldat = nldat(segmented_data2.(segment));
         set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
      else
         %tapped sensor
-        [~,L1]=min(abs(time_1 - (locs(i-1)+0.5)));
-        [~,L2]=min(abs(time_1 - (locs(i)-0.5)));
+        [~,L1]=min(abs(time - (locs(i-1)+0.5)));
+        [~,L2]=min(abs(time - (locs(i)-0.5)));
         segmented_data1.(segment)=data_1(L1:L2,:);
-        segmented_time1.(segment)=time_1(L1:L2,1);
+        segmented_time1.(segment)=time(L1:L2,1);
         hold_nldat = nldat(segmented_data1.(segment));
         set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor 
-        [~,L1]=min(abs(time_2 - (locs(i-1)+0.5)));
-        [~,L2]=min(abs(time_2 - (locs(i)-0.5)));
+        [~,L1]=min(abs(time - (locs(i-1)+0.5)));
+        [~,L2]=min(abs(time - (locs(i)-0.5)));
         segmented_data2.(segment)=data_2(L1:L2,:);
-        segmented_time2.(segment)=time_2(L1:L2,1);
+        segmented_time2.(segment)=time(L1:L2,1);
         hold_nldat = nldat(segmented_data2.(segment));
         set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
@@ -229,17 +241,16 @@ end
 %option3 passsegmented_data and segmented_time
     %would need to change accel_analysis
 
-% for i=1:length(pks)+1
-% %for i=1:1
-%     segment=append('seg', num2str(i));
-%     hold_nldat1=segment_nldat1.(segment);
-%     hold_nldat2=segment_nldat2.(segment);
-%     %need to change save path
-%     savepath2=[savepath ntrial '/segment_' num2str(i) '/'];
-%     if ~exist(savepath2, 'file')
-%         mkdir(savepath2)
-%     end
-%     savefigs=1;
-%     accel_analysis(hold_nldat1,hold_nldat2,ntrial,savepath2,savefigs)
-% end
+for i =1:length(pks)+1
+    segment=append('seg', num2str(i));
+    hold_nldat1=segment_nldat1.(segment);
+    hold_nldat2=segment_nldat2.(segment);
+    %need to change save path
+    savepath2=[savepath ntrial '/segment_' num2str(i) '/'];
+    if ~exist(savepath2, 'file')
+        mkdir(savepath2)
+    end
+    savefigs=1;
+    accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2,savefigs)
+end
 end

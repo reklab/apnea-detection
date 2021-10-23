@@ -4,10 +4,11 @@
 % Make sure to add nlid_tools and utility_tools from reklab public
 
 % addpath('/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
-addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
+%addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
+%addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 
-
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
 %% load raw data from the json file 
 clc
 clear all
@@ -17,7 +18,8 @@ descrip_path ='intermittentBreathing_voluntary';
 ntrial = '002';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['trials_data_json/Export/figures_v2/' ntrial '/'];
+%savepath = ['trials_data_json/Export/figures_v2/' ntrial '/'];
+savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
@@ -146,9 +148,21 @@ fprintf('Data converted to nldat objects \n')
 % this is where we should do the segment ID and then we can call the
 % accel_analysis function for each segment - we can also alter savepath for
 % each segment and then call the accel_analysis w the new savepath 
-%save_figs = 1;
+save_figs = 1;
 
-[segm_loc, seg_data1, seg_time1 seg_data2, seg_time2]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, 'C3892', pkg_gap,ntrial, savepath);
+%% MOVE INTO SEGMENT ACCEL AFTER PKS AND LOCS COMMAND
+%DOMAIN WILL BE CHANGED 
+
+
+
+%%
+[segm_loc, seg_nldat1, seg_nldat2]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, 'C3892', pkg_gap,ntrial, savepath);
 
 %accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
+
+%UPDATE from Vic: For trial002 it ran everything besides the last segment (see
+%facebook for weird error message. All the plots are saved on my computer right
+%now
+
+
 

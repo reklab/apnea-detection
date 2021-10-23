@@ -4,23 +4,29 @@
 % 
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor 
 
-% function accel_analysis(nldat_accel1, nldat_accel2, ntrial, savepath, save_figs)
+function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
 %%
 
-nldat_accel1 = nldat_C3898_ACCEL;
-nldat_accel2 = nldat_C3892_ACCEL;
-time1 = nldat_accel1.domainValues;
-time2 = nldat_accel2.domainValues;
-ts = time1(2)-time2(1);
-fs = 1/ts;
-sampleLength = time1(end);
-time = 0:ts:sampleLength;
+%nldat_accel1 = segment_nldat1.seg2;
+%nldat_accel2 = segment_nldat2.seg2;
+time = nldat_accel1.domainValues;
+ts=0.0024;
+% time2 = nldat_accel2.domainValues;
+% ts = time1(2)-time1(1);
+% fs = 1/ts;
+% sampleLength = time1(end);
+% time = time1(1):ts:sampleLength;
+
+figure()
+plot(nldat_accel1)
+figure()
+plot(nldat_accel2)
 
 %%
-nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
+%nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
 %nldat_accel1.dataSet = zscore(nldat_accel1.dataSet);
 set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts);
-nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
+%nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
 %nldat_accel2.dataSet = zscore(nldat_accel2.dataSet);
 set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts);
 
@@ -169,14 +175,14 @@ end
     
 if save_figs
 
-    savefig(a, [savepath, 'disp_' ntrial])
-    savefig(b, [savepath, 'accel_' ntrial])
-    savefig(c, [savepath, 'scatter_' ntrial])
-    savefig(d, [savepath, 'psd_disp_' ntrial '_spect'])
-    savefig(e, [savepath, 'psd_accel_' ntrial '_spect'])
+    savefig(a, [savepath, 'disp_' ntrial '_' seg])
+    savefig(b, [savepath, 'accel_' ntrial '_' seg])
+    savefig(c, [savepath, 'scatter_' ntrial '_' seg])
+    savefig(d, [savepath, 'psd_disp_' ntrial '_' seg '_spect'])
+    savefig(e, [savepath, 'psd_accel_' ntrial '_' seg '_spect'])
     
     close all
 end
 
 
-% end
+%end
