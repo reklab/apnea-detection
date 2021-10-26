@@ -160,9 +160,7 @@ save_figs = 1;
 
 %accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
 
-%UPDATE from Vic: For trial002 it ran everything besides the last segment (see
-%facebook for weird error message. All the plots are saved on my computer right
-%now
+%UPDATE from Vic: For trial002 everything ran
 
 
 

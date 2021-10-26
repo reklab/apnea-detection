@@ -4,8 +4,8 @@
 %sensor1 and sensor 2 should be string
 
 function [locs,segment_nldat1 segment_nldat2]=segment_accel(nldat_accel1, nldat_accel2, sensor2, pkg_gap,ntrial, savepath)
-%nldat_accel1=nldat_C3898_ACCEL;
-%nldat_accel2=nldat_C3892_ACCEL;
+% nldat_accel1=nldat_C3898_ACCEL;
+% nldat_accel2=nldat_C3892_ACCEL;
 
 datatype= 'ACCEL';
 sensor= 'C3898';
@@ -161,7 +161,7 @@ savefig([savepath, 'segmented_acceldata'])
 
 %%
 ts=0.0024;
-time = 0:ts:160;
+time = 0:ts:180;
 time=time';
 
 nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
