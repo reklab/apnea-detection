@@ -3,28 +3,34 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-% addpath('/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+addpath('MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+
 %% load raw data from the json file 
 clc
 clear all
-tic 
+
 baseDir = 'trials_data_json/ANNE_data_trial';
-descrip_path ='intermittentBreathing_voluntary';
-ntrial = '002';
+
+% chose the desired trial
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
+% descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-%savepath = ['trials_data_json/Export/figures_v2/' ntrial '/'];
-savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
+savepath = ['Export/figures_v2/' ntrial '/'];
+% savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
 
-description = "intermittent voluntary breathing";
 raw_data = loadjson(filename);
 
 fprintf('Data loaded \n')
@@ -134,7 +140,7 @@ for n = 1:length(sensor_list)
             set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
 
             if v > 1
-                eval(['nldat_' sensor '_' datatype '=cat(2,hold_nldat,  nldat_' sensor '_' datatype ');'])
+                eval(['nldat_' sensor '_' datatype '=cat(2, nldat_' sensor '_' datatype ', hold_nldat);'])
                 
             else
                 eval ([ 'nldat_' sensor '_' datatype '= hold_nldat;']);
@@ -148,17 +154,13 @@ fprintf('Data converted to nldat objects \n')
 % this is where we should do the segment ID and then we can call the
 % accel_analysis function for each segment - we can also alter savepath for
 % each segment and then call the accel_analysis w the new savepath 
-save_figs = 1;
 
-%% MOVE INTO SEGMENT ACCEL AFTER PKS AND LOCS COMMAND
-%DOMAIN WILL BE CHANGED 
+% for whole data
+% accel_analysis(nldat_C3898_ACCEL ,nldat_C3892_ACCEL, ntrial, 0 , savepath);
 
-
-
-%%
-[segm_loc, seg_nldat1, seg_nldat2]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, 'C3892', pkg_gap,ntrial, savepath);
-
-%accel_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, savepath, save_figs)
+% to segment and then analyze
+savefigs = 1;
+[segm_loc, seg_nldat1, seg_nldat2]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
 %UPDATE from Vic: For trial002 everything ran
 

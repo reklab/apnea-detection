@@ -3,13 +3,13 @@
 %nldat_accel1 must be sensor that was tapped
 %sensor1 and sensor 2 should be string
 
-function [locs,segment_nldat1 segment_nldat2]=segment_accel(nldat_accel1, nldat_accel2, sensor2, pkg_gap,ntrial, savepath)
+function [locs,segment_nldat1, segment_nldat2]=segment_accel(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savepath, savefigs)
 % nldat_accel1=nldat_C3898_ACCEL;
 % nldat_accel2=nldat_C3892_ACCEL;
-
-datatype= 'ACCEL';
-sensor= 'C3898';
-sensor2='C3892';
+% 
+% datatype= 'ACCEL';
+% sensor= 'C3898';
+% sensor2='C3892';
 
 %currently only set up to test for taps on sensor 3898 and only observes
 %z_accel data
@@ -107,7 +107,7 @@ time_2= get(nldat_accel2, "domainValues");
 
 
 %%
-figure()
+figure(2)
 for j=1:3
     subplot(3,1,j)    
     g(j)=plot(time_2,data_2(:,j), 'k');
@@ -157,7 +157,7 @@ ylim([ymin ymax])
 hold off
 end   
 
-savefig([savepath, 'segmented_acceldata'])
+savefig(figure(2), [savepath, 'segmented_acceldata'])
 
 %%
 ts=0.0024;
@@ -246,11 +246,11 @@ for i =1:length(pks)+1
     hold_nldat1=segment_nldat1.(segment);
     hold_nldat2=segment_nldat2.(segment);
     %need to change save path
-    savepath2=[savepath ntrial '/segment_' num2str(i) '/'];
+    savepath2=[savepath 'segment_' num2str(i) '/'];
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
-    savefigs=1;
+
     accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2,savefigs)
 end
 end

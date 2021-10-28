@@ -6,28 +6,19 @@
 
 function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
 %%
+% nldat_accel1 = nldat_C3898_ACCEL;
+% nldat_accel2 = nldat_C3892_ACCEL;
 
-%nldat_accel1 = segment_nldat1.seg2;
-%nldat_accel2 = segment_nldat2.seg2;
-time = nldat_accel1.domainValues;
-ts=0.0024;
-% time2 = nldat_accel2.domainValues;
-% ts = time1(2)-time1(1);
-% fs = 1/ts;
-% sampleLength = time1(end);
-% time = time1(1):ts:sampleLength;
+time1 = nldat_accel1.domainValues;
+ts = time1(2) - time1(1);
+sampleLength = time1(end);
 
-figure()
-plot(nldat_accel1)
-figure()
-plot(nldat_accel2)
+time = time1(1):ts:sampleLength;
 
 %%
-%nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
-%nldat_accel1.dataSet = zscore(nldat_accel1.dataSet);
+nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
 set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts);
-%nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
-%nldat_accel2.dataSet = zscore(nldat_accel2.dataSet);
+nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
 set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts);
 
 names = get(nldat_accel1, "chanNames");
@@ -41,19 +32,15 @@ nldat_disp1 = nldat;    nldat_disp2 = nldat;
 
 nldat_velocity1.dataSet = cumtrapz(time, nldat_accel1.dataSet);
 nldat_velocity1 = detrend(nldat_velocity1, 'linear'); 
-%nldat_velocity1.dataSet = zscore(nldat_velocity1.dataSet);
 
 nldat_velocity2.dataSet = cumtrapz(time, nldat_accel2.dataSet);
 nldat_velocity2 = detrend(nldat_velocity2, 'linear'); 
-%nldat_velocity2.dataSet = zscore(nldat_velocity2.dataSet);
 
 nldat_disp1.dataSet = cumtrapz(time, nldat_velocity1.dataSet);
 nldat_disp1 = detrend(nldat_disp1, 'linear'); 
-%nldat_disp1.dataSet = zscore(nldat_disp1.dataSet);
 
 nldat_disp2.dataSet = cumtrapz(time, nldat_velocity2.dataSet);
 nldat_disp2 = detrend(nldat_disp2, 'linear'); 
-%nldat_disp2.dataSet = zscore(nldat_disp2.dataSet);
 
 velocity_names = {"VELOCITY X", "VELCOTIY Y", "VELOCITY Z"};
 disp_names = {"DISP X", "DISP Y", "DISP Z"};
@@ -95,17 +82,17 @@ for v = 1:nChans
     figure(1); 
     subplot(nChans,1,v)
     plot(nldat_disp1(:,v))
-    
-    line(nldat_disp2(:,v))
+    hold on 
+    plot(nldat_disp2(:,v));
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Displacement in the ' dir ' direction for both sensors'])
-
+    hold off
     
     figure(2);
     subplot(nChans,1,v)
     plot(nldat_accel1(:,v))
-    hold on
-    plot(nldat_accel2(:,v))
+    hold on 
+    plot(nldat_accel2(:,v));
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Acceleration in the ' dir ' direction for both sensors'])
     hold off
@@ -130,59 +117,112 @@ for v = 1:nChans
     figure(4);
     subplot(nChans,1,v)
     psd1 = spect(nldat_accel1(:,v));
-    plot(psd1);
-%     [psd1,f] = pwelch(accel1(:,v));
-%     plot(f,pow2db(psd1))
-%     xlabel('Frequency (Hz)')
-%     ylabel('PSD')    
-    hold on
+    psd1.dataSet = 10*log10(psd1.dataSet);
+    psd1.chanNames = "Power (dB)";
+    plot(psd1, 'xmode', 'db');
+    hold on 
     psd2 = spect(nldat_accel2(:,v));
-    plot(psd2)
-%     [psd2,f] = pwelch(accel2(:,v));
-%     plot(f,pow2db(psd2))
-%     xlabel('Frequency (Hz)')
-%     ylabel('PSD')    
-%     legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Power spectral density of acceleration in ' dir ' direction for both sensors - using spect objects'])
+    psd2.dataSet = 10*log10(psd2.dataSet);
+    psd2.chanNames = "Power (dB)";
+    plot(psd2, 'xmode', 'db');
+    title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
     hold off
     
     figure(5);
     subplot(nChans,1,v)
     psd1 = spect(nldat_disp1(:,v));
+    psd1.dataSet = 10*log10(psd1.dataSet);
+    psd1.chanNames = "Power (dB)";
     plot(psd1, 'xmode', 'db');
-%     [psd1,f] = pwelch(disp1(:,v), fs);
-%     plot(f,pow2db(psd1))
-%     xlabel('Frequency (Hz)')
-%     ylabel('PSD')
     hold on 
     psd2 = spect(nldat_disp2(:,v));
+    psd2.dataSet = 10*log10(psd2.dataSet);
+    psd2.chanNames = "Power (dB)";
     plot(psd2, 'xmode', 'db')
-%     [psd2,f] = pwelch(disp2(:,v));
-%     plot(f,pow2db(psd2))
-%     xlabel('Frequency (Hz)')
-%     ylabel('PSD')    
     legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Power spectral density of displacement in ' dir ' direction for both sensors - using spect objects'])
+    title(['Power spectral density of displacement in ' dir ' direction for both sensors'])
     hold off
-    
 end
 % 
-%     set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-%     set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-%     set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-%     set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-%     set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+    set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+    set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+    set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+    set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+    set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
     
 if save_figs
 
-    savefig(a, [savepath, 'disp_' ntrial '_' seg])
-    savefig(b, [savepath, 'accel_' ntrial '_' seg])
-    savefig(c, [savepath, 'scatter_' ntrial '_' seg])
-    savefig(d, [savepath, 'psd_disp_' ntrial '_' seg '_spect'])
-    savefig(e, [savepath, 'psd_accel_' ntrial '_' seg '_spect'])
-    
+        savefig(a, [savepath, 'disp_' ntrial '_' seg])
+        savefig(b, [savepath, 'accel_' ntrial '_' seg])
+        savefig(c, [savepath, 'scatter_' ntrial '_' seg])
+        savefig(d, [savepath, 'psd_accel_' ntrial '_' seg])
+        savefig(e, [savepath, 'psd_disp_' ntrial '_' seg])
+
     close all
+
+end
+%% to add to analysis
+% measure magnitude and phase of displacement and plot
+% generate 3D plot of displacement 
+magnitude1 = zeros(length(time),1);
+magnitude2 = zeros(length(time),1);
+data1 = nldat_accel1.dataSet;
+data2 = nldat_accel2.dataSet;
+
+for i = 1:length(time)
+    x1 = data1(i,1);     x2 = data2(i,1);
+    y1 = data1(i,2);     y2 = data2(i,2);
+    z1 = data1(i,3);     z2 = data2(i,3);
+    
+    magnitude1(i) = sqrt(x1.^2+y1.^2+z1.^2);
+    magnitude2(i) = sqrt(x2.^2+y2.^2+z2.^2);
+
 end
 
+nldat_mag1 = nldat(magnitude1);
+set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of chest sensor");
 
-%end
+nldat_mag2 = nldat(magnitude2);
+set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of abdomen sensor");
+
+figure()
+plot(nldat_mag1)
+hold on 
+plot(nldat_mag2)
+title('Magnitude of acceleration for both sensors')
+legend(["Chest Sensor", "Abdomen Sensor"])
+savefig([savepath, 'accel_magn_' ntrial '_' seg])
+    
+% angle between points
+cos_angle1 = zeros(length(time)-1, 1);
+cos_angle2 = zeros(length(time)-1, 1);
+
+for i = 1:length(time)-1
+    
+    x1a = data1(i,1);    x1d = data1(i+1,1);    % x2 = data2(i,1);
+    y1b = data1(i,2);    y1e = data1(i+1,2);    % y2 = data2(i,2);
+    z1c = data1(i,3);    z1f = data1(i+1,3);    % z2 = data2(i,3);
+    
+    x2a = data2(i,1);    x2d = data2(i+1,1);    % x2 = data2(i,1);
+    y2b = data2(i,2);    y2e = data2(i+1,2);    % y2 = data2(i,2);
+    z2c = data2(i,3);    z2f = data2(i+1,3);    % z2 = data2(i,3);
+    
+    cos_angle1(i) = (x1a*x1d + y1b*y1e + z1c*z1f)/(magnitude1(i)*magnitude1(i+1));
+    cos_angle2(i) = (x2a*x2d + y2b*y2e + z2c*z2f)/(magnitude2(i)*magnitude2(i+1));
+
+end
+
+cos1 = acos(cos_angle1);
+cos2 = acos(cos_angle2);
+time_temp = time(1:end-1);
+
+figure()
+plot(time_temp, cos1)
+hold on 
+plot(time_temp, cos2)
+title('Acceleration: direction change')
+xlabel('Time(s)')
+ylabel('Angle (rad)')
+savefig([savepath, 'accel_angle_' ntrial '_' seg])
+
+end
