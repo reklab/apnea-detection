@@ -6,8 +6,8 @@
 
 function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
 %%
-% nldat_accel1 = nldat_C3898_ACCEL;
-% nldat_accel2 = nldat_C3892_ACCEL;
+nldat_accel1 = nldat_C3898_ACCEL(1:4000,:,:);
+nldat_accel2 = nldat_C3892_ACCEL(1:4000,:,:);
 
 time1 = nldat_accel1.domainValues;
 ts = time1(2) - time1(1);
@@ -144,23 +144,7 @@ for v = 1:nChans
     hold off
 end
 % 
-    set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-    set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-    set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-    set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-    set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-    
-if save_figs
 
-        savefig(a, [savepath, 'disp_' ntrial '_' seg])
-        savefig(b, [savepath, 'accel_' ntrial '_' seg])
-        savefig(c, [savepath, 'scatter_' ntrial '_' seg])
-        savefig(d, [savepath, 'psd_accel_' ntrial '_' seg])
-        savefig(e, [savepath, 'psd_disp_' ntrial '_' seg])
-
-    close all
-
-end
 %% to add to analysis
 % measure magnitude and phase of displacement and plot
 % generate 3D plot of displacement 
@@ -180,18 +164,17 @@ for i = 1:length(time)
 end
 
 nldat_mag1 = nldat(magnitude1);
-set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of chest sensor");
+set(nldat_mag1, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of chest sensor");
 
 nldat_mag2 = nldat(magnitude2);
-set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of abdomen sensor");
+set(nldat_mag2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of abdomen sensor");
 
-figure()
+figure(6)
 plot(nldat_mag1)
 hold on 
 plot(nldat_mag2)
 title('Magnitude of acceleration for both sensors')
 legend(["Chest Sensor", "Abdomen Sensor"])
-savefig([savepath, 'accel_magn_' ntrial '_' seg])
     
 % angle between points
 cos_angle1 = zeros(length(time)-1, 1);
@@ -216,13 +199,32 @@ cos1 = acos(cos_angle1);
 cos2 = acos(cos_angle2);
 time_temp = time(1:end-1);
 
-figure()
+figure(7)
 plot(time_temp, cos1)
 hold on 
 plot(time_temp, cos2)
 title('Acceleration: direction change')
 xlabel('Time(s)')
 ylabel('Angle (rad)')
-savefig([savepath, 'accel_angle_' ntrial '_' seg])
+%%
+set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(6), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(7), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 
+if save_figs
+
+        savefig(a, [savepath, 'disp_' ntrial '_' seg])
+        savefig(b, [savepath, 'accel_' ntrial '_' seg])
+        savefig(c, [savepath, 'scatter_' ntrial '_' seg])
+        savefig(d, [savepath, 'psd_accel_' ntrial '_' seg])
+        savefig(e, [savepath, 'psd_disp_' ntrial '_' seg])
+        savefig(figure(6), [savepath, 'accel_magn_' ntrial '_' seg])
+        savefig(figure(7), [savepath, 'accel_angle_' ntrial '_' seg])
+    close all
+
+end
 end
