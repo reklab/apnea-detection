@@ -81,17 +81,17 @@ for v = 1:nChans
     dir = directions{v};
     
     figure(1); 
-    ax1 = subplot(nChans,1,v);
+    subplot(nChans,1,v)
     plot(nldat_disp1(:,v))
     hold on 
     plot(nldat_disp2(:,v));
     legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Displacement in the ' dir ' direction for both sensors'])
+    title(['Displacement in the ' dir ' direction for both sensors'], 'FontSize', ftsz)
 
     hold off
     
     figure(2);
-    ax2 = subplot(nChans,1,v);
+    subplot(nChans,1,v)
     plot(nldat_accel1(:,v))
     hold on 
     plot(nldat_accel2(:,v));
@@ -100,7 +100,7 @@ for v = 1:nChans
     hold off
     
     figure(3);
-    ax3 = subplot(nChans,1,v);
+    subplot(nChans,1,v)
     eval(['plot(nldat_disp_' dir ', "plotmode", "xy" )'])
     title(['Scatter of displacement of both sensors in ' dir '-' dir ' direction'])
     hold on
@@ -117,7 +117,7 @@ for v = 1:nChans
 %     eval(['scatter(nldat_disp_' dir '.dataSet{end,1}, nldat_disp_' dir '.dataSet{end,2}, "g")'])
         
     figure(4);
-    ax4 = subplot(nChans,1,v);
+    subplot(nChans,1,v)
     psd1 = spect(nldat_accel1(:,v));
     psd1.dataSet = 10*log10(psd1.dataSet);
     psd1.chanNames = "Power (dB)";
@@ -131,7 +131,7 @@ for v = 1:nChans
     hold off
     
     figure(5);
-    ax5 = subplot(nChans,1,v);
+    subplot(nChans,1,v)
     psd1 = spect(nldat_disp1(:,v));
     psd1.dataSet = 10*log10(psd1.dataSet);
     psd1.chanNames = "Power (dB)";
@@ -144,15 +144,8 @@ for v = 1:nChans
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Power spectral density of displacement in ' dir ' direction for both sensors'])
     hold off
-    
-    ax1.FontSize = ftsz;    ax4.FontSize = ftsz;
-    ax2.FontSize = ftsz;    ax5.FontSize = ftsz;
-    ax3.FontSize = ftsz;
-
 end
-
-
-
+% 
 
 %% to add to analysis
 % measure magnitude and phase of displacement and plot
@@ -182,7 +175,7 @@ figure(6)
 plot(nldat_mag1)
 hold on 
 plot(nldat_mag2)
-title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
+title('Magnitude of acceleration for both sensors')
 legend(["Chest Sensor", "Abdomen Sensor"])
     
 % angle between points
@@ -212,10 +205,9 @@ figure(7)
 plot(time_temp, cos1)
 hold on 
 plot(time_temp, cos2)
-title('Acceleration: direction change', 'FontSize', ftsz)
-legend(["Chest Sensor", "Abdomen Sensor"])
-xlabel('Time(s)', 'FontSize', ftsz)
-ylabel('Angle (rad)', 'FontSize', ftsz)
+title('Acceleration: direction change')
+xlabel('Time(s)')
+ylabel('Angle (rad)')
 %%
 set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
