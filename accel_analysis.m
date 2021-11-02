@@ -4,21 +4,24 @@
 % 
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor 
 
-function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
+%function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
 %%
-% nldat_accel1 = nldat_C3898_ACCEL(1:4000,:,:);
-% nldat_accel2 = nldat_C3892_ACCEL(1:4000,:,:);
+nldat_accel1 = nldat_C3898_ACCEL;
+nldat_accel2 = nldat_C3898_ACCEL;
 
-time1 = nldat_accel1.domainValues;
-ts = time1(2) - time1(1);
-sampleLength = time1(end);
-
-time = time1(1):ts:sampleLength;
+% time1 = nldat_accel1.domainValues;
+% ts = time1(2) - time1(1);
+% sampleLength = time1(end);
+% 
+% time = time1(1):ts:sampleLength;
+ts=0.0024;
+time = 0:ts:180;
+time=time';
 
 %%
-nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
+%nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
 set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts);
-nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
+%nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
 set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts);
 
 names = get(nldat_accel1, "chanNames");
@@ -152,7 +155,63 @@ for v = 1:nChans
 end
 
 
+%% Trial with nFFT 
+    nldat_test1=nldat_accel1;
+    nldat_test2=nldat_accel2;
+   
 
+for v = 1:3
+    figure(4);
+    ax4 = subplot(nChans,1,v);
+    psd1 = spect(nldat_accel1(:,v));
+    psd1.dataSet = 10*log10(psd1.dataSet);
+    psd1.chanNames = "Power (dB)";
+    plot(psd1, 'xmode', 'db');
+    hold on 
+    psd2 = spect(nldat_accel2(:,v));
+    psd2.dataSet = 10*log10(psd2.dataSet);
+    psd2.chanNames = "Power (dB)";
+    plot(psd2, 'xmode', 'db');
+    %title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
+    xlim ([0 10])
+    hold off
+    
+    figure(5);
+
+    ax5 = subplot(nChans,1,v);
+
+    psd1 = spect(nldat_accel1(:,v), 'nFFT', 4000);
+    psd1.dataSet = 10*log10(psd1.dataSet);
+    psd1.chanNames = "Power (dB)";
+    plot(psd1, 'xmode', 'db');
+    hold on 
+    psd2 = spect(nldat_accel2(:,v), 'nFFT', 4000);
+    psd2.dataSet = 10*log10(psd2.dataSet);
+    psd2.chanNames = "Power (dB)";
+    plot(psd2, 'xmode', 'db');
+    %title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
+    xlim ([0 10])
+    hold off
+    
+    figure(6);
+    ax6 = subplot(nChans,1,v);
+    psd1 = spect(nldat_accel1(:,v), 'nFFT', 8000);
+    psd1.dataSet = 10*log10(psd1.dataSet);
+    psd1.chanNames = "Power (dB)";
+    plot(psd1, 'xmode', 'db');
+    hold on 
+    psd2 = spect(nldat_accel2(:,v), 'nFFT', 8000);
+    psd2.dataSet = 10*log10(psd2.dataSet);
+    psd2.chanNames = "Power (dB)";
+    plot(psd2, 'xmode', 'db');
+    %title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
+    xlim ([0, 10])
+    hold off
+end
+
+
+%% TRIALS with lowpass filter
+lowpass(nldat_test1(:,3).dataSet, 10, 1/ts);
 
 %% to add to analysis
 % measure magnitude and phase of displacement and plot
@@ -237,4 +296,4 @@ if save_figs
     close all
 
 end
-end
+%end
