@@ -20,10 +20,12 @@ gaps_C3892=interval_C3892(abs(interval_C3892-mode(interval_C3892))>0.02*mode(int
 figure()
 hist(gaps_C3898)
 title(sprintf('Gaps for ACCEL sensor C3898 (normal gap size = %s)', num2str(mode(interval_C3898))))
+tabulate(interval_C3898)
 
 figure()
 hist(gaps_C3892)
 title(sprintf('Gaps for ACCEL sensor C3892 (normal gap size = %s)', num2str(mode(interval_C3892))))
+tabulate(interval_C3892)
 
 % figure()
 % hist(gaps_L3572)
