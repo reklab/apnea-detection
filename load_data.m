@@ -152,6 +152,9 @@ fprintf('Data converted to nldat objects \n')
 [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL);
 [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG);
 [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG);
+[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp);
+[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp);
+[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp);
 [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG);
 
 %% analysis 2: segmentation detrend and interpolate
