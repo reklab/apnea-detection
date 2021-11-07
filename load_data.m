@@ -160,7 +160,8 @@ fs2 = 500;
 sampleLength1 = nldat_C3898_ACCEL.domainValues(end);
 sampleLength2 = nldat_C3892_ACCEL.domainValues(end);
 sampleLength = min(sampleLength1, sampleLength2);
-time = 0:1/fs1:sampleLength;
+time = 0:1/fs2:sampleLength;
+time=time';
 savefigs = 1;
 [segm_pks,segm_locs]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
