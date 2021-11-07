@@ -45,6 +45,9 @@ nldat_disp1 = detrend(nldat_disp1, 'linear');
 nldat_disp2.dataSet = cumtrapz(time, nldat_velocity2.dataSet);
 nldat_disp2 = detrend(nldat_disp2, 'linear'); 
 
+fft_accel1 = fft(nldat_accel1);
+fft_accel2 = fft(nldat_accel2);
+
 velocity_names = {"VELOCITY X", "VELCOTIY Y", "VELOCITY Z"};
 disp_names = {"DISP X", "DISP Y", "DISP Z"};
 
@@ -65,7 +68,11 @@ for v = 1:nChans
     set(nldat_temp2, 'chanNames', "Abdomen Sesnsor", 'domainValues', time)
     
     eval(['nldat_disp_' dir '= cat(2, nldat_temp1, nldat_temp2);']);
-end
+
+    phase_accel1 = phase(fft_accel1(:,v));  
+    phase_accel2 = phase(fft_accel2(:,v));
+    phase_diff(:,v) = diff(phase_accel1.dataSet-phase_accel2.dataSet);
+end 
 
 nldat_disp_X.comment = 'displacement from both sensors in the X direction';
 nldat_disp_Y.comment = 'displacement from both sensors in the Y direction';
@@ -77,6 +84,9 @@ b=figure(2);
 c=figure(3);
 d=figure(4);
 e=figure(5);
+f=figure(6);
+g=figure(7);
+
 ftsz = 16;
 
 for v = 1:nChans
@@ -115,9 +125,6 @@ for v = 1:nChans
 
     h  = scatter(end1, end2, 'r', 'filled');
     h.SizeData = 100;
-
-%     eval(['scatter(nldat_disp_' dir '.dataSet{1,1}, nldat_disp_' dir '.dataSet{1,2}, "g")'])
-%     eval(['scatter(nldat_disp_' dir '.dataSet{end,1}, nldat_disp_' dir '.dataSet{end,2}, "g")'])
         
     figure(4);
     ax4 = subplot(nChans,1,v);
@@ -147,12 +154,22 @@ for v = 1:nChans
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Power spectral density of displacement in ' dir ' direction for both sensors'])
     hold off
-    
+
+    figure(6)
+    ax6 = subplot(nChans,1,v);
+    plot(phase_accel1)
+    hold on 
+    plot(phase_accel2)
+    title(['Phase for both sensors in the ' dir ' direction'])
+
     ax1.FontSize = ftsz;    ax4.FontSize = ftsz;
     ax2.FontSize = ftsz;    ax5.FontSize = ftsz;
-    ax3.FontSize = ftsz;
+    ax3.FontSize = ftsz;    ax6.FontSize = ftsz;
 
 end
+
+% figure(7)
+% plot
 
 
 %% Trial with nFFT 

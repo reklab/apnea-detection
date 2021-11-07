@@ -21,8 +21,8 @@ baseDir = 'trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
 % descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
-descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
+% descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['Export/figures_v2/' ntrial '/'];
@@ -60,12 +60,9 @@ for a = 1:length(raw_data)
             time_diff(j-1) = cell.timestamp(j) - cell.timestamp(j-1);
         end
         Ts = mean(time_diff);
-        
-        %CHECKING FOR PACKAGE SIZED GAPS
-        %STILL NEED TO COMPARE TO HISTOGRAMS OF TIME GAPS
-        
+                
         if cell.timestamp >1.5*Ts*length(cell.timestamp)+all_data.(sensor).(datatype)(end-1).timestamp
-%             fprintf('GAP in the data - sensor: %s datatype: %s \n', sensor, datatype)
+            fprintf('GAP in the data - sensor: %s datatype: %s \n', sensor, datatype)
             package_gap_counter = package_gap_counter+1;
             T1=all_data.(sensor).(datatype)(1).timestamp(1,1);
             TS=all_data.(sensor).(datatype)(end-1).timestamp(end);
@@ -91,12 +88,11 @@ for a = 1:length(raw_data)
                 all_data.(sensor).(datatype)(end) = [];
                 duplicate_data_counter = duplicate_data_counter+1;
             else
-%                 fprintf('ERROR: different data for same time points - sensor: %s datatype: %s \n', sensor, datatype)
+                fprintf('ERROR: different data for same time points - sensor: %s datatype: %s \n', sensor, datatype)
                 all_data.(sensor).(datatype)(end) = [];
                 duplicate_data_counter = duplicate_data_counter+1;
             end
-        end
-               
+        end               
     end
 end
 
@@ -150,19 +146,44 @@ for n = 1:length(sensor_list)
 end
 fprintf('Data converted to nldat objects \n')
 
-%% analysis 
-% this is where we should do the segment ID and then we can call the
-% accel_analysis function for each segment - we can also alter savepath for
-% each segment and then call the accel_analysis w the new savepath 
+%% analysis 1: gap and duplicate counting 
 
-% for whole data
-% accel_analysis(nldat_C3898_ACCEL ,nldat_C3892_ACCEL, ntrial, 0 , savepath);
+[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL);
+[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL);
+[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG);
+[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG);
+[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG);
 
-% to segment and then analyze
+%% analysis 2: segmentation detrend and interpolate
+fs1 = 416;
+fs2 = 500;
+sampleLength1 = nldat_C3898_ACCEL.domainValues(end);
+sampleLength2 = nldat_C3892_ACCEL.domainValues(end);
+sampleLength = min(sampleLength1, sampleLength2);
+time = 0:1/fs1:sampleLength;
 savefigs = 1;
-[segm_loc, seg_nldat1, seg_nldat2]=segment_accel(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
+[segm_pks,segm_locs]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
-%UPDATE from Vic: For trial002 everything ran
+[nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, nChans, fs1, fs2, time);
+[nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, nChans, fs1, fs2, time);
+
+[seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL);
+%% analysis 3: generate figures
+
+for i =1:length(pks)+1
+    segment=append('seg', num2str(i));
+    hold_nldat1=segment_nldat1.(segment);
+    hold_nldat2=segment_nldat2.(segment);
+ 
+    savepath2=[savepath 'segment_' num2str(i) '/'];
+    if ~exist(savepath2, 'file')
+        mkdir(savepath2)
+    end
+find_phase(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs)
+accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2, savefigs)
+end
+    
+
 
 
 

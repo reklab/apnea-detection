@@ -3,7 +3,7 @@
 %nldat_accel1 must be sensor that was tapped
 %sensor1 and sensor 2 should be string
 
-function [locs,segment_nldat1, segment_nldat2]=segment_accel(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savepath, savefigs)
+function [locs,pks]=segment_accel(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savepath, savefigs)
 % nldat_accel1=nldat_C3898_ACCEL;
 % nldat_accel2=nldat_C3892_ACCEL;
 % 
@@ -14,18 +14,21 @@ function [locs,segment_nldat1, segment_nldat2]=segment_accel(nldat_accel1, nldat
 %currently only set up to test for taps on sensor 3898 and only observes
 %z_accel data
 
-
 data_1 = get(nldat_accel1, "dataSet");
 time_1 = get(nldat_accel1, "domainValues");
+names = get(nldat_accel1, "chanNames");
+nChans = length(names);
+
+sensor2="C3892";
+datatype="ACCEL";
+data_2= get(nldat_accel2, "dataSet");
+time_2= get(nldat_accel2, "domainValues");
 
 Zdata_1 = data_1(:,3);
-
 
 %% Identify Peaks using Zdata from Chest sensor (C3898)
 [pks,locs]=findpeaks(Zdata_1,time_1);
 
-
-%%
 std_pks=std(pks);
 mean_pks=mean(pks);
 cut_off=mean_pks+5*std_pks;
@@ -93,22 +96,9 @@ locs(locs==0)=[];
 % ylim([ymin ymax])
 % hold off
 
-
-%% Accounting for Gaps
-
-%%assumes that the first time stamp of all data readings are roughly the
-%%same (within 100 ms)
-
-%can change datatype and sensor if desired
-sensor2="C3892";
-datatype="ACCEL";
-data_2= get(nldat_accel2, "dataSet");
-time_2= get(nldat_accel2, "domainValues");
-
-
 %%
-figure(2)
-for j=1:3
+figure()
+for j=1:nChans
     subplot(3,1,j)    
     g(j)=plot(time_2,data_2(:,j), 'k');
     ymax=max(ylim);
@@ -157,100 +147,8 @@ ylim([ymin ymax])
 hold off
 end   
 
-savefig(figure(2), [savepath, 'segmented_acceldata'])
-
-%%
-ts=0.0024;
-time = 0:ts:180;
-time=time';
-
-nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
-data_1= get(nldat_accel1, "dataSet");
-
-nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
-data_2= get(nldat_accel2, "dataSet");
-
-
-
-%% Segment data and create nldats
-chan=get(nldat_accel1, "chanNames");
-for i=1:length(pks)+1
-     segment=append('seg', num2str(i));
-     if i==1
-        %tapped sensor
-        [~,L2]=min(abs(time - (locs(i)-0.5)));
-        segmented_data1.(segment)=data_1(1:L2,:);
-        segmented_time1.(segment)=time(1:L2,1);
-        hold_nldat = nldat(segmented_data1.(segment));
-        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
-        segment_nldat1.(segment)=hold_nldat;
-        %untapped sensor
-        [~,L2]=min(abs(time - (locs(i)-0.5)));
-        segmented_data2.(segment)=data_2(1:(L2),:);
-        segmented_time2.(segment)=time(1:(L2),1);
-        hold_nldat = nldat(segmented_data2.(segment));
-        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
-        segment_nldat2.(segment)=hold_nldat;
-    elseif i==length(pks)+1
-        %tapped sensor
-        [~,L1]=min(abs(time - (locs(i-1)+1)));
-        segmented_data1.(segment)=data_1((L1):end,:);
-        segmented_time1.(segment)=time((L1):end,1);
-        hold_nldat = nldat(segmented_data1.(segment));
-        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
-        segment_nldat1.(segment)=hold_nldat;
-        %untapped sensor
-        [~,L1]=min(abs(time - (locs(i-1)+1)));
-        segmented_data2.(segment)=data_2((L1):end,:);
-        segmented_time2.(segment)=time((L1):end,1);
-        hold_nldat = nldat(segmented_data2.(segment));
-        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
-        segment_nldat2.(segment)=hold_nldat;
-     else
-        %tapped sensor
-        [~,L1]=min(abs(time - (locs(i-1)+0.5)));
-        [~,L2]=min(abs(time - (locs(i)-0.5)));
-        segmented_data1.(segment)=data_1(L1:L2,:);
-        segmented_time1.(segment)=time(L1:L2,1);
-        hold_nldat = nldat(segmented_data1.(segment));
-        set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
-        segment_nldat1.(segment)=hold_nldat;
-        %untapped sensor 
-        [~,L1]=min(abs(time - (locs(i-1)+0.5)));
-        [~,L2]=min(abs(time - (locs(i)-0.5)));
-        segmented_data2.(segment)=data_2(L1:L2,:);
-        segmented_time2.(segment)=time(L1:L2,1);
-        hold_nldat = nldat(segmented_data2.(segment));
-        set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', chan, 'comment', ['Tapped Sensor_ACCEL']);
-        segment_nldat2.(segment)=hold_nldat;
-    end
+if savefigs
+    savefig(gca, [savepath, 'segmented_acceldata_' ntrial])
 end
 
-%% Current Trouble shooting
-
-%keep in mind: time_1 and time_2 are not equal, especially when gaps occur
-
-%right now, needing to adjust cutoff to get the right segments- should be
-%able to have uniform or make loop to see if we are at right # of sections
-
-%% Calling ACCEL_analysis
-%option1 make nldat for each time seg? but would never know final number
-%option2 make structure with X nldats for each time seg
-    %is this do-able
-    %would need to change accel_analysis
-%option3 passsegmented_data and segmented_time
-    %would need to change accel_analysis
-
-for i =1:length(pks)+1
-    segment=append('seg', num2str(i));
-    hold_nldat1=segment_nldat1.(segment);
-    hold_nldat2=segment_nldat2.(segment);
-    %need to change save path
-    savepath2=[savepath 'segment_' num2str(i) '/'];
-    if ~exist(savepath2, 'file')
-        mkdir(savepath2)
-    end
-
-    accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2,savefigs)
-end
 end
