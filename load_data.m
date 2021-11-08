@@ -7,11 +7,11 @@ addpath('MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
 
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
 
 %% load raw data from the json file 
 clc
@@ -169,7 +169,10 @@ sampleLength = min(sampleLength1, sampleLength2);
 time = 0:1/fs2:sampleLength;
 time=time';
 savefigs = 0;
-[segm_pks,segm_locs]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
+
+%always pass tapped sensor first
+[segm_locs,segm_pks]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
+
 
 [nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, fs1, fs2, time, savefigs);
 [nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time, savefigs);
@@ -187,7 +190,7 @@ for i =1:length(segm_pks)+1
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
-fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs)
+fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2)
 % accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2, savefigs)
 end
     

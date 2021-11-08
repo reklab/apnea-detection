@@ -4,7 +4,7 @@
 % 
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor 
 
-function fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
+function fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
 % nldat_accel1 = nldat_C3898_ACCEL;
 % nldat_accel2 = nldat_C3898_ACCEL;
 

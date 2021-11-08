@@ -1,11 +1,14 @@
 %%
-function [pks,segment_nldat1, segment_nldat2]= segmentation(pks, locs,nldat_accel1, nldat_accel2, time)
+function [segment_nldat1, segment_nldat2]= segmentation(pks, locs,nldat_accel1, nldat_accel2, time)
     
 %% Segment data and create nldats
 
 names = get(nldat_accel1, "chanNames");
 data_1 = nldat_accel1.dataSet;
 data_2 = nldat_accel2.dataSet;
+
+% pks=segm_pks;
+% locs=segm_locs;
 
 for i=1:length(pks)+1
      segment=append('seg', num2str(i));
@@ -19,8 +22,8 @@ for i=1:length(pks)+1
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor
         [~,L2]=min(abs(time - (locs(i)-0.5)));
-        segmented_data2.(segment)=data_2(1:(L2),:);
-        segmented_time2.(segment)=time(1:(L2),1);
+        segmented_data2.(segment)=data_2(1:L2,:);
+        segmented_time2.(segment)=time(1:L2,1);
         hold_nldat = nldat(segmented_data2.(segment));
         set(hold_nldat, 'domainValues', segmented_time2.(segment),'domainName', "Time (s)", 'chanNames', names, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat2.(segment)=hold_nldat;
