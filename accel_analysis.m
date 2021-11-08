@@ -4,30 +4,13 @@
 % 
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor 
 
-%function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
-%%
-nldat_accel1 = nldat_C3898_ACCEL;
-nldat_accel2 = nldat_C3898_ACCEL;
-
-% time1 = nldat_accel1.domainValues;
-% ts = time1(2) - time1(1);
-% sampleLength = time1(end);
-% 
-% time = time1(1):ts:sampleLength;
-ts=0.0024;
-time = 0:ts:180;
-time=time';
-
-%%
-%nldat_accel1 = interp1(nldat_accel1, time, 'linear');   nldat_accel1 = detrend(nldat_accel1, 'linear');
-set(nldat_accel1, 'domainValues', NaN, 'domainIncr', ts);
-%nldat_accel2 = interp1(nldat_accel2, time, 'linear');   nldat_accel2 = detrend(nldat_accel2, 'linear');
-set(nldat_accel2, 'domainValues', NaN, 'domainIncr', ts);
+function accel_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
+% %%
+% nldat_accel1 = nldat_C3898_ACCEL;
+% nldat_accel2 = nldat_C3898_ACCEL;
 
 names = get(nldat_accel1, "chanNames");
 nChans = length(names);
-
-%%
 directions = ["X", "Y", "Z"];
 
 nldat_velocity1 = nldat;    nldat_velocity2 = nldat;
@@ -48,9 +31,35 @@ nldat_disp2 = detrend(nldat_disp2, 'linear');
 fft_accel1 = fft(nldat_accel1);
 fft_accel2 = fft(nldat_accel2);
 
+for v = 1:nChans
+    dir = directions{v};
+    phase_accel1 = phase(fft_accel1(:,v));  
+    phase_accel2 = phase(fft_accel2(:,v));
+    phase_incr = phase_accel1.domainIncr;
+    
+    figure(1)
+    ax1 = subplot(nChans,1,v);
+    plot(phase_accel1)
+    hold on 
+    plot(phase_accel2)
+    title(['Phase for both sensors in the ' dir ' direction'])
+    ax1.FontSize = 16;
+
+    phase_diff(:,v) = phase_accel1.dataSet{:,v}-phase_accel2.dataSet{:,v};
+    nldat_temp = nldat(phase_diff(:,v));
+
+    if v > 1
+        nldat_phasediff=cat(2, nldat_phasediff, nldat_temp);
+    else
+        nldat_phasediff = nldat_temp;
+    end
+end
+
+phase_names = {" X", " Y", " Z"};
 velocity_names = {"VELOCITY X", "VELCOTIY Y", "VELOCITY Z"};
 disp_names = {"DISP X", "DISP Y", "DISP Z"};
 
+set(nldat_phasediff, 'domainIncr', phase_incr, 'domainValues', NaN, 'chanNames', phase_names, 'comment', "phase difference")
 set(nldat_velocity1, 'chanNames', velocity_names, 'domainValues', NaN, 'domainIncr', ts, 'comment' ,"Velocity from chest sensor")
 set(nldat_velocity2, 'chanNames', velocity_names, 'domainValues', NaN,'domainIncr', ts, 'comment', "Velocity from abdomen sensor")
 set(nldat_disp1, 'chanNames', disp_names, 'domainValues', NaN,'domainIncr', ts,'comment' ,"Displacement from chest sensor")
@@ -86,6 +95,13 @@ d=figure(4);
 e=figure(5);
 f=figure(6);
 g=figure(7);
+
+figure(2)
+plot(nldat_phasediff)
+set(figure(1), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(2), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+savefig(figure(1), [savepath, 'phase_' ntrial '_' seg])
+savefig(figure(2), [savepath, 'phase_diff' ntrial '_' seg])
 
 ftsz = 16;
 
@@ -176,7 +192,6 @@ end
     nldat_test1=nldat_accel1;
     nldat_test2=nldat_accel2;
    
-
 for v = 1:3
     figure(4);
     ax4 = subplot(nChans,1,v);

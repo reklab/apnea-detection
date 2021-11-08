@@ -62,7 +62,7 @@ for a = 1:length(raw_data)
         Ts = mean(time_diff);
                 
         if cell.timestamp >1.5*Ts*length(cell.timestamp)+all_data.(sensor).(datatype)(end-1).timestamp
-            fprintf('GAP in the data - sensor: %s datatype: %s \n', sensor, datatype)
+%             fprintf('GAP in the data - sensor: %s datatype: %s \n', sensor, datatype)
             package_gap_counter = package_gap_counter+1;
             T1=all_data.(sensor).(datatype)(1).timestamp(1,1);
             TS=all_data.(sensor).(datatype)(end-1).timestamp(end);
@@ -88,7 +88,7 @@ for a = 1:length(raw_data)
                 all_data.(sensor).(datatype)(end) = [];
                 duplicate_data_counter = duplicate_data_counter+1;
             else
-                fprintf('ERROR: different data for same time points - sensor: %s datatype: %s \n', sensor, datatype)
+%                 fprintf('ERROR: different data for same time points - sensor: %s datatype: %s \n', sensor, datatype)
                 all_data.(sensor).(datatype)(end) = [];
                 duplicate_data_counter = duplicate_data_counter+1;
             end
@@ -169,6 +169,7 @@ savefigs = 1;
 
 [seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL);
 %% analysis 3: generate figures
+savefigs = 0;
 
 for i =1:length(pks)+1
     segment=append('seg', num2str(i));
@@ -179,8 +180,8 @@ for i =1:length(pks)+1
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
-find_phase(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs)
-accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2, savefigs)
+fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs)
+% accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2, savefigs)
 end
     
 
