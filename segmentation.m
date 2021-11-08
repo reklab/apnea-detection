@@ -1,9 +1,11 @@
 %%
-function [segment_nldat1, segment_nldat2]= segmentation(pks, locs,nldat_accel1, nldat_accel2)
+function [pks,segment_nldat1, segment_nldat2]= segmentation(pks, locs,nldat_accel1, nldat_accel2, time)
     
 %% Segment data and create nldats
 
 names = get(nldat_accel1, "chanNames");
+data_1 = nldat_accel1.dataSet;
+data_2 = nldat_accel2.dataSet;
 
 for i=1:length(pks)+1
      segment=append('seg', num2str(i));

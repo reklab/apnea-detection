@@ -160,25 +160,28 @@ fprintf('Data converted to nldat objects \n')
 %% analysis 2: segmentation detrend and interpolate
 fs1 = 416;
 fs2 = 500;
-sampleLength1 = nldat_C3898_ACCEL.domainValues(end);
-sampleLength2 = nldat_C3892_ACCEL.domainValues(end);
+a = nldat_C3898_ACCEL.domainValues;
+sampleLength1 = a(end);
+b = nldat_C3892_ACCEL.domainValues;
+sampleLength2 = b(end);
+
 sampleLength = min(sampleLength1, sampleLength2);
 time = 0:1/fs2:sampleLength;
 time=time';
-savefigs = 1;
+savefigs = 0;
 [segm_pks,segm_locs]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
-[nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, nChans, fs1, fs2, time);
-[nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, nChans, fs1, fs2, time);
+[nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, fs1, fs2, time, savefigs);
+[nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time, savefigs);
 
-[seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL);
+[seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL, time);
 %% analysis 3: generate figures
 savefigs = 0;
 
-for i =1:length(pks)+1
+for i =1:length(segm_pks)+1
     segment=append('seg', num2str(i));
-    hold_nldat1=segment_nldat1.(segment);
-    hold_nldat2=segment_nldat2.(segment);
+    hold_nldat1=seg_nldat_C3898.(segment);
+    hold_nldat2=seg_nldat_C3892.(segment);
  
     savepath2=[savepath 'segment_' num2str(i) '/'];
     if ~exist(savepath2, 'file')
