@@ -3,21 +3,24 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+%addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 % 
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
 
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
 
 %% load raw data from the json file 
 clc
 clear all
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+
 
 % chose the desired trial
 % descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
@@ -170,13 +173,15 @@ time = 0:1/fs2:sampleLength;
 time=time';
 savefigs = 0;
 
+%%
 %always pass tapped sensor first
 [segm_locs,segm_pks]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
-
+%%
 [nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, fs1, fs2, time, savefigs);
 [nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time, savefigs);
 
+%%
 [seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL, time);
 %% analysis 3: generate figures
 savefigs = 0;
