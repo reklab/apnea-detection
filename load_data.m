@@ -20,8 +20,8 @@ clear all
 baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
