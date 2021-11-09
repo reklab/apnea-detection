@@ -4,9 +4,9 @@
 %
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor
 
-% function fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
-nldat_accel1 = seg_nldat_C3898.seg2;
-nldat_accel2 = seg_nldat_C3892.seg2;
+function fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
+% nldat_accel1 = seg_nldat_C3898.seg2;
+% nldat_accel2 = seg_nldat_C3892.seg2;
 
 d = 10; fs = fs2/d; ts = 1/fs;
 names = get(nldat_accel1, "chanNames");
@@ -69,7 +69,6 @@ a=figure(1);
 b=figure(2);
 c=figure(3);
 d=figure(4);
-e=figure(5);
 ftsz = 16;
 
 for v = 1:nChans
@@ -108,9 +107,7 @@ end
 
 figure(d)
 plot(nldat_phasediff);
-title(['Phase Difference between sensors'], 'FontSize', ftsz)
-
-
+title('Phase Difference between sensors', 'FontSize', ftsz)
 
 %% magnitude of acceleration in time domain
 k = nldat_accel1_dec.dataSet{end,1};
@@ -137,7 +134,7 @@ set(nldat_mag1, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of 
 nldat_mag2 = nldat(magnitude2);
 set(nldat_mag2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of abdomen sensor");
 
-figure(e)
+figure(5)
 plot(nldat_mag1)
 hold on
 plot(nldat_mag2)
@@ -149,7 +146,7 @@ set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(5), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 
 if save_figs
 
@@ -157,8 +154,8 @@ if save_figs
     savefig(b, [savepath, 'accel_fftmagn_' ntrial '_' seg])
     savefig(c, [savepath, 'accel_fftphase_' ntrial '_' seg])
     savefig(d, [savepath, 'phase_diff' ntrial '_' seg])
-    savefig(e, [savepath, 'accel_magn_' ntrial '_' seg])
+    savefig(figure(5), [savepath, 'accel_magn_' ntrial '_' seg])
     close all
 
 end
-% end
+end

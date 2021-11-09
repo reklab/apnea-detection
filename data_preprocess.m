@@ -17,10 +17,10 @@ for n=1:N-4
     data(T1:T2,:,n)=detrend(nldat1(T1:T2,:),3);
     T1=T1+WindowJump;
     T2=T2+WindowJump;
-    if n>30
-    disp(n)
-    disp(T2)
-    end
+%     if n>30
+%     disp(n)
+%     disp(T2)
+%     end
 end
 T_stop=T2-WindowJump;
 %%

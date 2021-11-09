@@ -6,10 +6,6 @@
 function [locs,pks]=segment_ID(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savepath, savefigs)
 % nldat_accel1=nldat_C3898_ACCEL;
 % nldat_accel2=nldat_C3892_ACCEL;
-% 
-% datatype= 'ACCEL';
-% sensor= 'C3898';
-% sensor2='C3892';
 
 %currently only set up to test for taps on sensor 3898 and only observes
 %z_accel data
