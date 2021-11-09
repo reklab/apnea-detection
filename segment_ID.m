@@ -39,7 +39,7 @@ hold off
  %% Select ONLY important peaks       
 for i=2:length(pks)
     for j=2:i
-    if locs(i)<locs(j-1)+0.5
+    if locs(i)<locs(j-1)+1
         locs(i)=0;
     end
     end
