@@ -17,10 +17,6 @@ for n=1:N-4
     data(T1:T2,:,n)=detrend(nldat1(T1:T2,:),3);
     T1=T1+WindowJump;
     T2=T2+WindowJump;
-    if n>30
-    disp(n)
-    disp(T2)
-    end
 end
 T_stop=T2-WindowJump;
 %%
@@ -32,8 +28,11 @@ end
 end
 %%
 detrended=detrended(1:T_stop,:);
-%%
+
+T=nldat1.domainValues;
+nldat1.domainValues=T(1:T_stop,1);
 nldat1.dataSet=detrended;
+%%
 %nldat=nldat(1:T1,:);
 data_1= get(nldat1, "dataSet");
 time_1= get(nldat1, "domainValues");

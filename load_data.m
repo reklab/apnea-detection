@@ -182,6 +182,7 @@ savefigs = 0;
 [nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time, savefigs);
 
 %%
+time=nldat_C3898_ACCEL.domainValues;
 [seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL, time);
 %% analysis 3: generate figures
 savefigs = 0;
