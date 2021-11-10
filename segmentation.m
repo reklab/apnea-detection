@@ -44,7 +44,7 @@ for i=1:length(pks)+1
         segment_nldat2.(segment)=hold_nldat;
      else
         %tapped sensor
-        [~,L1]=min(abs(time - (locs(i-1)+0.5)));
+        [~,L1]=min(abs(time - (locs(i-1)+1)));
         [~,L2]=min(abs(time - (locs(i)-0.5)));
         segmented_data1.(segment)=data_1(L1:L2,:);
         segmented_time1.(segment)=time(L1:L2,1);
@@ -52,7 +52,7 @@ for i=1:length(pks)+1
         set(hold_nldat, 'domainValues', segmented_time1.(segment),'domainName', "Time (s)", 'chanNames', names, 'comment', ['Tapped Sensor_ACCEL']);
         segment_nldat1.(segment)=hold_nldat;
         %untapped sensor 
-        [~,L1]=min(abs(time - (locs(i-1)+0.5)));
+        [~,L1]=min(abs(time - (locs(i-1)+1)));
         [~,L2]=min(abs(time - (locs(i)-0.5)));
         segmented_data2.(segment)=data_2(L1:L2,:);
         segmented_time2.(segment)=time(L1:L2,1);
