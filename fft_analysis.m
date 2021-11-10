@@ -84,7 +84,16 @@ for v = 1:nChans
     title(['Acceleration in the ' dir ' direction for both sensors'])
     hold off
 
-    figure(b)
+    figure(b);
+    ax1 = subplot(nChans,1,v);
+    plot(nldat_accel1_dec(:,v))
+    hold on
+    plot(nldat_accel2_dec(:,v));
+    legend(["Chest Sensor", "Abdomen Sensor"])
+    title(['Decimated Acceleration in the ' dir ' direction for both sensors'])
+    hold off
+
+    figure(c)
     ax2 = subplot(nChans,1,v);
     plot(mag_accel1(:,v))
     hold on
@@ -92,7 +101,7 @@ for v = 1:nChans
     title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
     hold off
 
-    figure(c)
+    figure(d)
     ax3 = subplot(nChans,1,v);
     plot(phase_accel1(:,v))
     hold on
@@ -105,13 +114,14 @@ for v = 1:nChans
 
 end
 
-figure(d)
+figure(e)
 plot(nldat_phasediff);
 title('Phase Difference between sensors', 'FontSize', ftsz)
 
 %% magnitude of acceleration in time domain
 k = nldat_accel1_dec.dataSet{end,1};
-time = 0:ts:k(end,1);
+j = length(k);
+time = 0:ts:j*ts;
 
 magnitude1 = zeros(length(time),1);
 magnitude2 = zeros(length(time),1);
@@ -151,9 +161,10 @@ set(figure(5), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 if save_figs
 
     savefig(a, [savepath, 'accel_' ntrial '_' seg])
-    savefig(b, [savepath, 'accel_fftmagn_' ntrial '_' seg])
-    savefig(c, [savepath, 'accel_fftphase_' ntrial '_' seg])
-    savefig(d, [savepath, 'phase_diff' ntrial '_' seg])
+    savefig(b, [savepath, 'accel_dec_' ntrial '_' seg])
+    savefig(c, [savepath, 'accel_fftmagn_' ntrial '_' seg])
+    savefig(d, [savepath, 'accel_fftphase_' ntrial '_' seg])
+    savefig(e, [savepath, 'phase_diff' ntrial '_' seg])
     savefig(figure(5), [savepath, 'accel_magn_' ntrial '_' seg])
     close all
 

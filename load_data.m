@@ -3,32 +3,33 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-%addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 % 
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
 
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
 
 %% load raw data from the json file 
 clc
 clear all
 
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
+% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
+descrip_path = 'calibrationC3898_test01'; ntrial = '004';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['Export/figures_v2/' ntrial '/'];
+savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v2/' ntrial '/'];
 % savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
