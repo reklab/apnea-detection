@@ -31,7 +31,7 @@ cut_off=mean_pks+5*std_pks;
 locs(pks<cut_off)=[];
 pks(pks<cut_off)=[];
 
-figure()
+figure(1)
 hold on
 g=scatter(locs, pks, 'r');
 h=plot(time_1, Zdata_1, 'k');
@@ -93,7 +93,7 @@ locs(locs==0)=[];
 % hold off
 
 %%
-figure()
+figure(2)
 for j=1:nChans
     subplot(3,1,j)    
     g(j)=plot(time_2,data_2(:,j), 'k');
@@ -143,7 +143,7 @@ hold off
 end   
 
 if savefigs
-    savefig(gca, [savepath, 'segmented_acceldata_' ntrial])
+    savefig(figure(2), [savepath, 'segmented_acceldata_' ntrial])
 end
 
 end

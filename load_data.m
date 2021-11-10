@@ -3,33 +3,33 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-%addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
 %addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
-% 
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+% % 
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
 
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
 
 %% load raw data from the json file 
 clc
 clear all
 
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 
 % chose the desired trial
-% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
-descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
+descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-% savepath = ['Export/figures_v2/' ntrial '/'];
-savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
+savepath = ['Export/figures_v3/' ntrial '/'];
+% savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
@@ -150,15 +150,15 @@ end
 fprintf('Data converted to nldat objects \n')
 
 %% analysis 1: gap and duplicate counting 
-
-[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL);
-[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL);
-[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG);
-[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG);
-[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp);
-[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp);
-[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp);
-[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG);
+% 
+% [gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL);
+% [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL);
+% [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG);
+% [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG);
+% [gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp);
+% [gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp);
+% [gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp);
+% [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG);
 
 %% analysis 2: segmentation detrend and interpolate
 fs1 = 416;
@@ -171,7 +171,7 @@ sampleLength2 = b(end);
 sampleLength = min(sampleLength1, sampleLength2);
 time = 0:1/fs2:sampleLength;
 time=time';
-savefigs = 0;
+savefigs = 1;
 
 %%
 %always pass tapped sensor first
@@ -216,7 +216,6 @@ for i =1:length(segm_pks)+1
         mkdir(savepath2)
     end
 fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2)
-% accel_analysis(hold_nldat1,hold_nldat2,ntrial,segment, savepath2, savefigs)
 end
     
 

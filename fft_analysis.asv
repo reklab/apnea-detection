@@ -69,7 +69,6 @@ a=figure(1);
 b=figure(2);
 c=figure(3);
 d=figure(4);
-e=figure(5);
 ftsz = 16;
 
 for v = 1:nChans
@@ -85,43 +84,36 @@ for v = 1:nChans
     title(['Acceleration in the ' dir ' direction for both sensors'])
     hold off
 
-    figure(b);
+    figure(b)
     ax2 = subplot(nChans,1,v);
-    plot(nldat_accel1_dec(:,v))
-    hold on
-    plot(nldat_accel2_dec(:,v));
-    legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Decimated Acceleration in the ' dir ' direction for both sensors'])
-    hold off
-
-    figure(c)
-    ax3 = subplot(nChans,1,v);
     plot(mag_accel1(:,v))
     hold on
     plot(mag_accel2(:,v))
     title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
     hold off
 
-    figure(d)
-    ax4 = subplot(nChans,1,v);
+    figure(c)
+    ax3 = subplot(nChans,1,v);
     plot(phase_accel1(:,v))
     hold on
     plot(phase_accel2(:,v))
     title(['Phase for both sensors in the ' dir ' direction'])
+    ax3.FontSize = 16;
 
     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
-    ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
+    ax3.FontSize = ftsz;
 
 end
 
-figure(e)
+figure(d)
 plot(nldat_phasediff);
 title('Phase Difference between sensors', 'FontSize', ftsz)
 
+
+
 %% magnitude of acceleration in time domain
 k = nldat_accel1_dec.dataSet{end,1};
-j = length(k);
-time = 0:ts:j*ts;
+time = 0:ts:k(end,1);
 
 magnitude1 = zeros(length(time),1);
 magnitude2 = zeros(length(time),1);
@@ -144,7 +136,7 @@ set(nldat_mag1, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of 
 nldat_mag2 = nldat(magnitude2);
 set(nldat_mag2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of abdomen sensor");
 
-figure(6)
+figure(5)
 plot(nldat_mag1)
 hold on
 plot(nldat_mag2)
@@ -156,16 +148,14 @@ set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(figure(6), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(5), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 
 if save_figs
 
     savefig(a, [savepath, 'accel_' ntrial '_' seg])
-    savefig(b, [savepath, 'accel_dec_' ntrial '_' seg])
-    savefig(c, [savepath, 'accel_fftmagn_' ntrial '_' seg])
-    savefig(d, [savepath, 'accel_fftphase_' ntrial '_' seg])
-    savefig(e, [savepath, 'phase_diff' ntrial '_' seg])
+    savefig(b, [savepath, 'accel_fftmagn_' ntrial '_' seg])
+    savefig(c, [savepath, 'accel_fftphase_' ntrial '_' seg])
+    savefig(d, [savepath, 'phase_diff' ntrial '_' seg])
     savefig(figure(5), [savepath, 'accel_magn_' ntrial '_' seg])
     close all
 
