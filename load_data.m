@@ -23,13 +23,13 @@ baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_dat
 
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '002';
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['Export/figures_v2/' ntrial '/'];
-% savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
+% savepath = ['Export/figures_v2/' ntrial '/'];
+savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
@@ -178,12 +178,31 @@ savefigs = 0;
 [segm_locs,segm_pks]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
 %%
-[nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, fs1, fs2, time, savefigs);
-[nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time, savefigs);
-
+Preprocess=0;
+if Preprocess
+    [nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, fs1, fs2, time, savefigs);
+    [nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time, savefigs);
+    disp ('data preprocessed')
+else
+    nldat_C3898_ACCEL= interp1(nldat_C3898_ACCEL, time, 'linear');
+    nldat_C3892_ACCEL= interp1(nldat_C3892_ACCEL, time, 'linear');
+    disp ('data interpolated')
+end
 %%
 time=nldat_C3898_ACCEL.domainValues;
 [seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL, time);
+disp ('Data Segmented')
+%%
+if Preprocess==0
+for i=1:length(segm_pks)+1
+    segment=append('seg', num2str(i));
+    [hold_nldat1] = data_preprocess2(seg_nldat_C3898.(segment), fs1, fs2, time, savefigs);
+    [hold_nldat2] = data_preprocess2(seg_nldat_C3892.(segment), fs1, fs2, time, savefigs);
+    seg_nldat_C3898.(segment)=hold_nldat1;
+    seg_nldat_C3892.(segment)=hold_nldat2;
+end
+disp ('Data detrended after segmentation')
+end
 %% analysis 3: generate figures
 savefigs = 0;
 
