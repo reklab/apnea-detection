@@ -8,6 +8,7 @@ function fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_fig
 % nldat_accel1 = seg_nldat_C3898.seg2;
 % nldat_accel2 = seg_nldat_C3892.seg2;
 
+
 d = 10; fs = fs2/d; ts = 1/fs;
 names = get(nldat_accel1, "chanNames");
 nChans = length(names);
@@ -33,11 +34,15 @@ h = fft_accel2.dataSet;
 h = h(1:(L-1)/2+1,:);
 fft_accel2_1S = nldat(h);
 
+incr = fft_accel1.domainIncr;
+
 mag_accel1 = abs(fft_accel1_1S);
 mag_accel2 = abs(fft_accel2_1S);
 
-set(mag_accel1, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', names, 'comment', "magnitude accel data")
-set(mag_accel2, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', names, 'comment', "magnitude accel data")
+set(fft_accel1_1S, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "one sided fft of accel 1")
+set(fft_accel2_1S, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "one sided fft of accel 2")
+set(mag_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "magnitude accel data")
+set(mag_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)",'chanNames', names, 'comment', "magnitude accel data")
 
 %%
 phase_diff = zeros(length(fft_accel1_1S.dataSet), nChans);
@@ -61,7 +66,9 @@ end
 
 phase_names = {" X", " Y", " Z"};
 
-set(nldat_phasediff, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', phase_names, 'comment', "phase difference")
+set(nldat_phasediff,  'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase difference")
+set(phase_accel1, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "phase accel data")
+set(phase_accel2, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "phase accel data")
 
 %%
 clc
@@ -108,7 +115,6 @@ for v = 1:nChans
     hold on
     plot(phase_accel2(:,v))
     title(['Phase for both sensors in the ' dir ' direction'])
-
     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
 
@@ -149,8 +155,9 @@ plot(nldat_mag1)
 hold on
 plot(nldat_mag2)
 title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
+ylabel('Magnitude')
 legend(["Chest Sensor", "Abdomen Sensor"])
-
+hold off
 %%
 set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
@@ -166,8 +173,8 @@ if save_figs
     savefig(c, [savepath, 'accel_fftmagn_' ntrial '_' seg])
     savefig(d, [savepath, 'accel_fftphase_' ntrial '_' seg])
     savefig(e, [savepath, 'phase_diff' ntrial '_' seg])
-    savefig(figure(5), [savepath, 'accel_magn_' ntrial '_' seg])
+    savefig(figure(6), [savepath, 'accel_magn_' ntrial '_' seg])
     close all
 
 end
-end
+% end
