@@ -39,7 +39,7 @@ time_1= get(nldat1, "domainValues");
 
 if saveFigs
 figure()
-for j=1:nC
+for j=1:nChans
     subplot(3,1,j)
     plot(time_1,data_1(:,j), 'k');
     ymax=max(ylim);
