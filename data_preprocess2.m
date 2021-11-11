@@ -7,25 +7,16 @@ saveFigs=1;
 % nldat1 = interp1(nldat1, time, 'linear');
 
 %%
-nChans=3;
-L=length(nldat1.dataSet);
-D=nldat1.dataSet;
-T=nldat1.domainValues;
-for j=1:3
-    data_hold=D(:,j);
-    data_hold=detrend(data_hold,3);
-    D(:,j)=data_hold;
-end
-nldat1.dataSet=D;
+detrend(nldat1,3);
 %%
 %nldat=nldat(1:T1,:);
 data_1=nldat1.dataSet;
-time_1= get(nldat1, "domainValues");
+time_1= nldat1.domainValues;
 
 if saveFigs
 figure()
-for j=1:3
-    subplot(3,1,j)
+for j=1:nChans
+    subplot(nChans,1,j)
     plot(time_1,data_1(:,j));
     ymax=max(ylim);
    
