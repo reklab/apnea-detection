@@ -77,7 +77,7 @@ b=figure(2);
 c=figure(3);
 d=figure(4);
 e=figure(5);
-ftsz = 16;
+ftsz = 30;
 
 for v = 1:nChans
 
@@ -106,7 +106,7 @@ for v = 1:nChans
     plot(mag_accel1(:,v))
     hold on
     plot(mag_accel2(:,v))
-    title(['Power spectral density of acceleration in ' dir ' direction for both sensors'])
+    title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     hold off
 
     figure(d)
@@ -114,15 +114,18 @@ for v = 1:nChans
     plot(phase_accel1(:,v))
     hold on
     plot(phase_accel2(:,v))
-    title(['Phase for both sensors in the ' dir ' direction'])
+    title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
+
+
+    figure(e)
+    ax5 = subplot(nChans,1, v);
+    plot(nldat_phasediff(:,v))
+    title(['Phase Difference between sensors in the ' dir 'direction'])
+
     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
-
+    ax5.FontSize = ftsz;
 end
-
-figure(e)
-plot(nldat_phasediff);
-% title('Phase Difference between sensors', 'FontSize', ftsz)
 
 %% magnitude of acceleration in time domain
 k = nldat_accel1_dec.dataSet{end,1};

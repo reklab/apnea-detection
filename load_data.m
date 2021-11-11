@@ -20,23 +20,19 @@ addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
 clc
 clear all
 
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
+descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
 % descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
-% descrip_path ='calibrationC3898_test01'; description = "calibration C3898 test 1"; ntrial = '004';
-% descrip_path ='calibrationC3892_test01'; description = "calibration C3892 test 1"; ntrial = '005';
-% descrip_path ='calibrationC3898_test02'; description = "calibration C3898 test 2"; ntrial = '006';
-% descrip_path ='calibrationC3892_test02'; description = "calibration C3892 test 2"; ntrial = '007';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-% savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
+savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
 % savepath= ['vstur/OneDrive/Desktop/BIEN 470 DATA/Images/' ntrial '/'];
-savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
+% savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
