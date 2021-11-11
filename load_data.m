@@ -22,7 +22,7 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 % baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
+descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
 % descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
@@ -128,7 +128,6 @@ for n = 1:length(sensor_list)
                     hold_data(:,t)=cell2mat(data(1,t));
                     hold_time(:,t)=cell2mat(time(1,t));
             end
-            % best time to test for gaps??
             
             hold_data=transpose(reshape(hold_data,1,[]));
             hold_time=transpose(reshape(hold_time,1,[]));
@@ -140,7 +139,7 @@ for n = 1:length(sensor_list)
 
             if v > 1
                 eval(['nldat_' sensor '_' datatype '=cat(2, nldat_' sensor '_' datatype ', hold_nldat);'])
-                
+%                 eval(['nldat_' sensor '_' datatype '.comment = ['' sensor '' "' datatype ''];'])
             else
                 eval ([ 'nldat_' sensor '_' datatype '= hold_nldat;']);
             end
@@ -150,15 +149,15 @@ end
 fprintf('Data converted to nldat objects \n')
 
 %% analysis 1: gap and duplicate counting 
-% 
-% [gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL);
-% [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL);
-% [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG);
-% [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG);
-% [gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp);
-% [gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp);
-% [gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp);
-% [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG);
+
+[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
+[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
+[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
+[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
+[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
+[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
+[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
+[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
 
 %% analysis 2: segmentation detrend and interpolate
 fs1 = 416;

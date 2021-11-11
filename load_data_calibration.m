@@ -29,7 +29,7 @@ descrip_path = 'calibrationC3898_test01'; ntrial = '004';
 % descrip_path = 'calibrationC3892_test02'; ntrial = '007';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v2/' ntrial '/'];
+savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
 % savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
@@ -152,14 +152,15 @@ fprintf('Data converted to nldat objects \n')
 
 %% analysis 1: gap and duplicate counting 
 
-[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL);
-[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL);
-[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG);
-[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG);
-[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp);
-[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp);
-[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp);
-[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG);
+
+[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
+[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
+[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
+[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
+[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
+[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
+[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
+[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
 
 %% analysis 2: generate figues
 fs1 = 416;
