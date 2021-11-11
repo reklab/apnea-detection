@@ -136,7 +136,7 @@ for n = 1:length(sensor_list)
             hold_time = hold_time/1000;
             
             hold_nldat = nldat(hold_data);
-            set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
+%             set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
 
             if v > 1
                 eval(['nldat_' sensor '_' datatype '=cat(2, nldat_' sensor '_' datatype ', hold_nldat);'])
@@ -149,6 +149,9 @@ for n = 1:length(sensor_list)
 end
 fprintf('Data converted to nldat objects \n')
 
+fs = 416;
+set(nldat_C3898_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN)
+set(nldat_C3892_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN)
 %% analysis 1: gap and duplicate counting 
 
 

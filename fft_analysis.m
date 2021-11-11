@@ -122,7 +122,7 @@ end
 
 figure(e)
 plot(nldat_phasediff);
-title('Phase Difference between sensors', 'FontSize', ftsz)
+% title('Phase Difference between sensors', 'FontSize', ftsz)
 
 %% magnitude of acceleration in time domain
 k = nldat_accel1_dec.dataSet{end,1};
