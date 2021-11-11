@@ -23,10 +23,10 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 
 
 % chose the desired trial
-descrip_path = 'calibrationC3898_test01'; ntrial = '004';
+% descrip_path = 'calibrationC3898_test01'; ntrial = '004';
 % descrip_path = 'calibrationC3892_test01'; ntrial = '005';
 % descrip_path = 'calibrationC3898_test02'; ntrial = '006';
-% descrip_path = 'calibrationC3892_test02'; ntrial = '007';
+descrip_path = 'calibrationC3892_test02'; ntrial = '007';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
@@ -34,7 +34,7 @@ savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-
+savefigs = 1;
 raw_data = loadjson(filename);
 
 fprintf('Data loaded \n')
@@ -129,7 +129,6 @@ for n = 1:length(sensor_list)
                     hold_data(:,t)=cell2mat(data(1,t));
                     hold_time(:,t)=cell2mat(time(1,t));
             end
-            % best time to test for gaps??
             
             hold_data=transpose(reshape(hold_data,1,[]));
             hold_time=transpose(reshape(hold_time,1,[]));
@@ -163,16 +162,25 @@ fprintf('Data converted to nldat objects \n')
 [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
 
 %% analysis 2: generate figues
-fs1 = 416;
-fs2 = 500;
-a = nldat_C3898_ACCEL.domainValues;
-sampleLength1 = a(end);
-b = nldat_C3892_ACCEL.domainValues;
-sampleLength2 = b(end);
 
-sampleLength = min(sampleLength1, sampleLength2);
-time = 0:1/fs2:sampleLength;
-time=time';
-savefigs = 0;
+channels = nldat_C3898_ACCEL.chanNames;
+nChans = length(channels);
 
-fft_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, 1, savepath, savefigs, fs2)
+directions = ["X", "Y", "Z"];
+figure(1)
+for v = 1:nChans
+
+    dir = directions{v};
+
+    ax1 = subplot(nChans,1,v);
+    plot(nldat_C3898_ACCEL(:,v))
+    hold on
+    plot(nldat_C3892_ACCEL(:,v));
+    legend(["Chest Sensor", "Abdomen Sensor"])
+    title(['Acceleration in the ' dir ' direction for both sensors'])
+    hold off
+end
+
+set(figure(1), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+savefig(figure(1), [savepath, 'accel_' ntrial])
+% fft_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, 1, savepath, savefigs, fs2)

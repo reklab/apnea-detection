@@ -22,7 +22,7 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 % baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
 % descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
