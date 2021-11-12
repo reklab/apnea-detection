@@ -8,8 +8,13 @@ data_type = get(nldat, "chanNames");
 t=nldat.comment{1};
 
 if sum(size(data_type))~=2
+    if sum(size(data_type))==3
+        data_type = 'PPG';
+        sensor_name=t(12:16);
+    else
     data_type = 'ACCEL';
     sensor_name=t(12:16);
+    end
 else
     data_type = char(data_type{1});
     sensor_name=t(1:5);
