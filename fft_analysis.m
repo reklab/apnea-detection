@@ -116,34 +116,34 @@ set(nldat_mag2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of 
 %% generate plots
 
 clc
-% a=figure(1);
-% b=figure(2);
+a=figure(1);
+b=figure(2);
 c=figure(3);
-% d=figure(4);
-% e=figure(5);
+d=figure(4);
+e=figure(5);
 ftsz = 25;
 cutoff = 5;
 for v = 1:nChans
 
     dir = directions{v};
 
-%     figure(a);
-%     ax1 = subplot(nChans,1,v);
-%     plot(nldat_accel1(:,v))
-%     hold on
-%     plot(nldat_accel2(:,v));
-%     legend(["Chest Sensor", "Abdomen Sensor"])
-%     title(['Acceleration in the ' dir ' direction for both sensors'])
-%     hold off
-% 
-%     figure(b);
-%     ax2 = subplot(nChans,1,v);
-%     plot(nldat_accel1_dec(:,v))
-%     hold on
-%     plot(nldat_accel2_dec(:,v));
-%     legend(["Chest Sensor", "Abdomen Sensor"])
-%     title(['Decimated Acceleration in the ' dir ' direction for both sensors'])
-%     hold off
+    figure(a);
+    ax1 = subplot(nChans,1,v);
+    plot(nldat_accel1(:,v))
+    hold on
+    plot(nldat_accel2(:,v));
+    legend(["Chest Sensor", "Abdomen Sensor"])
+    title(['Acceleration in the ' dir ' direction for both sensors'])
+    hold off
+
+    figure(b);
+    ax2 = subplot(nChans,1,v);
+    plot(nldat_accel1_dec(:,v))
+    hold on
+    plot(nldat_accel2_dec(:,v));
+    legend(["Chest Sensor", "Abdomen Sensor"])
+    title(['Decimated Acceleration in the ' dir ' direction for both sensors'])
+    hold off
 
     figure(c)
     ax3 = subplot(nChans,1,v);
@@ -155,35 +155,35 @@ for v = 1:nChans
     title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     xlim([0,cutoff])
     hold off
-% 
-%     figure(d)
-%     ax4 = subplot(nChans,1,v);
-%     plot(phase_accel1(:,v))
-%     hold on
-%     plot(phase_accel2(:,v))
-%     xlim([0,cutoff])
-%     title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
-% 
-% 
-%     figure(e)
-%     ax5 = subplot(nChans,1, v);
-%     plot(nldat_phasediff(:,v))
-%     xlim([0, cutoff])
-%     title(['Phase Difference between sensors in the ' dir 'direction'])
 
-%     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
-%     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
-%     ax5.FontSize = ftsz;
+    figure(d)
+    ax4 = subplot(nChans,1,v);
+    plot(phase_accel1(:,v))
+    hold on
+    plot(phase_accel2(:,v))
+    xlim([0,cutoff])
+    title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
+
+
+    figure(e)
+    ax5 = subplot(nChans,1, v);
+    plot(nldat_phasediff(:,v))
+    xlim([0, cutoff])
+    title(['Phase Difference between sensors in the ' dir 'direction'])
+
+    ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
+    ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
+    ax5.FontSize = ftsz;
 end
-% 
-% figure(6)
-% plot(nldat_mag1)
-% hold on
-% plot(nldat_mag2)
-% title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
-% ylabel('Magnitude')
-% legend(["Chest Sensor", "Abdomen Sensor"])
-% hold off
+
+figure(6)
+plot(nldat_mag1)
+hold on
+plot(nldat_mag2)
+title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
+ylabel('Magnitude')
+legend(["Chest Sensor", "Abdomen Sensor"])
+hold off
 
 %% finalize and save plots 
 set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
