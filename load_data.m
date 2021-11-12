@@ -20,19 +20,19 @@ addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
 clc
 clear all
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
+% savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
 % savepath= ['vstur/OneDrive/Desktop/BIEN 470 DATA/Images/' ntrial '/'];
-% savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
+savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
@@ -188,7 +188,7 @@ disp ('Data detrended')
 
 time=nldat_C3898_ACCEL.domainValues;
 [seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL, time);
-disp ('Data Segmented')
+disp ('Data segmented')
 close all 
 %% analysis 3: generate figures
 
