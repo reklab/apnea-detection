@@ -147,22 +147,23 @@ for n = 1:length(sensor_list)
         end
     end
 end
-fprintf('Data converted to nldat objects \n')
+fprintf('Data converted to nldat objects‰ \n')
 
 fs = 416;
-set(nldat_C3898_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN)
-set(nldat_C3892_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN)
+names = {"ACCEL X", "ACCEL Y", "ACCEL Z"};
+set(nldat_C3898_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN, 'chanNames',names )
+set(nldat_C3892_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN, 'chanNames', names)
 %% analysis 1: gap and duplicate counting 
 
 
-[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
-[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
-[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
-[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
-[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
-[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
-[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
-[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
+% [gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
+% [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
+% [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
+% [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
+% [gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
+% [gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
+% [gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
+% [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
 
 %% analysis 2: generate figues
 
@@ -181,9 +182,11 @@ for v = 1:nChans
     plot(nldat_C3892_ACCEL(:,v));
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Acceleration in the ' dir ' direction for both sensors'])
+    ax1.FontSize = 30;
     hold off
 end
 
 set(figure(1), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 savefig(figure(1), [savepath, 'accel_' ntrial])
 % fft_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, 1, savepath, savefigs, fs2)
+close all
