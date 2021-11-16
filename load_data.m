@@ -27,7 +27,7 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 % chose the desired trial
 % descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
 descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
-% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
+% descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction'; ntrial = '003';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
@@ -36,7 +36,7 @@ savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-savefigs = 0;
+savefigs = 1;
 
 raw_data = loadjson(filename);
 
@@ -204,7 +204,17 @@ for i =1:length(segm_pks)+1
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
-    fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2)
+    
+   [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2);
+    
+   sensor_C3898.freq = freq_1;
+   sensor_C3898.phasediff = phasediff_1;
+   sensor_C3898.pks = pk_1;
+   sensor_C3892.freq = freq_2;
+   sensor_C3892.phasediff = phasediff_2;
+   sensor_C3892.pks = pk_2;
+
+   save([savepath2 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
 end
     
 

@@ -4,9 +4,9 @@
 %
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor
 
-% function fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
-nldat_accel1 = seg_nldat_C3898.seg3;
-nldat_accel2 = seg_nldat_C3892.seg3;
+function [freq_a, freq_b, phasediff_a, phasediff_b, pk_a, pk_b] = fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
+% nldat_accel1 = seg_nldat_C3898.seg3;
+% nldat_accel2 = seg_nldat_C3892.seg3;
 
 %% decimate data and generate FT
 
@@ -35,8 +35,9 @@ incr = fft_accel1.domainIncr;
 mag_accel1 = abs(fft_accel1);
 mag_accel2 = abs(fft_accel2);
 
-set(mag_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "magnitude accel data")
-set(mag_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)",'chanNames', names, 'comment', "magnitude accel data")
+mag_names = {"Amplitude X", "Amplitude Y", "Amplitude Z"};
+set(mag_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', mag_names, 'comment', "magnitude accel data")
+set(mag_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)",'chanNames', mag_names, 'comment', "magnitude accel data")
 
 %% generate phase difference 
 
@@ -59,11 +60,11 @@ for v = 1:nChans
     end
 end
 
-phase_names = {" X", " Y", " Z"};
+phase_names = {"Phase X", "Phase Y", "Phase Z"};
 
 set(nldat_phasediff, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase difference")
-set(phase_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "phase accel data")
-set(phase_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', names, 'comment', "phase accel data")
+set(phase_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase accel data")
+set(phase_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase accel data")
 
 %% determine phase difference at peak magnitude 
 
@@ -71,25 +72,28 @@ set(phase_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames
 % find equivalent phase difference 
 hold_data1 = mag_accel1.dataSet;
 hold_data2 = mag_accel2.dataSet;
-
+domaint = 0:incr:length(hold_data1);
 for v = 1:nChans
     dir = directions{v};
 
-    [pk_a.(dir), index_a.(dir)] = findpeaks(hold_data1(:,v), 'SortStr', 'descend');
-    [pk_b.(dir), index_b.(dir)] = findpeaks(hold_data2(:,v), 'SortStr', 'descend');
+    [pk_1.(dir), index_a.(dir)] = findpeaks(hold_data1(:,v), 'SortStr', 'descend');
+    [pk_2.(dir), index_b.(dir)] = findpeaks(hold_data2(:,v), 'SortStr', 'descend');
 
-    freq_a(v) = index_a.(dir)(1)*incr;
-    freq_b(v) = index_b.(dir)(1)*incr;
+    freq_a(v) = domaint(index_a.(dir)(1));
+    freq_b(v) = domaint(index_b.(dir)(1));
 
     phasediff_a(v) = phase_diff(index_a.(dir)(1));
     phasediff_b(v) = phase_diff(index_b.(dir)(1));
-end
 
+    pk_a(v) = pk_1.(dir)(1);
+    pk_b(v) = pk_2.(dir)(1);
+
+end
 %% generate magnitude of acceleration 
 
 k = nldat_accel1_dec.dataSet{end,1};
 j = length(k);
-time = 0:ts:j*ts-1;
+time = 0:ts:j*ts-ts;
 
 magnitude1 = zeros(length(time),1);
 magnitude2 = zeros(length(time),1);
@@ -150,8 +154,8 @@ for v = 1:nChans
     plot(mag_accel1(:,v))
     hold on
     plot(mag_accel2(:,v))
-    scatter(freq_a(v),pk_a.(dir)(1),  80, 'r', 'filled')
-    scatter(freq_b(v),pk_b.(dir)(1),  80, 'g', 'filled')
+    scatter(freq_a(v),pk_a(v),  80, 'g', 'filled')
+    scatter(freq_b(v),pk_b(v),  80, 'r', 'filled')
     title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     xlim([0,cutoff])
     hold off
@@ -169,7 +173,7 @@ for v = 1:nChans
     ax5 = subplot(nChans,1, v);
     plot(nldat_phasediff(:,v))
     xlim([0, cutoff])
-    title(['Phase Difference between sensors in the ' dir 'direction'])
+    title(['Phase Difference between sensors in the ' dir ' direction'])
 
     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
@@ -192,7 +196,7 @@ set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(figure(6), 'Units', 'normalized', 'outerposition', [0 0 1 1])
-
+%%
 if save_figs
 
     savefig(a, [savepath, 'accel_' ntrial '_' seg])
