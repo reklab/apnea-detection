@@ -187,12 +187,13 @@ disp ('Data interpolated')
 disp ('Data detrended')
 
 time=nldat_C3898_ACCEL.domainValues;
-[seg_nldat_C3898, seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL, nldat_C3892_ACCEL, time);
+[seg_nldat_C3898] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL);
+[seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3892_ACCEL);
 disp ('Data segmented')
 close all 
 
 %% Analysis 2.2: ECG interpolate and segment
-fs_ECG=500;
+fs_ECG=250;
 c = nldat_C3898_ECG.domainValues;
 sampleLength3 = c(end);
 sampleLength = min(sampleLength, sampleLength3);
@@ -203,7 +204,7 @@ nldat_C3898_ECG= interp1(nldat_C3898_ECG, time_ECG, 'linear');
 nldat_C3892_ECG= interp1(nldat_C3892_ECG, time_ECG, 'linear');
 disp ('ECG Data interpolated')
 
-[seg_ECG_C3898, seg_ECG_C3892] = segmentation(segm_pks, segm_locs, nldat_C3898_ECG, nldat_C3892_ECG, time_ECG);
+[seg_ECG_C3898] = segmentation(segm_pks, segm_locs, nldat_C3898_ECG);
 
 
 %% analysis 3: generate figures
