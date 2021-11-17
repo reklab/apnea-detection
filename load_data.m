@@ -212,18 +212,31 @@ for i =1:length(segm_pks)+1
     segment=append('seg', num2str(i));
     hold_nldat1=seg_nldat_C3898.(segment);
     hold_nldat2=seg_nldat_C3892.(segment);
- 
+    nldat_ECG = seg_ECG_C3898.(segnent);
+
     set(hold_nldat1, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "accel 1");
     set(hold_nldat2, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "accel 2");
+    set(nldat_ECG, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "ECG");
 
     savepath2=[savepath 'segment_' num2str(i) '/'];
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
-    fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2)
+    
+    fft_ECG_analysis(nldat_ECG, savepath, savefigs)
+   [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2);
+    
+   sensor_C3898.freq = freq_1;
+   sensor_C3898.phasediff = phasediff_1;
+   sensor_C3898.pks = pk_1;
+   sensor_C3892.freq = freq_2;
+   sensor_C3892.phasediff = phasediff_2;
+   sensor_C3892.pks = pk_2;
+
+   save([savepath2 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
+
 end
     
-
 
 
 

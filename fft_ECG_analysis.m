@@ -2,19 +2,10 @@
 function fft_ECG_analysis(nldat_ECG, savepath, savefigs)
 
 % nldat_ECG = nldat_C3898_ECG;
-a = nldat_ECG.domainValues;
-sampleLength =a(end);
 
 fs = 250;
-ts = 1/fs;
 d = 5;
 ts2 = 1/(fs/d);
-time = 0:ts:sampleLength;
-
-nldat_ECG = interp1(nldat_ECG,  time, 'linear');
-
-
-set(nldat_ECG, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', "ECG", 'comment', "ECG data")
 
 nldat_ECG_dec = decimate(nldat_ECG,d);
 set(nldat_ECG_dec, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', "ECG", 'comment', "decimated ECG data")
@@ -59,5 +50,56 @@ title('Decimated ECG data')
 
 ax1.FontSize = ftsz;
 ax2.FontSize = ftsz;
+
+set(figure(1), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(2), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(3), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+
+if savefigs
+    savefig(figure(1), [savepath, 'ECG_fftphase_magn_' ntrial '_' seg])
+    savefig(figure(2), [savepath, 'ECG_' ntrial '_' seg])
+    savefig(figure(3), [savepath, 'ECG_dec_' ntrial '_' seg])
+end
+
+
+%%
+[pks,locs]=findpeaks(data_1,time_1);
+
+std_pks=std(pks);
+mean_pks=mean(pks);
+cut_off=mean_pks+5*std_pks;
+locs(pks<cut_off)=[];
+pks(pks<cut_off)=[];
+
+% figure()
+% hold on
+% g=scatter(locs, pks, 'r');
+% h=plot(time_1, data_1, 'k');
+% xlim([time_1(1000) time_1(2000)])
+% hold off
+
+%if tapping is disturbing sensor, HR_diff is unable to detect HR
+HR_diff=60./diff(locs);
+%
+% figure()
+% plot(locs(2:end),HR_diff)
+
+L=0;
+H=0;
+Low_HR=struct([]);
+High_HR=struct([]);
+
+%Determines when single heat rate is too high or low
+for i=1:length(HR_diff)
+    if HR_diff(i)<62
+        L=L+1;
+        Low_HR(L).HR=HR_diff(i);
+        Low_HR(L).time=locs(i+1);
+    elseif HR_diff(i)>75
+        H=H+1;
+        High_HR(H).HR=HR_diff(i);
+        High_HR(H).time=locs(i+1);
+    end
+end
 
 end
