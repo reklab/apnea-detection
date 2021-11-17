@@ -1,5 +1,5 @@
 % ECG analysis
-function fft_ECG_analysis(nldat_ECG, savepath, savefigs)
+function fft_ECG_analysis(nldat_ECG, ntrial, seg, savepath, savefigs)
 
 % nldat_ECG = nldat_C3898_ECG;
 
@@ -45,7 +45,7 @@ plot(nldat_ECG)
 title(['ECG'])
 
 figure(3);
-plot(nldat_ECG_dec(:,v))
+plot(nldat_ECG_dec)
 title('Decimated ECG data')
 
 ax1.FontSize = ftsz;
@@ -59,11 +59,17 @@ if savefigs
     savefig(figure(1), [savepath, 'ECG_fftphase_magn_' ntrial '_' seg])
     savefig(figure(2), [savepath, 'ECG_' ntrial '_' seg])
     savefig(figure(3), [savepath, 'ECG_dec_' ntrial '_' seg])
+    close all
+
 end
 
 
 %%
-[pks,locs]=findpeaks(data_1,time_1);
+data = nldat_ECG_dec.dataSet;
+incr = nldat_ECG_dec.domainIncr;
+time_1 = 0:incr:length(data)*incr-incr;
+
+[pks,locs]=findpeaks(data,time_1);
 
 std_pks=std(pks);
 mean_pks=mean(pks);
