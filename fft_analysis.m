@@ -43,8 +43,8 @@ set(mag_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)",'chanNames', 
 
 phase_diff = zeros(length(fft_accel1.dataSet), nChans);
 for v = 1:nChans
-    phase_accel1_temp = phase(fft_accel1(:,v));
-    phase_accel2_temp = phase(fft_accel2(:,v));
+    phase_accel1_temp = angle(fft_accel1(:,v));
+    phase_accel2_temp = angle(fft_accel2(:,v));
 
     phase_diff(:,v) = phase_accel1_temp.dataSet{:,v}-phase_accel2_temp.dataSet{:,v};
     nldat_temp = nldat(phase_diff(:,v));

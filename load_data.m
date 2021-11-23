@@ -15,6 +15,7 @@
 addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
 addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
 
 %% load raw data from the json file 
 clc
@@ -26,8 +27,8 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 
 % chose the desired trial
 % descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
-descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
+% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
@@ -36,7 +37,7 @@ savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-savefigs = 1;
+savefigs = 0;
 
 raw_data = loadjson(filename);
 

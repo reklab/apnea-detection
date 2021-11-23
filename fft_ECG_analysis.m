@@ -21,7 +21,7 @@ mag_ECG = abs(fft_ECG);
 mag_names = {"Amplitude X", "Amplitude Y", "Amplitude Z"};
 set(mag_ECG, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', mag_names, 'comment', "magnitude accel data")
 
-phase_ECG = phase(fft_ECG);
+phase_ECG = angle(fft_ECG);
 phase_names = {"Phase X", "Phase Y", "Phase Z"};
 
 set(phase_ECG, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase difference")
