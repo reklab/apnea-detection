@@ -188,8 +188,8 @@ disp ('Data interpolated')
 disp ('Data detrended')
 
 time=nldat_C3898_ACCEL.domainValues;
-[seg_nldat_C3898] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL);
-[seg_nldat_C3892] = segmentation(segm_pks, segm_locs, nldat_C3892_ACCEL);
+[seg_C3898_ACCEL] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL);
+[seg_C3892_ACCEL] = segmentation(segm_pks, segm_locs, nldat_C3892_ACCEL);
 disp ('Data segmented')
 close all 
 
@@ -212,8 +212,8 @@ disp ('ECG Data interpolated')
 
 for i =1:length(segm_pks)+1
     segment=append('seg', num2str(i));
-    hold_nldat1=seg_nldat_C3898.(segment);
-    hold_nldat2=seg_nldat_C3892.(segment);
+    hold_nldat1=seg_C3898_ACCEL.(segment);
+    hold_nldat2=seg_C3892_ACCEL.(segment);
     nldat_ECG = seg_ECG_C3898.(segment);
 
     set(hold_nldat1, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "accel 1");
