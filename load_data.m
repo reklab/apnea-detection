@@ -236,10 +236,10 @@ for i =1:length(segm_pks)+1
    sensor_C3892.phasediff(i,:) = phasediff_2;
    sensor_C3892.pks(i,:) = pk_2;
 
-   save([savepath2 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
 
 end
     
+save([savepath2 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
 
 
 
