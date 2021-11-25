@@ -31,13 +31,13 @@ descrip_path ='intermittentBreathing_voluntary'; description = "intermittent bre
 % descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
-% savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v3\' ntrial '/'];
-% savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
+savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+% savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
+% savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-savefigs = 0;
+savefigs = 1;
 
 raw_data = loadjson(filename);
 
@@ -154,16 +154,17 @@ end
 fprintf('Data converted to nldat objects \n')
 
 %% analysis 1: gap and duplicate counting 
-
-[gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
-[gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
-[gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
-[gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
-[gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
-[gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
-[gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
-[gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
-
+gap_analysis = 0;
+if gap_analysis
+    [gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
+    [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
+    [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
+    [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
+    [gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
+    [gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
+    [gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
+    [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
+end
 %% analysis 2.1: ACCEL detrend, interpolate, and segment
 fs1 = 416;
 fs2 = 500;
@@ -228,12 +229,12 @@ for i =1:length(segm_pks)+1
     fft_ECG_analysis(nldat_ECG,ntrial, segment, savepath2, savefigs)
    [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2);
     
-   sensor_C3898.freq = freq_1;
-   sensor_C3898.phasediff = phasediff_1;
-   sensor_C3898.pks = pk_1;
-   sensor_C3892.freq = freq_2;
-   sensor_C3892.phasediff = phasediff_2;
-   sensor_C3892.pks = pk_2;
+   sensor_C3898.freq(i,:) = freq_1;
+   sensor_C3898.phasediff(i,:) = phasediff_1;
+   sensor_C3898.pks(i,:) = pk_1;
+   sensor_C3892.freq(i,:) = freq_2;
+   sensor_C3892.phasediff(i,:) = phasediff_2;
+   sensor_C3892.pks(i,:) = pk_2;
 
    save([savepath2 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
 
