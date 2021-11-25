@@ -5,8 +5,8 @@
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor
 
 function [freq_a, freq_b, phasediff_a, phasediff_b, pk_a, pk_b] = fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
-% nldat_accel1 = seg_nldat_C3898.seg3;
-% nldat_accel2 = seg_nldat_C3892.seg3;
+% nldat_accel1 = seg_C3898_ACCEL.seg5;
+% nldat_accel2 = seg_C3892_ACCEL.seg5;
 
 %% decimate data and generate FT
 
@@ -32,12 +32,12 @@ fft_accel2.dataSet = fft_accel2.dataSet/L;
 
 incr = fft_accel1.domainIncr;
 
-mag_accel1 = abs(fft_accel1);
-mag_accel2 = abs(fft_accel2);
+fft_mag_accel1 = abs(fft_accel1);
+fft_mag_accel2 = abs(fft_accel2);
 
 mag_names = {"Amplitude X", "Amplitude Y", "Amplitude Z"};
-set(mag_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', mag_names, 'comment', "magnitude accel data")
-set(mag_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)",'chanNames', mag_names, 'comment', "magnitude accel data")
+set(fft_mag_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', mag_names, 'comment', "magnitude accel data")
+set(fft_mag_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)",'chanNames', mag_names, 'comment', "magnitude accel data")
 
 %% generate phase difference 
 
@@ -60,7 +60,7 @@ for v = 1:nChans
     end
 end
 
-phase_names = {"Phase X", "Phase Y", "Phase Z"};
+phase_names = {"Phase X (rad)", "Phase Y (rad)", "Phase Z (rad)"};
 
 set(nldat_phasediff, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase difference")
 set(phase_accel1, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames', phase_names, 'comment', "phase accel data")
@@ -70,8 +70,8 @@ set(phase_accel2, 'domainIncr', incr, 'domainName', "Frequency (Hz)", 'chanNames
 
 % find peaks to determine the the highest amplitude 
 % find equivalent phase difference 
-hold_data1 = mag_accel1.dataSet;
-hold_data2 = mag_accel2.dataSet;
+hold_data1 = fft_mag_accel1.dataSet;
+hold_data2 = fft_mag_accel2.dataSet;
 domaint = 0:incr:length(hold_data1);
 for v = 1:nChans
     dir = directions{v};
@@ -125,8 +125,16 @@ b=figure(2);
 c=figure(3);
 d=figure(4);
 e=figure(5);
+f=figure(6);
 ftsz = 25;
 cutoff = 5;
+
+accel1 = fft_mag_accel1.dataSet;
+accel2 = fft_mag_accel2.dataSet;
+
+i = nldat_mag1.domainIncr;
+x = 0:i:length(accel1)*i-i;
+
 for v = 1:nChans
 
     dir = directions{v};
@@ -146,22 +154,35 @@ for v = 1:nChans
     hold on
     plot(nldat_accel2_dec(:,v));
     legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Decimated Acceleration in the ' dir ' direction for both sensors'])
+    title(['Acceleration in the ' dir ' direction for both sensors'])
     hold off
 
     figure(c)
     ax3 = subplot(nChans,1,v);
-    plot(mag_accel1(:,v))
+    plot(fft_mag_accel1(:,v))
     hold on
-    plot(mag_accel2(:,v))
+    plot(fft_mag_accel2(:,v))
     scatter(freq_a(v),pk_a(v),  80, 'g', 'filled')
     scatter(freq_b(v),pk_b(v),  80, 'r', 'filled')
     title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     xlim([0,cutoff])
     hold off
 
-    figure(d)
+    log_accel1 = 10*log10(accel1(:,v));
+    log_accel2 = 10*log10(accel2(:,v));
+
+    figure(d);
     ax4 = subplot(nChans,1,v);
+    plot(x,log_accel1)
+    hold on
+    plot(x,log_accel2);
+    ylabel(['Log Amplitude ' dir])
+    xlabel('Frequency (Hz)')
+    title(['Log Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
+    xlim([0 5])
+
+    figure(e)
+    ax5 = subplot(nChans,1,v);
     plot(phase_accel1(:,v))
     hold on
     plot(phase_accel2(:,v))
@@ -169,23 +190,24 @@ for v = 1:nChans
     title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
 
 
-    figure(e)
-    ax5 = subplot(nChans,1, v);
+    figure(f)
+    ax6 = subplot(nChans,1, v);
     plot(nldat_phasediff(:,v))
     xlim([0, cutoff])
     title(['Phase Difference between sensors in the ' dir ' direction'])
 
     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
-    ax5.FontSize = ftsz;
+    ax5.FontSize = ftsz;    ax6.FontSize = ftsz;
 end
 
-figure(6)
+figure(7)
 plot(nldat_mag1)
 hold on
 plot(nldat_mag2)
 title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
-ylabel('Magnitude')
+ylabel('Magnitude', 'FontSize', ftsz)
+ylabel('Time (s)', 'FontSize', ftsz)
 legend(["Chest Sensor", "Abdomen Sensor"])
 hold off
 
@@ -195,17 +217,19 @@ set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(figure(6), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(f, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+set(figure(7), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 %%
 if save_figs
 
     savefig(a, [savepath, 'accel_' ntrial '_' seg])
     savefig(b, [savepath, 'accel_dec_' ntrial '_' seg])
     savefig(c, [savepath, 'accel_fftmagn_' ntrial '_' seg])
-    savefig(d, [savepath, 'accel_fftphase_' ntrial '_' seg])
-    savefig(e, [savepath, 'phase_diff' ntrial '_' seg])
-    savefig(figure(6), [savepath, 'accel_magn_' ntrial '_' seg])
+    savefig(d, [savepath, 'accel_logfftmagn_' ntrial '_' seg])
+    savefig(e, [savepath, 'accel_fftphase_' ntrial '_' seg])
+    savefig(f, [savepath, 'phase_diff' ntrial '_' seg])
+    savefig(figure(7), [savepath, 'accel_magn_' ntrial '_' seg])
     close all
 
 end
-% end
+end
