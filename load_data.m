@@ -239,7 +239,7 @@ for i =1:length(segm_pks)+1
 
 end
     
-save([savepath2 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
+save([savepath 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
 
 
 

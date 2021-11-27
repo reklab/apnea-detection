@@ -207,7 +207,7 @@ hold on
 plot(nldat_mag2)
 title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
 ylabel('Magnitude', 'FontSize', ftsz)
-ylabel('Time (s)', 'FontSize', ftsz)
+xlabel('Time (s)', 'FontSize', ftsz)
 legend(["Chest Sensor", "Abdomen Sensor"])
 hold off
 
