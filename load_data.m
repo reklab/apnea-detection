@@ -7,37 +7,38 @@
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 % addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
-% 
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
 
-addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+addpath('C:\Users\vstur\OneDrive\Desktpp\GitHub\reklab_public\nlid_tools\nlid_util');
+
+% addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
 
 %% load raw data from the json file 
 clc
 clear all
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
-descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
-% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
+descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
-% savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
+% savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
 % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-savefigs = 1;
+savefigs = 0;
 
 raw_data = loadjson(filename);
 
@@ -221,7 +222,7 @@ for i =1:length(segm_pks)+1
     set(hold_nldat2, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "accel 2");
     set(nldat_ECG, 'domainIncr', 1/fs_ECG, 'domainName', "Time (s)",  'comment', "ECG");
 
-    savepath2=[savepath 'segment_' num2str(i) '/'];
+    savepath2=[savepath 'segment_' num2str(i) '_raw/'];
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
@@ -239,7 +240,48 @@ for i =1:length(segm_pks)+1
 
 end
     
-save([savepath 'spectrum_pks_phase'], 'sensor_C3898', 'sensor_C3892')
+save([savepath 'spectrum_pks_phase_clean'], 'sensor_C3898', 'sensor_C3892')
+
+%% repeat with cleaned data
+
+%for i =1:length(segm_pks)+1
+for i=3
+    segment=append('seg', num2str(i));
+    hold_nldat1=seg_C3898_ACCEL.(segment);
+    hold_nldat2=seg_C3892_ACCEL.(segment);
+    nldat_ECG = seg_ECG_C3898.(segment);
+
+    set(hold_nldat1, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "accel 1");
+    %set(hold_nldat2, 'domainIncr', 1/fs2, 'domainName', "Time (s)",  'comment', "accel 2");
+    set(nldat_ECG, 'domainIncr', 1/fs_ECG, 'domainName', "Time (s)",  'comment', "ECG");
+
+    savepath2=[savepath 'segment_' num2str(i) '_clean/'];
+    if ~exist(savepath2, 'file')
+        mkdir(savepath2)
+    end
+    
+    ts=1/fs2;
+    % call the irf function here:pass both raw and clean signals
+    hold_nldat1_z=hold_nldat1(:,3,:);
+    hold_nldat2_z=hold_nldat2(:,3,:);
+    [hold_nldat1_raw, hold_nldat1_clean]=irf_accel_ecg(hold_nldat1_z, nldat_ECG,ts,ntrial, segment,savepath2, savefigs);
+    [hold_nldat2_raw, hold_nldat2_clean]=irf_accel_ecg(hold_nldat2_z, nldat_ECG,ts,ntrial, segment,savepath2, savefigs);
+
+    %remove decimate from FFT_ANALYSIS  
+%     fft_ECG_analysis(nldat_ECG,ntrial, segment, savepath2, savefigs)
+%    [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2);
+%     
+%    sensor_C3898.freq(i,:) = freq_1;
+%    sensor_C3898.phasediff(i,:) = phasediff_1;
+%    sensor_C3898.pks(i,:) = pk_1;
+%    sensor_C3892.freq(i,:) = freq_2;
+%    sensor_C3892.phasediff(i,:) = phasediff_2;
+%    sensor_C3892.pks(i,:) = pk_2;
+
+
+end
+    
+%save([savepath 'spectrum_pks_phase_raw'], 'sensor_C3898', 'sensor_C3892')
 
 
 
