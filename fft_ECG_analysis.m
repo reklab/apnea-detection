@@ -3,14 +3,14 @@ function fft_ECG_analysis(nldat_ECG, ntrial, seg, savepath, savefigs)
 
 % nldat_ECG = nldat_C3898_ECG;
 
-fs = 250;
-d = 5;
-ts2 = 1/(fs/d);
+% fs = 250;
+% d = 5;
+% ts2 = 1/(fs/d);
+% 
+% nldat_ECG_dec = decimate(nldat_ECG,d);
+% set(nldat_ECG_dec, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', "ECG", 'comment', "decimated ECG data")
 
-nldat_ECG_dec = decimate(nldat_ECG,d);
-set(nldat_ECG_dec, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', "ECG", 'comment', "decimated ECG data")
-
-fft_ECG = fft(nldat_ECG_dec);
+fft_ECG = fft(nldat_ECG);
 L = length(fft_ECG.dataSet);
 
 fft_ECG.dataSet = fft_ECG.dataSet/L;
@@ -44,29 +44,24 @@ figure(2);
 plot(nldat_ECG)
 title(['ECG'])
 
-figure(3);
-plot(nldat_ECG_dec)
-title('Decimated ECG data')
 
 ax1.FontSize = ftsz;
 ax2.FontSize = ftsz;
 
 set(figure(1), 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(figure(2), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(figure(3), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 
 if savefigs
     savefig(figure(1), [savepath, 'ECG_fftphase_magn_' ntrial '_' seg])
     savefig(figure(2), [savepath, 'ECG_' ntrial '_' seg])
-    savefig(figure(3), [savepath, 'ECG_dec_' ntrial '_' seg])
     close all
 
 end
 
 
 %%
-data = nldat_ECG_dec.dataSet;
-incr = nldat_ECG_dec.domainIncr;
+data = nldat_ECG.dataSet;
+incr = nldat_ECG.domainIncr;
 time_1 = 0:incr:length(data)*incr-incr;
 
 [pks,locs]=findpeaks(data,time_1);
