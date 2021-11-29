@@ -4,24 +4,25 @@
 %
 % right now nldat1 is the chest sensor and nldat2 is the abdomen sensor
 
-function [freq_a, freq_b, phasediff_a, phasediff_b, pk_a, pk_b] = fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs, fs2)
+function [freq_a, freq_b, phasediff_a, phasediff_b, pk_a, pk_b] = fft_analysis(nldat_accel1_dec, nldat_accel2_dec, ntrial,seg, savepath, save_figs, fs2)
 % nldat_accel1 = seg_C3898_ACCEL.seg5;
 % nldat_accel2 = seg_C3892_ACCEL.seg5;
 
 %% decimate data and generate FT
 
-d = 10; ts2 = 1/fs2; fs = fs2/d; ts = 1/fs;
-names = get(nldat_accel1, "chanNames");
+% d = 10; ts2 = 1/fs2; fs = fs2/d; 
+ts = get(nldat_accel1_dec, "domainIncr");
+names = get(nldat_accel1_dec, "chanNames");
 nChans = length(names);
 directions = ["X", "Y", "Z"];
-
-set(nldat_accel1, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', names, 'comment', "accel data")
-set(nldat_accel2, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', names, 'comment', "accel data")
-
-nldat_accel1_dec = decimate(nldat_accel1,d);
-nldat_accel2_dec = decimate(nldat_accel2,d);
-set(nldat_accel1_dec, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', names, 'comment', "decimated accel data")
-set(nldat_accel2_dec, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', names, 'comment', "decimated accel data")
+% 
+% set(nldat_accel1, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', names, 'comment', "accel data")
+% set(nldat_accel2, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', names, 'comment', "accel data")
+% 
+% nldat_accel1_dec = decimate(nldat_accel1,d);
+% nldat_accel2_dec = decimate(nldat_accel2,d);
+% set(nldat_accel1_dec, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', names, 'comment', "decimated accel data")
+% set(nldat_accel2_dec, 'domainIncr', ts, 'domainValues', NaN, 'chanNames', names, 'comment', "decimated accel data")
 
 fft_accel1 = fft(nldat_accel1_dec);
 fft_accel2 = fft(nldat_accel2_dec);
@@ -141,9 +142,9 @@ for v = 1:nChans
 
     figure(a);
     ax1 = subplot(nChans,1,v);
-    plot(nldat_accel1(:,v))
+    plot(nldat_accel1_dec(:,v))
     hold on
-    plot(nldat_accel2(:,v));
+    plot(nldat_accel2_dec(:,v));
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Acceleration in the ' dir ' direction for both sensors'])
     hold off

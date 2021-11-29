@@ -261,27 +261,43 @@ for i=3
     end
     
     ts=1/fs2;
-    % call the irf function here:pass both raw and clean signals
-    hold_nldat1_z=hold_nldat1(:,3,:);
-    hold_nldat2_z=hold_nldat2(:,3,:);
-    [hold_nldat1_raw, hold_nldat1_clean]=irf_accel_ecg(hold_nldat1_z, nldat_ECG,ts,ntrial, segment,savepath2, savefigs);
-    [hold_nldat2_raw, hold_nldat2_clean]=irf_accel_ecg(hold_nldat2_z, nldat_ECG,ts,ntrial, segment,savepath2, savefigs);
-
-    %remove decimate from FFT_ANALYSIS  
-%     fft_ECG_analysis(nldat_ECG,ntrial, segment, savepath2, savefigs)
-%    [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2);
-%     
-%    sensor_C3898.freq(i,:) = freq_1;
-%    sensor_C3898.phasediff(i,:) = phasediff_1;
-%    sensor_C3898.pks(i,:) = pk_1;
-%    sensor_C3892.freq(i,:) = freq_2;
-%    sensor_C3892.phasediff(i,:) = phasediff_2;
-%    sensor_C3892.pks(i,:) = pk_2;
+    
+    %irf provides decimated raw signal and a demiated/ cleaned signal
+    for v=1:3
+        hold_nldat1_temp=hold_nldat1(:,v,:);
+        hold_nldat2_temp=hold_nldat2(:,v,:);
+        [hold_nldat1_raw, hold_nldat1_clean]=irf_accel_ecg(hold_nldat1_temp, nldat_ECG,ts,ntrial, segment,savepath2, savefigs);
+        [hold_nldat2_raw, hold_nldat2_clean]=irf_accel_ecg(hold_nldat2_temp, nldat_ECG,ts,ntrial, segment,savepath2, savefigs);
+        if v > 1
+            eval(['nldat_C3898_ACCEL_raw.' segment '=cat(2,nldat_C3898_ACCEL_raw.' segment ', hold_nldat1_raw);'])
+            eval(['nldat_C3892_ACCEL_raw.' segment '=cat(2,nldat_C3892_ACCEL_raw.' segment ', hold_nldat2_raw);'])
+            eval(['nldat_C3898_ACCEL_clean.' segment '=cat(2,nldat_C3898_ACCEL_clean.' segment ', hold_nldat1_clean);'])
+            eval(['nldat_C3892_ACCEL_clean.' segment '=cat(2,nldat_C3892_ACCEL_clean.' segment ', hold_nldat2_clean);'])
+        else
+            eval(['nldat_C3898_ACCEL_raw.' segment '=hold_nldat1_raw;'])
+            eval(['nldat_C3892_ACCEL_raw.' segment '=hold_nldat2_raw;'])
+            eval(['nldat_C3898_ACCEL_clean.' segment '=hold_nldat1_clean;'])
+            eval(['nldat_C3892_ACCEL_clean.' segment '=hold_nldat2_clean;'])
+        end
+    end
+        %remove decimate from FFT_ANALYSIS  
+   hold_nldat1_raw=nldat_C3898_ACCEL_raw.(segment); hold_nldat2_raw=nldat_C3892_ACCEL_raw.(segment);
+   hold_nldat1_clean=nldat_C3898_ACCEL_clean.(segment); hold_nldat2_clean=nldat_C3892_ACCEL_clean.(segment);
+   
+   fft_ECG_analysis(nldat_ECG,ntrial, segment, savepath2, savefigs)
+   [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(hold_nldat1, hold_nldat2, ntrial, segment, savepath2, savefigs, fs2);
+    
+   sensor_C3898.freq(i,:) = freq_1;
+   sensor_C3898.phasediff(i,:) = phasediff_1;
+   sensor_C3898.pks(i,:) = pk_1;
+   sensor_C3892.freq(i,:) = freq_2;
+   sensor_C3892.phasediff(i,:) = phasediff_2;
+   sensor_C3892.pks(i,:) = pk_2;
 
 
 end
     
-%save([savepath 'spectrum_pks_phase_raw'], 'sensor_C3898', 'sensor_C3892')
+save([savepath 'spectrum_pks_phase_raw'], 'sensor_C3898', 'sensor_C3892')
 
 
 

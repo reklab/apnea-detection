@@ -89,7 +89,7 @@ plot(nldat_ACCEL_output_dec)
 h=line(clean_ACCEL_dec);
 h.Color = 'r';
 legend(["raw data", "cleaned data"])
-title(['Acceleration in the z dir'])
+title(['Acceleration'])
 
 %% Finalize and Save Plots
 set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
