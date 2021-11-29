@@ -8,22 +8,22 @@
 % addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
 
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktpp\GitHub\reklab_public\nlid_tools\nlid_util');
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
 
-addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
+% addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
 
 %% load raw data from the json file
 clc
 clear all
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
@@ -32,8 +32,8 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
-% savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
+% savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
 % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
@@ -218,16 +218,16 @@ ts=1/fs2;
 d= 10;
 ts_d = ts/d;
 
+%%
 for i =1:length(segm_pks)+1
-
     segment=append('seg', num2str(i));
     hold_accel1=seg_C3898_ACCEL.(segment);
     hold_accel2=seg_C3892_ACCEL.(segment);
     nldat_ECG=seg_C3898_ECG.(segment);
 
-    set(hold_accel1, 'domainIncr', ts,'domainValues', NaN, 'domainStart', 0, 'domainName', "Time (s)",  'comment', "accel 1");
-    set(hold_accel2, 'domainIncr', ts, 'domainValues', NaN, 'domainStart', 0,'domainName', "Time (s)",  'comment', "accel 2");
-    set(nldat_ECG, 'domainIncr', 1/fs_ECG, 'domainValues', NaN, 'domainStart', 0, 'domainName', "Time (s)",  'comment', "ECG");
+%     set(hold_accel1, 'domainIncr', ts,'domainValues', NaN, 'domainStart', 0, 'domainName', "Time (s)",  'comment', "accel 1");
+%     set(hold_accel2, 'domainIncr', ts, 'domainValues', NaN, 'domainStart', 0,'domainName', "Time (s)",  'comment', "accel 2");
+%     set(nldat_ECG, 'domainIncr', 1/fs_ECG, 'domainValues', NaN, 'domainStart', 0, 'domainName', "Time (s)",  'comment', "ECG");
 
     savepath2=[savepath 'segment_' num2str(i) '_clean/'];
     if ~exist(savepath2, 'file')
