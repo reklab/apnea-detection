@@ -27,9 +27,9 @@ baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_dat
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '001';
+descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
 % descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
-descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
+% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 % savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
@@ -195,6 +195,13 @@ time=nldat_C3898_ACCEL.domainValues;
 disp ('Data segmented')
 close all
 
+% % code for seg 8
+% T1=find(time==159);
+% T2=find(time==161);
+% seg_C3892_ACCEL.seg1=nldat_C3892_ACCEL(1:T1,:,1);
+% seg_C3898_ACCEL.seg1=nldat_C3898_ACCEL(1:T1,:,1);
+% seg_C3892_ACCEL.seg2=nldat_C3892_ACCEL(T2:end,:,1);
+% seg_C3898_ACCEL.seg2=nldat_C3898_ACCEL(T2:end,:,1);
 %% Analysis 2.2: ECG interpolate and segment
 fs_ECG=250;
 c = nldat_C3898_ECG.domainValues;
@@ -209,7 +216,11 @@ disp ('ECG Data interpolated')
 
 [seg_C3898_ECG] = segmentation(segm_pks, segm_locs, nldat_C3898_ECG);
 
-
+% %code for seg 8
+% TE1=find(time_ECG==159)
+% TE2=find(time_ECG==161)
+% seg_C3898_ECG.seg1=nldat_C3898_ECG(1:TE1);
+% seg_C3898_ECG.seg2=nldat_C3898_ECG(TE2:end);
 %% Analysis 3. clean the data and generate figures 
 
 directions = ["X", "Y", "Z"];
@@ -218,7 +229,6 @@ ts=1/fs2;
 d= 10;
 ts_d = ts/d;
 
-%%
 for i =1:length(segm_pks)+1
     segment=append('seg', num2str(i));
     hold_accel1=seg_C3898_ACCEL.(segment);
