@@ -1,5 +1,5 @@
 
-function [ACCEL_output_dec,clean_ACCEL]=irf_accel_ecg(ACCEL_output, ECG_input,ts,ntrial,seg, savepath, save_figs)
+function [ACCEL_output_dec,clean_ACCEL]=irf_accel_ecg(ACCEL_output, ECG_input,ts,ntrial,seg, savepath, save_figs, dir)
 
 %% Uncomment if not a function
 % ACCEL_output = hold_accel1_temp;
@@ -58,19 +58,24 @@ I = irf(nldat_sys_dec, 'nLags', nLags);
 
 pred = nlsim(I,ECG_input_dec);
 
-ftsz = 16;
+ftsz = 25;
 a=figure(1);
 clean_ACCEL = nlid_resid(I, nldat_sys_dec);
 
 b=figure(2);
-plot(ACCEL_output)
+plot(ACCEL_output_dec)
 h=line(clean_ACCEL);
 h.Color = 'r';
 legend(["raw data", "cleaned data"])
-title('Acceleration Signal Clean and Raw Data', 'FontSize', ftsz)
+title([ dir ' Acceleration Signal Clean and Raw Data'], 'FontSize', ftsz)
+xlabel('Time (s)', 'FontSize', ftsz)
+ylabel(['ACCEL ' dir], 'FontSize', ftsz)
 
 c=figure(3);
 plot(I)
+title(['IRF between ECG and ' dir ' Acceleration Signals'], 'FontSize', ftsz);
+ylabel('Amplitude', 'FontSize', ftsz)
+xlabel('Time (s)', 'FontSize', ftsz)
 
 %% Finalize and Save Plots
 set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
@@ -78,9 +83,10 @@ set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 
 if save_figs
-    savefig(a, [savepath, 'residplot_' ntrial '_' seg])
-    savefig(b, [savepath, 'accel_raw_clean_' ntrial '_' seg])
-    savefig(c, [savepath, 'IRF_' ntrial '_' seg])
+    savefig(a, [savepath, 'residplot_' ntrial '_' seg dir])
+    savefig(b, [savepath, 'accel_raw_clean_' ntrial '_' seg dir])
+    savefig(c, [savepath, 'IRF_' ntrial '_' seg dir])
 end
+close all 
 
 end

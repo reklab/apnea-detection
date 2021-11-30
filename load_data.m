@@ -7,38 +7,38 @@
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
 % addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
+% 
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
 
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
-
-% addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
+addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
 
 %% load raw data from the json file
 clc
 clear all
 
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
+% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
+descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
 % descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-% savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
-savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
+savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+% savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
 % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-savefigs = 0;
+savefigs = 1;
 
 raw_data = loadjson(filename);
 
@@ -245,11 +245,11 @@ for i =1:length(segm_pks)+1
     end
 
     for v=1:nDir
-
+        dir = directions{v};
         hold_accel1_temp=hold_accel1(:,v,:);
         hold_accel2_temp=hold_accel2(:,v,:);
-        [hold_accel1_raw, hold_accel1_clean]=irf_accel_ecg(hold_accel1_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs);
-        [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs);
+        [hold_accel1_raw, hold_accel1_clean]=irf_accel_ecg(hold_accel1_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir);
+        [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir);
 
         if v > 1
             eval(['nldat_C3898_ACCEL_raw.' segment '=cat(2,nldat_C3898_ACCEL_raw.' segment ', hold_accel1_raw);'])

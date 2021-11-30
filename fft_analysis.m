@@ -143,6 +143,7 @@ for v = 1:nChans
     plot(fft_mag_accel2(:,v))
     scatter(freq_a(v),pk_a(v),  80, 'g', 'filled')
     scatter(freq_b(v),pk_b(v),  80, 'r', 'filled')
+    legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     xlim([0,cutoff])
     hold off
@@ -157,6 +158,7 @@ for v = 1:nChans
     plot(x,log_accel2);
     ylabel(['Log Amplitude ' dir])
     xlabel('Frequency (Hz)')
+    legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Log Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     xlim([0 5])
 
@@ -166,6 +168,7 @@ for v = 1:nChans
     hold on
     plot(phase_accel2(:,v))
     xlim([0,cutoff])
+    legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
 
 
@@ -205,7 +208,7 @@ if save_figs
     savefig(c, [savepath, 'accel_logfftmagn_' ntrial '_' seg])
     savefig(d, [savepath, 'accel_fftphase_' ntrial '_' seg])
     savefig(e, [savepath, 'phase_diff' ntrial '_' seg])
-    savefig(figure(7), [savepath, 'accel_magn_' ntrial '_' seg])
+    savefig(figure(6), [savepath, 'accel_magn_' ntrial '_' seg])
 
 end
 

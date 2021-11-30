@@ -9,6 +9,7 @@ function [locs,pks]=segment_ID(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savep
 
 %currently only set up to test for taps on sensor 3898 and only observes
 %z_accel data
+directions = ["X", "Y", "Z"];
 
 data_1 = get(nldat_accel1, "dataSet");
 time_1 = get(nldat_accel1, "domainValues");
@@ -95,6 +96,7 @@ locs(locs==0)=[];
 %%
 figure(2)
 for j=1:nChans
+    dir = directions{j};
     subplot(3,1,j)    
     g(j)=plot(time_2,data_2(:,j), 'k');
     ymax=max(ylim);
@@ -139,6 +141,9 @@ end
 uistack(g(j), 'top')
 xlim([0 time_2(end)])
 ylim([ymin ymax])
+xlabel('Time (s)', 'FontSize', 25)
+ylabel(['ACCEL ' dir], 'FontSize',25)
+title('Segmented Acceleration data based on Sensor Tapping', 'FontSize', 25)
 hold off
 end   
 
