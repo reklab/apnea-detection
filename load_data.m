@@ -28,8 +28,8 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 
 % chose the desired trial
 % descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
-descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
-% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
+% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
+descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
@@ -230,16 +230,13 @@ d= 10;
 ts_d = ts/d;
 
 for i =1:length(segm_pks)+1
+
     segment=append('seg', num2str(i));
     hold_accel1=seg_C3898_ACCEL.(segment);
     hold_accel2=seg_C3892_ACCEL.(segment);
     nldat_ECG=seg_C3898_ECG.(segment);
 
-%     set(hold_accel1, 'domainIncr', ts,'domainValues', NaN, 'domainStart', 0, 'domainName', "Time (s)",  'comment', "accel 1");
-%     set(hold_accel2, 'domainIncr', ts, 'domainValues', NaN, 'domainStart', 0,'domainName', "Time (s)",  'comment', "accel 2");
-%     set(nldat_ECG, 'domainIncr', 1/fs_ECG, 'domainValues', NaN, 'domainStart', 0, 'domainName', "Time (s)",  'comment', "ECG");
-
-    savepath2=[savepath 'segment_' num2str(i) '_clean/'];
+    savepath2=[savepath 'segment_' num2str(i) '_raw/'];
     if ~exist(savepath2, 'file')
         mkdir(savepath2)
     end
@@ -248,8 +245,8 @@ for i =1:length(segm_pks)+1
         dir = directions{v};
         hold_accel1_temp=hold_accel1(:,v,:);
         hold_accel2_temp=hold_accel2(:,v,:);
-        [hold_accel1_raw, hold_accel1_clean]=irf_accel_ecg(hold_accel1_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir);
-        [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir);
+        [hold_accel1_raw, hold_accel1_clean]=irf_accel_ecg(hold_accel1_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'C3898');
+        [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'C3892');
 
         if v > 1
             eval(['nldat_C3898_ACCEL_raw.' segment '=cat(2,nldat_C3898_ACCEL_raw.' segment ', hold_accel1_raw);'])
@@ -270,8 +267,9 @@ for i =1:length(segm_pks)+1
     set(nldat_C3892_ACCEL_clean.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Clean Acceleration Data C3892')
 
     fft_ECG_analysis(nldat_ECG, ntrial, segment, savepath2, savefigs)
-
+% 
     [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_C3898_ACCEL_clean.(segment), nldat_C3892_ACCEL_clean.(segment), ntrial, segment, savepath2, savefigs);
+%     [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_C3898_ACCEL_raw.(segment), nldat_C3892_ACCEL_raw.(segment), ntrial, segment, savepath2, savefigs);
 
     sensor_C3898.freq(i,:) = freq_1;
     sensor_C3898.phasediff(i,:) = phasediff_1;

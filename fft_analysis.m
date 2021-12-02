@@ -6,7 +6,8 @@
 
 function [freq_a, freq_b, phasediff_a, phasediff_b, pk_a, pk_b] = fft_analysis(nldat_accel1, nldat_accel2, ntrial,seg, savepath, save_figs)
 
-
+% nldat_accel1 = nldat_C3898_ACCEL_clean.seg1;
+% nldat_accel2 = nldat_C3892_ACCEL_clean.seg1;
 %% generate FT and its magnitude 
 
 ts = get(nldat_accel1, "domainIncr");
@@ -114,8 +115,9 @@ b=figure(2);
 c=figure(3);
 d=figure(4);
 e=figure(5);
-ftsz = 25;
+ftsz = 20;
 cutoff = 5;
+linew = 0.8; 
 
 accel1 = fft_mag_accel1.dataSet;
 accel2 = fft_mag_accel2.dataSet;
@@ -132,6 +134,7 @@ for v = 1:nChans
     plot(nldat_accel1(:,v))
     hold on
     plot(nldat_accel2(:,v));
+    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Acceleration in the ' dir ' direction for both sensors'])
     hold off
@@ -144,6 +147,7 @@ for v = 1:nChans
     scatter(freq_a(v),pk_a(v),  80, 'g', 'filled')
     scatter(freq_b(v),pk_b(v),  80, 'r', 'filled')
     legend(["Chest Sensor", "Abdomen Sensor"])
+    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
     title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
     xlim([0,cutoff])
     hold off
@@ -156,6 +160,7 @@ for v = 1:nChans
     plot(x,log_accel1)
     hold on
     plot(x,log_accel2);
+    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
     ylabel(['Log Amplitude ' dir])
     xlabel('Frequency (Hz)')
     legend(["Chest Sensor", "Abdomen Sensor"])
@@ -168,6 +173,7 @@ for v = 1:nChans
     hold on
     plot(phase_accel2(:,v))
     xlim([0,cutoff])
+    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
     legend(["Chest Sensor", "Abdomen Sensor"])
     title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
 
@@ -176,11 +182,13 @@ for v = 1:nChans
     ax6 = subplot(nChans,1, v);
     plot(nldat_phasediff(:,v))
     xlim([0, cutoff])
+    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
     title(['Phase Difference between sensors in the ' dir ' direction'])
 
     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
     ax5.FontSize = ftsz;    ax6.FontSize = ftsz;
+    
 end
 
 figure(6)
@@ -191,6 +199,8 @@ title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
 ylabel('Magnitude', 'FontSize', ftsz)
 xlabel('Time (s)', 'FontSize', ftsz)
 legend(["Chest Sensor", "Abdomen Sensor"])
+set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+set(gca, 'FontSize', ftsz)
 hold off
 
 %% finalize and save plots 
