@@ -110,106 +110,106 @@ set(nldat_mag2, 'domainValues', NaN, 'domainIncr', ts, 'comment', "Magnitude of 
 %% generate plots
 
 clc
-a=figure(1);
-b=figure(2);
-c=figure(3);
-d=figure(4);
-e=figure(5);
-ftsz = 20;
-cutoff = 5;
-linew = 0.8; 
-
-accel1 = fft_mag_accel1.dataSet;
-accel2 = fft_mag_accel2.dataSet;
-
-i = nldat_mag1.domainIncr;
-x = 0:i:length(accel1)*i-i;
-
-for v = 1:nChans
-
-    dir = directions{v};
-
-    figure(a);
-    ax1 = subplot(nChans,1,v);
-    plot(nldat_accel1(:,v))
-    hold on
-    plot(nldat_accel2(:,v));
-    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
-    legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Acceleration in the ' dir ' direction for both sensors'])
-    hold off
-
-    figure(b)
-    ax3 = subplot(nChans,1,v);
-    plot(fft_mag_accel1(:,v))
-    hold on
-    plot(fft_mag_accel2(:,v))
-    scatter(freq_a(v),pk_a(v),  80, 'g', 'filled')
-    scatter(freq_b(v),pk_b(v),  80, 'r', 'filled')
-    legend(["Chest Sensor", "Abdomen Sensor"])
-    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
-    title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
-    xlim([0,cutoff])
-    hold off
-
-    log_accel1 = 10*log10(accel1(:,v));
-    log_accel2 = 10*log10(accel2(:,v));
-
-    figure(c);
-    ax4 = subplot(nChans,1,v);
-    plot(x,log_accel1)
-    hold on
-    plot(x,log_accel2);
-    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
-    ylabel(['Log Amplitude ' dir])
-    xlabel('Frequency (Hz)')
-    legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Log Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
-    xlim([0 5])
-
-    figure(d)
-    ax5 = subplot(nChans,1,v);
-    plot(phase_accel1(:,v))
-    hold on
-    plot(phase_accel2(:,v))
-    xlim([0,cutoff])
-    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
-    legend(["Chest Sensor", "Abdomen Sensor"])
-    title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
-
-
-    figure(e)
-    ax6 = subplot(nChans,1, v);
-    plot(nldat_phasediff(:,v))
-    xlim([0, cutoff])
-    set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
-    title(['Phase Difference between sensors in the ' dir ' direction'])
-
-    ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
-    ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
-    ax5.FontSize = ftsz;    ax6.FontSize = ftsz;
-    
-end
-
-figure(6)
-plot(nldat_mag1)
-hold on
-plot(nldat_mag2)
-title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
-ylabel('Magnitude', 'FontSize', ftsz)
-xlabel('Time (s)', 'FontSize', ftsz)
-legend(["Chest Sensor", "Abdomen Sensor"])
-set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
-set(gca, 'FontSize', ftsz)
-hold off
-
-%% finalize and save plots 
-set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
-set(figure(6), 'Units', 'normalized', 'outerposition', [0 0 1 1])
+% a=figure(1);
+% b=figure(2);
+% c=figure(3);
+% d=figure(4);
+% e=figure(5);
+% ftsz = 20;
+% cutoff = 5;
+% linew = 0.8; 
+% 
+% accel1 = fft_mag_accel1.dataSet;
+% accel2 = fft_mag_accel2.dataSet;
+% 
+% i = nldat_mag1.domainIncr;
+% x = 0:i:length(accel1)*i-i;
+% 
+% for v = 1:nChans
+% 
+%     dir = directions{v};
+% 
+%     figure(a);
+%     ax1 = subplot(nChans,1,v);
+%     plot(nldat_accel1(:,v))
+%     hold on
+%     plot(nldat_accel2(:,v));
+%     set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+%     legend(["Chest Sensor", "Abdomen Sensor"])
+%     title(['Acceleration in the ' dir ' direction for both sensors'])
+%     hold off
+% 
+%     figure(b)
+%     ax3 = subplot(nChans,1,v);
+%     plot(fft_mag_accel1(:,v))
+%     hold on
+%     plot(fft_mag_accel2(:,v))
+%     scatter(freq_a(v),pk_a(v),  80, 'g', 'filled')
+%     scatter(freq_b(v),pk_b(v),  80, 'r', 'filled')
+%     legend(["Chest Sensor", "Abdomen Sensor"])
+%     set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+%     title(['Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
+%     xlim([0,cutoff])
+%     hold off
+% 
+%     log_accel1 = 10*log10(accel1(:,v));
+%     log_accel2 = 10*log10(accel2(:,v));
+% 
+%     figure(c);
+%     ax4 = subplot(nChans,1,v);
+%     plot(x,log_accel1)
+%     hold on
+%     plot(x,log_accel2);
+%     set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+%     ylabel(['Log Amplitude ' dir])
+%     xlabel('Frequency (Hz)')
+%     legend(["Chest Sensor", "Abdomen Sensor"])
+%     title(['Log Magnitude of the Fourier Transform in ' dir ' direction for both sensors'])
+%     xlim([0 5])
+% 
+%     figure(d)
+%     ax5 = subplot(nChans,1,v);
+%     plot(phase_accel1(:,v))
+%     hold on
+%     plot(phase_accel2(:,v))
+%     xlim([0,cutoff])
+%     set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+%     legend(["Chest Sensor", "Abdomen Sensor"])
+%     title(['Phase of the Fourier Transform for both sensors in the ' dir ' direction'])
+% 
+% 
+%     figure(e)
+%     ax6 = subplot(nChans,1, v);
+%     plot(nldat_phasediff(:,v))
+%     xlim([0, cutoff])
+%     set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+%     title(['Phase Difference between sensors in the ' dir ' direction'])
+% 
+%     ax1.FontSize = ftsz;    ax2.FontSize = ftsz;
+%     ax3.FontSize = ftsz;    ax4.FontSize = ftsz;
+%     ax5.FontSize = ftsz;    ax6.FontSize = ftsz;
+%     
+% end
+% 
+% figure(6)
+% plot(nldat_mag1)
+% hold on
+% plot(nldat_mag2)
+% title('Magnitude of acceleration for both sensors', 'FontSize', ftsz)
+% ylabel('Magnitude', 'FontSize', ftsz)
+% xlabel('Time (s)', 'FontSize', ftsz)
+% legend(["Chest Sensor", "Abdomen Sensor"])
+% set(findall(gca, 'Type', 'Line'),'LineWidth',linew);
+% set(gca, 'FontSize', ftsz)
+% hold off
+% 
+% %% finalize and save plots 
+% set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+% set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+% set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+% set(d, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+% set(e, 'Units', 'normalized', 'outerposition', [0 0 1 1])
+% set(figure(6), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 %%
 if save_figs
 

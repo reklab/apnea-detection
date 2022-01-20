@@ -12,8 +12,7 @@ nldat_accel2=nldat_abd_ACCEL;
 directions = ["X", "Y", "Z"];
 
 data_1 = get(nldat_accel1, "dataSet");
-% time_1 = get(nldat_accel1, "domainValues");
-time_1 = 0 + (0:length(data_1)-1)*nldat_accel1.domainIncr;
+time_1 = get(nldat_accel1, "domainValues");
 names = get(nldat_accel1, "chanNames");
 nChans = length(names);
 
