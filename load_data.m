@@ -27,31 +27,40 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-% descrip_path ='normalBreathing'; description = "normal breathing"; ntrial = '008';
-% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; ntrial = '009';
-descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; ntrial = '010';
+ntrial = '001'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
+% ntrial = '011'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
+descrip_path ='normalBreathing'; description = "normal breathing";
+
+% ntrial = '002'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
+% ntrial = '012'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
+% descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; 
+
+% ntrial = '003'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
+% ntrial = '013'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
+% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; 
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v5/' ntrial '/'];
 % savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
 % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
-savefigs = 1;
+savefigs = 0;
 
 raw_data = loadjson(filename);
 
 fprintf('Data loaded \n')
 %% go through each cell in the raw data and assign it to a structure
-pkg_gap=[];
-package_gap_counter =1;
-duplicate_data_counter = 1;
-for a = 1:length(raw_data)
+
+package_gap_counter =0;
+duplicate_data_counter = 0;
+for a = 15:length(raw_data)
 
     cell = raw_data{a};
     datatype = cell.dataType;
-    if datatype == "Health"
+
+    if datatype == "Health" || datatype == "SystemStatus"
         continue
     end
     sensor = cell.sensor_name;
@@ -142,36 +151,44 @@ for n = 1:length(sensor_list)
 
             hold_nldat = nldat(hold_data);
             set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
+            
+            if isequal(sensor, ChestSensor)
+                s = 'chest';
+            elseif isequal(sensor, AbdSensor)
+                s = 'abd';
+            else
+                s = 'digit';
+            end
 
             if v > 1
-                eval(['nldat_' sensor '_' datatype '=cat(2, nldat_' sensor '_' datatype ', hold_nldat);'])
-                %                 eval(['nldat_' sensor '_' datatype '.comment = ['' sensor '' "' datatype ''];'])
+                eval(['nldat_' s '_' datatype '=cat(2, nldat_' s '_' datatype ', hold_nldat);'])
             else
-                eval ([ 'nldat_' sensor '_' datatype '= hold_nldat;']);
+                eval ([ 'nldat_' s '_' datatype '= hold_nldat;']);
             end
         end
     end
 end
+
 fprintf('Data converted to nldat objects \n')
 
 %% Analysis 1: gap and duplicate counting
 gap_analysis = 0;
 if gap_analysis
-    [gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
-    [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
-    [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
-    [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
-    [gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
-    [gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
-    [gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
-    [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
+    [gaps_chest_ACCEL, interval_chest_ACCEL] = data_gaps(nldat_chest_ACCEL, savefigs, savepath);
+    [gaps_abd_ACCEL, interval_abd_ACCEL] = data_gaps(nldat_abd_ACCEL, savefigs, savepath);
+    [gaps_chest_ECG, interval_chest_ECG] = data_gaps(nldat_chest_ECG, savefigs, savepath);
+    [gaps_abd_ECG, interval_abd_ECG] = data_gaps(nldat_abd_ECG, savefigs, savepath);
+    [gaps_chest_Temp, interval_chest_Temp] = data_gaps(nldat_chest_Temp, savefigs, savepath);
+    [gaps_abd_Temp, interval_abd_Temp] = data_gaps(nldat_abd_Temp, savefigs, savepath);
+    [gaps_digit_Temp, interval_digit_Temp] = data_gaps(nldat_digit_Temp, savefigs, savepath);
+    [gaps_digit_PPG, interval_digit_PPG] = data_gaps(nldat_digit_PPG, savefigs, savepath);
 end
 %% Analysis 2.1: ACCEL detrend, interpolate, and segment
 fs1 = 416;
 fs2 = 500;
-a = nldat_C3898_ACCEL.domainValues;
+a = nldat_chest_ACCEL.domainValues;
 sampleLength1 = a(end);
-b = nldat_C3892_ACCEL.domainValues;
+b = nldat_abd_ACCEL.domainValues;
 sampleLength2 = b(end);
 
 sampleLength = min(sampleLength1, sampleLength2);
@@ -179,48 +196,48 @@ time = 0:1/fs2:sampleLength;
 time=time';
 
 %always pass tapped sensor first
-[segm_locs,segm_pks]= segment_ID(nldat_C3898_ACCEL, nldat_C3892_ACCEL, pkg_gap,ntrial, savepath, savefigs);
+[segm_locs,segm_pks]= segment_ID(nldat_chest_ACCEL, nldat_abd_ACCEL, pkg_gap,ntrial, savepath, savefigs);
 
-nldat_C3898_ACCEL= interp1(nldat_C3898_ACCEL, time, 'linear');
-nldat_C3892_ACCEL= interp1(nldat_C3892_ACCEL, time, 'linear');
+nldat_chest_ACCEL= interp1(nldat_chest_ACCEL, time, 'linear');
+nldat_abd_ACCEL= interp1(nldat_abd_ACCEL, time, 'linear');
 disp ('Data interpolated')
 
-[nldat_C3898_ACCEL] = data_preprocess(nldat_C3898_ACCEL, fs1, fs2, time);
-[nldat_C3892_ACCEL] = data_preprocess(nldat_C3892_ACCEL, fs1, fs2, time);
+[nldat_chest_ACCEL] = data_preprocess(nldat_chest_ACCEL, fs1, fs2, time);
+[nldat_abd_ACCEL] = data_preprocess(nldat_abd_ACCEL, fs1, fs2, time);
 disp ('Data detrended')
 
-time=nldat_C3898_ACCEL.domainValues;
-[seg_C3898_ACCEL] = segmentation(segm_pks, segm_locs, nldat_C3898_ACCEL);
-[seg_C3892_ACCEL] = segmentation(segm_pks, segm_locs, nldat_C3892_ACCEL);
+time=nldat_chest_ACCEL.domainValues;
+[seg_chest_ACCEL] = segmentation(segm_pks, segm_locs, nldat_chest_ACCEL);
+[seg_abd_ACCEL] = segmentation(segm_pks, segm_locs, nldat_abd_ACCEL);
 disp ('Data segmented')
 close all
 
-% % code for seg 8
+% % code for trial 8
 % T1=find(time==159);
 % T2=find(time==161);
-% seg_C3892_ACCEL.seg1=nldat_C3892_ACCEL(1:T1,:,1);
-% seg_C3898_ACCEL.seg1=nldat_C3898_ACCEL(1:T1,:,1);
-% seg_C3892_ACCEL.seg2=nldat_C3892_ACCEL(T2:end,:,1);
-% seg_C3898_ACCEL.seg2=nldat_C3898_ACCEL(T2:end,:,1);
+% seg_chest_ACCEL.seg1=nldat_chest_ACCEL(1:T1,:,1);
+% seg_abd_ACCEL.seg1=nldat_abd_ACCEL(1:T1,:,1);
+% seg_chest_ACCEL.seg2=nldat_chest_ACCEL(T2:end,:,1);
+% seg_abd_ACCEL.seg2=nldat_abd_ACCEL(T2:end,:,1);
 %% Analysis 2.2: ECG interpolate and segment
 fs_ECG=250;
-c = nldat_C3898_ECG.domainValues;
+c = nldat_chest_ECG.domainValues;
 sampleLength3 = c(end);
 sampleLength = min(sampleLength, sampleLength3);
 time_ECG = 0:1/fs_ECG:sampleLength;
 time_ECG=time_ECG';
 
-nldat_C3898_ECG= interp1(nldat_C3898_ECG, time_ECG, 'linear');
-nldat_C3892_ECG= interp1(nldat_C3892_ECG, time_ECG, 'linear');
+nldat_chest_ECG= interp1(nldat_chest_ECG, time_ECG, 'linear');
+nldat_abd_ECG= interp1(nldat_abd_ECG, time_ECG, 'linear');
 disp ('ECG Data interpolated')
 
-[seg_C3898_ECG] = segmentation(segm_pks, segm_locs, nldat_C3898_ECG);
+[seg_chest_ECG] = segmentation(segm_pks, segm_locs, nldat_chest_ECG);
 
 % %code for seg 8
-% TE1=find(time_ECG==159)
-% TE2=find(time_ECG==161)
-% seg_C3898_ECG.seg1=nldat_C3898_ECG(1:TE1);
-% seg_C3898_ECG.seg2=nldat_C3898_ECG(TE2:end);
+% TE1=find(time_ECG==159);
+% TE2=find(time_ECG==161);
+% seg_chest_ECG.seg1=nldat_chest_ECG(1:TE1);
+% seg_chest_ECG.seg2=nldat_chest_ECG(TE2:end);
 %% Analysis 3. clean the data and generate figures 
 
 directions = ["X", "Y", "Z"];
@@ -232,14 +249,14 @@ ts_d = ts/d;
 for i =1:length(segm_pks)+1
 
     segment=append('seg', num2str(i));
-    hold_accel1=seg_C3898_ACCEL.(segment);
-    hold_accel2=seg_C3892_ACCEL.(segment);
-    nldat_ECG=seg_C3898_ECG.(segment);
+    hold_accel1=seg_chest_ACCEL.(segment);
+    hold_accel2=seg_abd_ACCEL.(segment);
+    nldat_ECG=seg_chest_ECG.(segment);
 
     savepath2=[savepath 'segment_' num2str(i) '_raw/'];
-    if ~exist(savepath2, 'file')
-        mkdir(savepath2)
-    end
+%     if ~exist(savepath2, 'file')
+%         mkdir(savepath2)
+%     end
 
     for v=1:nDir
         dir = directions{v};
@@ -249,38 +266,38 @@ for i =1:length(segm_pks)+1
         [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'C3892');
 
         if v > 1
-            eval(['nldat_C3898_ACCEL_raw.' segment '=cat(2,nldat_C3898_ACCEL_raw.' segment ', hold_accel1_raw);'])
-            eval(['nldat_C3892_ACCEL_raw.' segment '=cat(2,nldat_C3892_ACCEL_raw.' segment ', hold_accel2_raw);'])
-            eval(['nldat_C3898_ACCEL_clean.' segment '=cat(2,nldat_C3898_ACCEL_clean.' segment ', hold_accel1_clean);'])
-            eval(['nldat_C3892_ACCEL_clean.' segment '=cat(2,nldat_C3892_ACCEL_clean.' segment ', hold_accel2_clean);'])
+            eval(['nldat_chest_ACCEL_raw.' segment '=cat(2,nldat_chest_ACCEL_raw.' segment ', hold_accel1_raw);'])
+            eval(['nldat_abd_ACCEL_raw.' segment '=cat(2,nldat_abd_ACCEL_raw.' segment ', hold_accel2_raw);'])
+            eval(['nldat_chest_ACCEL_clean.' segment '=cat(2,nldat_chest_ACCEL_clean.' segment ', hold_accel1_clean);'])
+            eval(['nldat_abd_ACCEL_clean.' segment '=cat(2,nldat_abd_ACCEL_clean.' segment ', hold_accel2_clean);'])
         else
-            eval(['nldat_C3898_ACCEL_raw.' segment '=hold_accel1_raw;'])
-            eval(['nldat_C3892_ACCEL_raw.' segment '=hold_accel2_raw;'])
-            eval(['nldat_C3898_ACCEL_clean.' segment '=hold_accel1_clean;'])
-            eval(['nldat_C3892_ACCEL_clean.' segment '=hold_accel2_clean;'])
+            eval(['nldat_chest_ACCEL_raw.' segment '=hold_accel1_raw;'])
+            eval(['nldat_abd_ACCEL_raw.' segment '=hold_accel2_raw;'])
+            eval(['nldat_chest_ACCEL_clean.' segment '=hold_accel1_clean;'])
+            eval(['nldat_abd_ACCEL_clean.' segment '=hold_accel2_clean;'])
         end
     end
 
-    set(nldat_C3898_ACCEL_raw.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Raw Acceleration Data C3898')
-    set(nldat_C3898_ACCEL_clean.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Clean Acceleration Data C3898')
-    set(nldat_C3892_ACCEL_raw.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Raw Acceleration Data C3892')
-    set(nldat_C3892_ACCEL_clean.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Clean Acceleration Data C3892')
+    set(nldat_chest_ACCEL_raw.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Raw Acceleration Data Chest')
+    set(nldat_chest_ACCEL_clean.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Clean Acceleration Data Chest')
+    set(nldat_abd_ACCEL_raw.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Raw Acceleration Data Abdomen')
+    set(nldat_abd_ACCEL_clean.(segment), 'domainIncr',ts_d, 'domainValues', NaN, 'domainStart', 0, 'chanNames', directions, 'comment', 'Clean Acceleration Data Abdomen')
 
     fft_ECG_analysis(nldat_ECG, ntrial, segment, savepath2, savefigs)
 % 
-    [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_C3898_ACCEL_clean.(segment), nldat_C3892_ACCEL_clean.(segment), ntrial, segment, savepath2, savefigs);
-%     [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_C3898_ACCEL_raw.(segment), nldat_C3892_ACCEL_raw.(segment), ntrial, segment, savepath2, savefigs);
+    [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_chest_ACCEL_clean.(segment), nldat_abd_ACCEL_clean.(segment), ntrial, segment, savepath2, savefigs);
+%     [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_chest_ACCEL_raw.(segment), nldat_abd_ACCEL_raw.(segment), ntrial, segment, savepath2, savefigs);
 
-    sensor_C3898.freq(i,:) = freq_1;
-    sensor_C3898.phasediff(i,:) = phasediff_1;
-    sensor_C3898.pks(i,:) = pk_1;
-    sensor_C3892.freq(i,:) = freq_2;
-    sensor_C3892.phasediff(i,:) = phasediff_2;
-    sensor_C3892.pks(i,:) = pk_2;
+    sensor_chest.freq(i,:) = freq_1;
+    sensor_chest.phasediff(i,:) = phasediff_1;
+    sensor_chest.pks(i,:) = pk_1;
+    sensor_abd.freq(i,:) = freq_2;
+    sensor_abd.phasediff(i,:) = phasediff_2;
+    sensor_abd.pks(i,:) = pk_2;
 
 end
 
-save([savepath 'spectrum_pks_phase_clean'], 'sensor_C3898', 'sensor_C3892')
+save([savepath 'spectrum_pks_phase_clean'], 'sensor_chest', 'sensor_abd')
 
 
 
