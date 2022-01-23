@@ -96,7 +96,7 @@ freqband_phasediff = phasediff_interp(ind1:ind2,:,:);
 
 hold_data1 = freqband_mag1.dataSet;
 hold_data2 = freqband_mag2.dataSet;
-domaint = 0:incr_new:length(hold_data1);
+domaint = 0.24:incr_new:0.46;
 phasediff = freqband_phasediff.dataSet;
 
 for v = 1:nChans

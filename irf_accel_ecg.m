@@ -3,14 +3,20 @@ function [ACCEL_output_dec,clean_ACCEL]=irf_accel_ecg(ACCEL_output, ECG_input,ts
 
 %% Uncomment if not a function
 % ACCEL_output = hold_accel1_temp;
+% data1 = ACCEL_output.dataSet;
 % ECG_input=nldat_ECG;
+% data_ecg = ECG_input.dataSet;
 % 
 % ts=0.002;
 % save_figs=savefigs;
 %%
-%time_seg = 0:ACCEL_output.domainIncr:length(ACCEL_output.dataSet)*ACCEL_output.domainIncr- ACCEL_output.domainIncr;
-
-% time_ECG = 0:ECG_input.domainIncr:length(ECG_input.dataSet)*ECG_input.domainIncr- ECG_input.domainIncr;
+% % time_seg = 0:ACCEL_output.domainIncr:length(ACCEL_output.dataSet)*ACCEL_output.domainIncr- ACCEL_output.domainIncr;
+% 
+% time_seg = 0 + (0:length(data1)-1)*ACCEL_output.domainIncr;
+% time_ECG = 0 + (0:length(data_ecg)-1)*ECG_input.domainIncr;
+% 
+% 
+% % time_ECG = 0:ECG_input.domainIncr:length(ECG_input.dataSet)*ECG_input.domainIncr- ECG_input.domainIncr;
 time_seg=ACCEL_output.domainValues;
 time_ECG=ECG_input.domainValues;
 

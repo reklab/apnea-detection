@@ -3,17 +3,17 @@
 %nldat_accel1 must be sensor that was tapped
 %sensor1 and sensor 2 should be string
 
-% function [locs,pks]=segment_ID(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savepath, savefigs)
-nldat_accel1=nldat_chest_ACCEL;
-nldat_accel2=nldat_abd_ACCEL;
+function [locs,pks]=segment_ID(nldat_accel1, nldat_accel2, pkg_gap,ntrial, savepath, savefigs)
+% nldat_accel1=nldat_chest_ACCEL;
+% nldat_accel2=nldat_abd_ACCEL;
 
 %currently only set up to test for taps on sensor 3898 and only observes
 %z_accel data
 directions = ["X", "Y", "Z"];
 
 data_1 = get(nldat_accel1, "dataSet");
-% time_1 = get(nldat_accel1, "domainValues");
-time_1 = 0 + (0:length(data_1)-1)*nldat_accel1.domainIncr;
+time_1 = get(nldat_accel1, "domainValues");
+% time_1 = 0 + (0:length(data_1)-1)*nldat_accel1.domainIncr;
 names = get(nldat_accel1, "chanNames");
 nChans = length(names);
 
@@ -152,4 +152,4 @@ if  savefigs
     savefig(figure(2), [savepath, 'segmented_acceldata_' ntrial])
 end
 
-% end
+end
