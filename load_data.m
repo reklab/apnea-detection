@@ -22,9 +22,11 @@ addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util
 clc
 clear all
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+
 % baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% list = dir([baseDir 'trials_data_json/']);
 
 % chose the desired trial
 % ntrial = '001'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
@@ -262,8 +264,8 @@ for i =1:length(segm_pks)+1
         dir = directions{v};
         hold_accel1_temp=hold_accel1(:,v,:);
         hold_accel2_temp=hold_accel2(:,v,:);
-        [hold_accel1_raw, hold_accel1_clean]=irf_accel_ecg(hold_accel1_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'C3898');
-        [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'C3892');
+        [hold_accel1_raw, hold_accel1_clean]=irf_accel_ecg(hold_accel1_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'chest');
+        [hold_accel2_raw, hold_accel2_clean]=irf_accel_ecg(hold_accel2_temp, nldat_ECG, ts, ntrial, segment,savepath2, savefigs, dir, 'abd');
 
         if v > 1
             eval(['nldat_chest_ACCEL_raw.' segment '=cat(2,nldat_chest_ACCEL_raw.' segment ', hold_accel1_raw);'])

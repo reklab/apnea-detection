@@ -16,6 +16,11 @@ T2=fs*20;
 % beyond N-4 does not exist 
 
 for n=1:N-4
+
+%     if T2 > L
+%         T2 = L;
+%     end
+
     data(T1:T2,:,n)=detrend(nldat1(T1:T2,:),3);
     T1=T1+WindowJump;
     T2=T2+WindowJump;

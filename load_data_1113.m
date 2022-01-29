@@ -27,17 +27,14 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
-% ntrial = '001'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
-ntrial = '011'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
-descrip_path ='normalBreathing'; description = "normal breathing";
+% ntrial = '011'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
+% descrip_path ='normalBreathing'; description = "normal breathing";
 
-% ntrial = '002'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
 % ntrial = '012'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
 % descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary"; 
 
-% ntrial = '003'; ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
-% ntrial = '013'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
-% descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; 
+ntrial = '013'; ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
+descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction'; 
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
 savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v5/' ntrial '/'];
@@ -336,6 +333,8 @@ for i =1:nSeg %length(segm_pks)+1
     [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_chest_ACCEL_clean.(segment), nldat_abd_ACCEL_clean.(segment), ntrial, segment, savepath2, savefigs);
 %     [freq_1, freq_2, phasediff_1, phasediff_2, pk_1, pk_2] = fft_analysis(nldat_chest_ACCEL_raw.(segment), nldat_abd_ACCEL_raw.(segment), ntrial, segment, savepath2, savefigs);
 
+    [freq_1_band, freq_2_band, phasediff_1_band, phasediff_2_band, pk_1_band, pk_2_band] = freq_band_analysis(nldat_chest_ACCEL_clean.(segment), nldat_abd_ACCEL_clean.(segment), ntrial,segment, savepath2, savefigs);
+    
     sensor_chest.freq(i,:) = freq_1;
     sensor_chest.phasediff(i,:) = phasediff_1;
     sensor_chest.pks(i,:) = pk_1;
@@ -343,9 +342,15 @@ for i =1:nSeg %length(segm_pks)+1
     sensor_abd.phasediff(i,:) = phasediff_2;
     sensor_abd.pks(i,:) = pk_2;
 
+    sensor_chest_fband.freq(i,:) = freq_1_band;
+    sensor_chest_fband.phasediff(i,:) = phasediff_1_band;
+    sensor_chest_fband.pks(i,:) = pk_1_band;
+    sensor_abd_fband.freq(i,:) = freq_2_band;
+    sensor_abd_fband.phasediff(i,:) = phasediff_2_band;
+    sensor_abd_fband.pks(i,:) = pk_2_band;
 end
 
-save([savepath 'spectrum_pks_phase_clean'], 'sensor_chest', 'sensor_abd')
+save([savepath 'spectrum_pks_phase_clean'], 'sensor_chest', 'sensor_abd', 'sensor_chest_fband', 'sensor_abd_fband')
 
 
 

@@ -1,5 +1,5 @@
 
-function [ACCEL_output_dec,clean_ACCEL]=irf_accel_ecg(ACCEL_output, ECG_input,ts,ntrial,seg, savepath, save_figs, dir, sensor)
+function [ACCEL_output_dec,clean_ACCEL]=irf_accel_ecg(ACCEL_output, ECG_input,ts,ntrial,seg, savepath, savefigs, dir, sensor)
 
 %% Uncomment if not a function
 % ACCEL_output = hold_accel1_temp;
@@ -96,7 +96,7 @@ set(a, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(b, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 set(c, 'Units', 'normalized', 'outerposition', [0 0 1 1])
 
-if save_figs
+if savefigs
     savefig(a, [savepath, 'residplot_' ntrial '_' seg dir '_' sensor])
     savefig(b, [savepath, 'accel_raw_clean_' ntrial '_' seg dir '_' sensor])
     savefig(c, [savepath, 'IRF_' ntrial '_' seg dir '_' sensor])
