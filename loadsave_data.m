@@ -9,32 +9,36 @@
 % addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
 %
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
+addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\METRICS')
+addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\Signal_Processing')
+addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\CardioRespiratory_Analysis')
 
-addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+% addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
+% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
+% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
+% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 %% load raw data from the json file
 clc
 clear all
 
-% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % list = dir([baseDir 'trials_data_json/']);
 
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "014", "015", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 Ntrials = length(trials);
 
-for n = 1 %:Ntrials
-    ntrial = trials(n);
+%  for n = 2:6 %:Ntrials
+    %ntrial=convertStringsToChars(trials(n));
+    ntrial = '010';
 
     if ismember(ntrial,["001","002","003","008","009","010"])
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
@@ -47,9 +51,9 @@ for n = 1 %:Ntrials
     ob = ["003", "010", "013", "019", "022", "025"];
 
     if ismember(ntrial, nb)
-        descrip_path ='normalBreathing'; description = "normal breathing";
+        descrip_path ='normalBreathing'; description = 'normal breathing';
     elseif ismember(ntrial, vb)
-        descrip_path ='intermittentBreathing_voluntary'; description = "intermittent breathing - voluntary";
+        descrip_path ='intermittentBreathing_voluntary'; description = 'intermittent breathing - voluntary';
     elseif ismember(ntrial, ob)
         descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction';
     else
@@ -57,12 +61,12 @@ for n = 1 %:Ntrials
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-    savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat/'];
-    % savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
-    % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
-    if ~exist(savepath, 'file')
-        mkdir(savepath)
-    end
+%     savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat/'];
+%     savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
+%     % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+%     if ~exist(savepath, 'file')
+%         mkdir(savepath)
+%     end
     savefigs = 0;
 
     raw_data = loadjson(filename);
@@ -187,38 +191,57 @@ for n = 1 %:Ntrials
     end
 
     fs_accel = 416; fs_ECG = 256;
-    set(nldat_abd_ACCEL, 'domainValues', NaN, 'domainIncr', 1/fs_accel)
-    set(nldat_chest_ACCEL, 'domainValues', NaN, 'domainIncr', 1/fs_accel)
-    % set(nldat_abd_ECG, 'domainValues', NaN, 'domainIncr', 1/fs_ECG)
-    set(nldat_chest_ECG, 'domainValues', NaN, 'domainIncr', 1/fs_ECG)
+%     set(nldat_abd_ACCEL, 'domainValues', NaN, 'domainIncr', 1/fs_accel)
+%     set(nldat_chest_ACCEL, 'domainValues', NaN, 'domainIncr', 1/fs_accel)
+%     % set(nldat_abd_ECG, 'domainValues', NaN, 'domainIncr', 1/fs_ECG)
+%     set(nldat_chest_ECG, 'domainValues', NaN, 'domainIncr', 1/fs_ECG)
 
     fprintf('Data converted to nldat objects \n')
 
     %% Analysis 2.1: ACCEL detrend, interpolate
     fs1 = 416;
     fs2 = 500;
-    a = nldat_chest_ACCEL.dataSet;
-    sampleLength1 = length(a);
-    b = nldat_abd_ACCEL.dataSet;
-    sampleLength2 = length(b);
+%     a = nldat_chest_ACCEL.dataSet;
+%     sampleLength1 = length(a);
+%     b = nldat_abd_ACCEL.dataSet;
+%     sampleLength2 = length(b);
+% 
+%     sampleLength = min(sampleLength1, sampleLength2);
+%     time= 0 + (0:sampleLength)*nldat_chest_ACCEL.domainIncr;
+    
+    a = nldat_chest_ACCEL.domainValues;
+    sampleLength1 = a(end);
+    b = nldat_abd_ACCEL.domainValues;
+    sampleLength2 = b(end);
 
     sampleLength = min(sampleLength1, sampleLength2);
-    time= 0 + (0:sampleLength)*nldat_chest_ACCEL.domainIncr;
+    time = 0:1/fs2:sampleLength;
+    time=time';
+
 
     nldat_chest_ACCEL= interp1(nldat_chest_ACCEL, time, 'linear');
     nldat_abd_ACCEL= interp1(nldat_abd_ACCEL, time, 'linear');
     disp ('Data interpolated')
 
+    %%
     [nldat_chest_ACCEL] = data_detrend(nldat_chest_ACCEL, fs2);
     [nldat_abd_ACCEL] = data_detrend(nldat_abd_ACCEL, fs2);
     disp ('Data detrended')
 
     %% Analysis 2.2: ECG interpolate
+%     fs_ECG=250;
+%     c = nldat_chest_ECG.dataSet;
+%     sampleLength3 = length(c);
+    % time_ECG = 0 + (0:sampleLength3)*nldat_chest_ECG.domainIncr;
+    
     fs_ECG=250;
-    c = nldat_chest_ECG.dataSet;
-    sampleLength3 = length(c);
+    c = nldat_chest_ECG.domainValues;
+    sampleLength3 = c(end);
+    sampleLength = min(sampleLength, sampleLength3);
+    time_ECG = 0:1/fs_ECG:sampleLength;
+    time_ECG=time_ECG';
 
-    time_ECG = 0 + (0:sampleLength3)*nldat_chest_ECG.domainIncr;
+    
 
     nldat_chest_ECG= interp1(nldat_chest_ECG, time_ECG, 'linear');
     disp ('ECG Data interpolated')
@@ -252,25 +275,28 @@ for n = 1 %:Ntrials
     end
 
     close all
+    
+  %% Redefine time domain and TimeInc
+    set(nldat_chest_ACCEL_raw, 'domainValues', NaN, 'domainIncr', 1/fs_d)
+    set(nldat_abd_ACCEL_raw, 'domainValues', NaN, 'domainIncr', 1/fs_d)
+    set(nldat_chest_ACCEL_clean, 'domainValues', NaN, 'domainIncr', 1/fs_d)
+	set(nldat_abd_ACCEL_clean, 'domainValues', NaN, 'domainIncr', 1/fs_d)
+    set(nldat_chest_ECG, 'domainValues', NaN, 'domainIncr', 1/fs_ECG)
 
-    save([savepath, 'ANNE_data_trial' ntrial], 'nldat_abd_ACCEL_clean', 'nldat_chest_ACCEL_clean', 'nldat_chest_ECG')
-    fprintf('file saved \n')
 
-%% we want to create a file for each trial containing the breathing type at
-% each timepoin
+%% we want to create a file for each trial containing the breathing type at each timepoint
 
 
 % N = normal, V = voluntary, O = obstruction, A = artefact, T = transition 
 
-segLength = 15*fs_d;
-transitionLength = 5*fs_d;
+% segLength = 15*fs_d;
+% transitionLength = 5*fs_d;
 
 dataLength = length(nldat_chest_ACCEL_clean);
 
 ID_array = blanks(dataLength);
 
-if descrip_path == "normal_breathing"
-
+    %NORMAL BREATHING TRIALS
     % if its normal assign N to everything unless trial 001 or 008 then
     % transition to deep breathing for last 20s
     if ntrial == "001" || ntrial == "008"
@@ -279,23 +305,45 @@ if descrip_path == "normal_breathing"
          ID_array(stopN:end) = "A";
         
     end
-elseif desrip_path == "intermittentBreathing_voluntary"
 
+    %VOLUNTARY BREATHING TRIALS
     % if voluntary trials have taps, use artefacts zone , if no taps then
     % use transition
+    if ntrial == "002" || ntrial == "009"
+         stopN = [17.5, 57.5, 97.5, 137.5].*fs_d;
+         stopV = [37.5, 77.5, 117.5, 157.5].*fs_d;
+         startV= [22.5; 62.5; 102.5; 142.5].*fs_d;
+         startN= [42.5, 82.5, 122.5, 162.5].*fs_d;
+         
+         ID_array(1:end)='T';
+         ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N'; 
+         ID_array([startV(1):stopV(1), startV(2):stopV(2), startV(3):stopV(3), startV(4):stopV(4)]) = 'V';
+         
+    end
 
-elseif descrip_path == "intermittentBreathing_obstructive"
+    %OBSTRUCTIVE BREATHING TRIALS
 
+    if ntrial == "003" || ntrial == "010"
+         stopN = [17.5, 57.5, 97.5, 137.5].*fs_d;
+         stopO = [37.5, 77.5, 117.5, 157.5].*fs_d;
+         startO= [22.5; 62.5; 102.5; 142.5].*fs_d;
+         startN= [42.5, 82.5, 122.5, 162.5].*fs_d;
+         
+         ID_array(1:end)='T';
+         ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N'; 
+         ID_array([startO(1):stopO(1), startO(2):stopO(2), startO(3):stopO(3), startO(4):stopO(4)]) = 'O';
+         
+    end
     % if obstructive trials have taps, use artefacts zone , if no taps then
     % use transition
 
-end
 
+%% Save everything
+    savepath= ['trials_data_nldat/'];
+    save([savepath, 'ANNE_data_trial' ntrial], 'nldat_abd_ACCEL_clean', 'nldat_chest_ACCEL_clean', 'nldat_chest_ECG', 'ID_array')
+    fprintf('file saved \n')
 
-
-
-
-end
+%  end
 
 
 
