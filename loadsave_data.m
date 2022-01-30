@@ -28,7 +28,7 @@ addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\CardioRespiratory_Analysis')
 clc
 clear all
 
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % list = dir([baseDir 'trials_data_json/']);
