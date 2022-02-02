@@ -1,4 +1,42 @@
-%%
+%% New Machine Learning with 
+clear all
+trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
+for i=1:length(trials)
+    ntrial=convertStringsToChars(trials(i));
+    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+    load(baseDir1)
+    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+    load(baseDir2);
+    ID=strings(length(ID_array),1);
+    for n=1:length(ID_array)
+    ID(n)=convertCharsToStrings(ID_array(n));
+    end
+    stat.ID=ID;
+    
+    T=struct2table(stat);
+    if i==1
+        %needed to make struct right format
+        hold_struct=table2struct(T);
+    else
+        hold_struct2=table2struct(T);
+        hold_struct(end+1:end+length(hold_struct2))=hold_struct2;
+    end
+
+end
+T=struct2table(hold_struct);
+X=table2array(T(:,1));
+locs=isnan(X);
+T(locs==1,:)=[];
+
+ID_array=table2array(T(:,58));
+IndexA = strfind(ID_array,'A');
+IndexA = not(cellfun('isempty',IndexA));
+IndexT = strfind(ID_array,'T');
+IndexT = not(cellfun('isempty',IndexT));
+IndexAT=IndexA+IndexT;
+
+locs_A=
+%% OLD Machine Learning
 trials={'002', '003', '009', '010', '012', '013'};
 OB_trials={'002', '009', '012'};
 VB_trials={'003', '010', '013'};
