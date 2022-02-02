@@ -1,15 +1,18 @@
 %% Analysis 4: call filtBankRespir with N = 251
+clear all 
+clc
+
 addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
 addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
 addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/';
 
-trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "014", "015", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
+trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 Ntrials = length(trials);
 directions = ["X", "Y", "Z"];
 nDir = length(directions);
 
-for n = 1:6 %:Ntrials
+for n = 1:Ntrials
 
     ntrial = trials{n};
     load([baseDir, 'trials_data_nldat/ANNE_data_trial' ntrial])
@@ -44,6 +47,7 @@ for n = 1:6 %:Ntrials
     Nb = 101;
     Nmu1 = 101;
     Navg = 21;
+    Nr = 251;
     Fs = 50;
 
     for v = 1:nDir
@@ -53,12 +57,14 @@ for n = 1:6 %:Ntrials
         data_abd = nldat_abd_ACCEL_clean.dataSet;
         Z_abd = data_abd(:,v);
 
-        [stat.TotPWR_RR_A.(dir),stat.TotPWR_MV_A.(dir),stat.MaxPWR_MV_A.(dir),stat.MaxPWR_RR_A.(dir),stat.FMAX_A.(dir),stat.FMAXi_A.(dir)] = filtBankRespir(Z_chest,N,Fs);
-        [stat.TotPWR_RR_C.(dir),stat.TotPWR_MV_C.(dir),stat.MaxPWR_MV_C.(dir),stat.MaxPWR_RR_C.(dir),stat.FMAX_C.(dir),stat.FMAXi_C.(dir)] = filtBankRespir(Z_abd,N,Fs);
+        eval(['[stat.TotPWR_RR_A_' dir ', stat.TotPWR_MV_A_' dir ',stat.MaxPWR_MV_A_' dir ',stat.MaxPWR_RR_A_' dir ',stat.FMAX_A_' dir ',stat.FMAXi_A_' dir '] = filtBankRespir(Z_chest,N,Fs);']);
+        eval(['[stat.TotPWR_RR_C_' dir ', stat.TotPWR_MV_C_' dir ',stat.MaxPWR_MV_C_' dir ',stat.MaxPWR_RR_C_' dir ',stat.FMAX_C_' dir ',stat.FMAXi_C_' dir '] = filtBankRespir(Z_abd,N,Fs);']);
 
-        [stat.PHI.(dir),stat.FMAXi_ABD.(dir)] = asynchStat(Z_chest,Z_abd,N,Fs);
-
-        [stat.BRC.(dir),stat.BAB.(dir),stat.BSU.(dir),stat.BDI.(dir),stat.BPH.(dir)] = breathStat(Z_chest,Z_abd,Nb,Nmu1,Navg,Fs);
+        eval(['[stat.PHI_' dir ',stat.FMAXi_ABD_' dir '] = asynchStat(Z_chest,Z_abd,N,Fs);']);
+        eval(['[stat.RMS_ABD_' dir '] = rmsStat(Z_abd,Z_abd,Nr,Fs);']);    
+        eval(['[stat.RMS_CHT_' dir '] = rmsStat(Z_chest,Z_chest,Nr,Fs);']);    
+        eval(['[stat.RMS_ABDCHT_' dir '] = rmsStat(Z_abd,Z_chest,Nr,Fs);']);    
+        eval(['[stat.BRC_' dir ',stat.BAB_' dir ',stat.BSU_' dir ',stat.BDI_' dir ',stat.BPH_' dir '] = breathStat(Z_chest,Z_abd,Nb,Nmu1,Navg,Fs);'])
 
     end
 
