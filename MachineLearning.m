@@ -3,9 +3,11 @@ clear all
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+%     baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+    baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
     load(baseDir1)
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+%     baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2);
     ID=strings(length(ID_array),1);
     for n=1:length(ID_array)
@@ -28,14 +30,15 @@ X=table2array(T(:,1));
 locs=isnan(X);
 T(locs==1,:)=[];
 
-ID_array=table2array(T(:,58));
+ID_array=table2array(T(:,67));
 IndexA = strfind(ID_array,'A');
 IndexA = not(cellfun('isempty',IndexA));
 IndexT = strfind(ID_array,'T');
 IndexT = not(cellfun('isempty',IndexT));
 IndexAT=IndexA+IndexT;
 
-locs_A=
+T1=T(IndexAT==0,:);
+
 %% OLD Machine Learning
 trials={'002', '003', '009', '010', '012', '013'};
 OB_trials={'002', '009', '012'};
@@ -47,7 +50,8 @@ TEST=struct('ChestFreq',{},'AbdFreq',{},'ChestAmp', {}, 'AbdAmp', {}, 'type', {}
 k=1;
 for i=3:3
     ntrial=trials(i)
-    baseDir=string(fullfile('/Users/vstur/Dropbox/ApnexDetection_Project/Export/figures_v5/', trials(i), '/spectrum_pks_phase_clean'));
+%     baseDir=string(fullfile('/Users/vstur/Dropbox/ApnexDetection_Project/Export/figures_v5/', trials(i), '/spectrum_pks_phase_clean'));
+    baseDir=string(fullfile('/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v5/', trials(i), '/spectrum_pks_phase_clean'));
     load(baseDir);
     chest_freq_z=sensor_chest.freq(:,3);
     abd_freq_z=sensor_abd.freq(:,3);
