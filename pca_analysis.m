@@ -13,4 +13,5 @@ addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 input=table2array(T1(:,1:66));
 labels=table2array(T1(:,67));
 
+[coeff,score,latent]=pca(input);
 mapcaplot(input,labels);
