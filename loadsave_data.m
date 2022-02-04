@@ -9,28 +9,28 @@
 % addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
 % addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
 %
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
-addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\METRICS')
-addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\Signal_Processing')
-addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\CardioRespiratory_Analysis')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
+% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
+% addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\METRICS')
+% addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\Signal_Processing')
+% addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\CardioRespiratory_Analysis')
 
-% addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
+addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
+addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
+addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 %% load raw data from the json file
 clc
 clear all
 
 % baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % list = dir([baseDir 'trials_data_json/']);
 
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "014", "015", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
@@ -38,7 +38,7 @@ Ntrials = length(trials);
 
 %  for n = 2:6 %:Ntrials
     %ntrial=convertStringsToChars(trials(n));
-    ntrial = '010';
+    ntrial = '019';
 
     if ismember(ntrial,["001","002","003","008","009","010"])
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
@@ -55,13 +55,13 @@ Ntrials = length(trials);
     elseif ismember(ntrial, vb)
         descrip_path ='intermittentBreathing_voluntary'; description = 'intermittent breathing - voluntary';
     elseif ismember(ntrial, ob)
-        descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction';
+        descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction';
     else
         error('Unknown trial type')
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-%     savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat/'];
+    savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat/'];
 %     savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
 %     % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
 %     if ~exist(savepath, 'file')
@@ -223,7 +223,6 @@ Ntrials = length(trials);
     nldat_abd_ACCEL= interp1(nldat_abd_ACCEL, time, 'linear');
     disp ('Data interpolated')
 
-    %%
     [nldat_chest_ACCEL] = data_detrend(nldat_chest_ACCEL, fs2);
     [nldat_abd_ACCEL] = data_detrend(nldat_abd_ACCEL, fs2);
     disp ('Data detrended')
