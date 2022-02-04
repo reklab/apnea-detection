@@ -8,6 +8,7 @@ addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
 addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/METRICS/')
 addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
 addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+addpath('/Users/jtam/Desktop/school/BIEN470/MATLAB tools/github_repo/')
 
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 for i=1:length(trials)
