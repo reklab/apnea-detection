@@ -9,7 +9,8 @@ labels=table2array(T1(:,67));
 % mapcaplot(input,labels);
 
 groups=labels_num;
-biplotG(coeff, score, 'Groups', groups)
+biplotG(coeff, score, 'Groups', groups) %this is a separate fxn downloaded from internet
+%I can put it in the dropbox if we want to use it
 
 labels_num=zeros(length(labels),1);
 
