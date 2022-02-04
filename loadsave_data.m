@@ -198,6 +198,38 @@ Ntrials = length(trials);
 
     fprintf('Data converted to nldat objects \n')
 
+    %% Fix Time Stamps
+    TIME1=nldat_abd_ACCEL.domainValues;
+    TIME2=nldat_chest_ACCEL.domainValues;
+    TIME3=nldat_chest_ECG.domainValues;
+    
+    for x=2:length (TIME1)-1
+        if TIME1(x+1) < TIME1(x)
+            
+            diff=TIME1(x)-TIME1(x+1);
+            TIME1(x+1: end)= TIME1(x+1:end) +diff + (1/fs_accel);
+        end
+    end
+    
+    for x=2:length (TIME2)-1
+        if TIME2(x+1) < TIME2(x)
+            
+            diff=TIME2(x)-TIME2(x+1);
+            TIME2(x+1: end)= TIME2(x+1:end) +diff + (1/fs_accel);
+        end
+    end
+    for x=2:length (TIME3)-1
+        if TIME3(x+1) < TIME3(x)
+            
+            diff=TIME3(x)-TIME3(x+1);
+            TIME3(x+1: end)= TIME3(x+1:end) +diff + (1/fs_accel);
+        end
+    end
+    
+    nldat_abd_ACCEL.domainValues=TIME1;
+    nldat_chest_ACCEL.domainValues=TIME2;
+    nldat_chest_ECG.domainValues=TIME3;
+    disp(TIME1(end)); disp(TIME2(end));
     %% Analysis 2.1: ACCEL detrend, interpolate
     fs1 = 416;
     fs2 = 500;
@@ -303,13 +335,31 @@ ID_array = blanks(dataLength);
          ID_array(1:stopN) = "N";
          ID_array(stopN:end) = "A";
         
+    elseif ntrial == "011" 
+         stopN = 117.5*fs_d;
+         ID_array(1:stopN) = "N";
+         ID_array(stopN:end) = "A";
+        
+    elseif ntrial == "017" || ntrial =="020" || ntrial=="023"
+        ID_array(1:end)="N";
     end
+
 
     %VOLUNTARY BREATHING TRIALS
     % if voluntary trials have taps, use artefacts zone , if no taps then
     % use transition
-    if ntrial == "002" || ntrial == "009"
+    if ntrial == "002" || ntrial == "009" || ntrial=="012"
          stopN = [17.5, 57.5, 97.5, 137.5].*fs_d;
+         stopV = [37.5, 77.5, 117.5, 157.5].*fs_d;
+         startV= [22.5; 62.5; 102.5; 142.5].*fs_d;
+         startN= [42.5, 82.5, 122.5, 162.5].*fs_d;
+         
+         ID_array(1:end)='A';
+         ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N'; 
+         ID_array([startV(1):stopV(1), startV(2):stopV(2), startV(3):stopV(3), startV(4):stopV(4)]) = 'V';
+         
+    elseif ntrial == "018" || ntrial =="021" || ntrial=="024"
+        stopN = [17.5, 57.5, 97.5, 137.5].*fs_d;
          stopV = [37.5, 77.5, 117.5, 157.5].*fs_d;
          startV= [22.5; 62.5; 102.5; 142.5].*fs_d;
          startN= [42.5, 82.5, 122.5, 162.5].*fs_d;
@@ -322,7 +372,17 @@ ID_array = blanks(dataLength);
 
     %OBSTRUCTIVE BREATHING TRIALS
 
-    if ntrial == "003" || ntrial == "010"
+    if ntrial == "003" || ntrial == "010" ||ntrial=="013"
+         stopN = [17.5, 57.5, 97.5, 137.5].*fs_d;
+         stopO = [37.5, 77.5, 117.5, 157.5].*fs_d;
+         startO= [22.5; 62.5; 102.5; 142.5].*fs_d;
+         startN= [42.5, 82.5, 122.5, 162.5].*fs_d;
+         
+         ID_array(1:end)='A';
+         ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N'; 
+         ID_array([startO(1):stopO(1), startO(2):stopO(2), startO(3):stopO(3), startO(4):stopO(4)]) = 'O';
+      
+    elseif ntrial == "019" || ntrial =="022" || ntrial=="025"
          stopN = [17.5, 57.5, 97.5, 137.5].*fs_d;
          stopO = [37.5, 77.5, 117.5, 157.5].*fs_d;
          startO= [22.5; 62.5; 102.5; 142.5].*fs_d;
@@ -331,7 +391,7 @@ ID_array = blanks(dataLength);
          ID_array(1:end)='T';
          ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N'; 
          ID_array([startO(1):stopO(1), startO(2):stopO(2), startO(3):stopO(3), startO(4):stopO(4)]) = 'O';
-         
+      
     end
     % if obstructive trials have taps, use artefacts zone , if no taps then
     % use transition
