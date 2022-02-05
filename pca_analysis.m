@@ -8,9 +8,6 @@ labels=table2array(T1(:,67));
 
 % mapcaplot(input,labels);
 
-groups=labels_num;
-biplotG(coeff, score, 'Groups', groups)
-
 labels_num=zeros(length(labels),1);
 
 for i=1:length(labels)
@@ -22,3 +19,7 @@ for i=1:length(labels)
         labels_num(i)=3;
     end
 end
+
+groups=labels_num;
+% biplotG(coeff, score, 'Groups', groups)
+
