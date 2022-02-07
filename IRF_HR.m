@@ -4,10 +4,10 @@
 % 2. decimates ECG and ACCEL data to 50Hz 
 % 3. uses IRF to remove HR effects in ACCEL data
 
-function [ACCEL_output_dec,clean_ACCEL]=IRF_HR(ACCEL_output, ECG_input,ts)
-% ACCEL_output = nldat_chest_ACCEL;
-% ECG_input = nldat_chest_ECG;
-% ts = 0.002;
+% function [ACCEL_output_dec,clean_ACCEL]=IRF_HR(ACCEL_output, ECG_input,ts)
+ACCEL_output = nldat_chest_ACCEL;
+ECG_input = nldat_chest_ECG;
+ts = 0.002;
 
 time_ACCEL = 0:ts:ts*length(ACCEL_output.dataSet)-ts;
 
@@ -36,35 +36,43 @@ set(nldat_sys, 'domainIncr', ts, 'domainValues', NaN, 'domainStart',0);
 set(nldat_sys_dec, 'domainIncr', ts_dec, 'domainValues', NaN, 'domainStart', 0);
 
 %%
-IR_length = 0.4;
+IR_length = 1;
 nLags = IR_length/ts_dec;
-T1=1;
-T2=20/ts_dec;
+% T1=1;
+% T2=20/ts_dec;
 
-L=length(nldat_sys_dec.dataSet);
-WindowJump=20/ts_dec;
-N=ceil(L/WindowJump);
+% L=length(nldat_sys_dec.dataSet);
+% WindowJump=20/ts_dec;
+% N=ceil(L/WindowJump);
 
-for n=1:N
+% for n=1:N
+% 
+%     if T2 > L
+%         T2 = L;
+%     end
+    I = irf(nldat_sys_dec, 'nLags', nLags, 'nSides', 2);
+    figure()
+    plot(I)
+%     I_smooth = I;
+%     hold on 
+%     I_smooth.dataSet = smooth(I_smooth.dataSet);
+%     plot(I_smooth)
 
-    if T2 > L
-        T2 = L;
-    end
-    I = irf(nldat_sys_dec(T1:T2,:), 'nLags', nLags);
-
-    nldat_temp = nlid_resid(I, nldat_sys_dec(T1:T2,:));
-
-    if n > 1
-        data_temp = nldat_temp.dataSet;
-        data_hold = cat(1, clean_ACCEL.dataSet, data_temp);
-        clean_ACCEL.dataSet = data_hold;
-    else
-        clean_ACCEL = nldat_temp;
-    end
-
-    T1=T1+WindowJump;
-    T2=T2+WindowJump;
-end
+    figure()
+    nldat_temp = nlid_resid(I, nldat_sys_dec);
+%     figure()
+%     nldat_temp_smooth = nlid_resid(I_smooth, nldat_sys_dec);
+%     if n > 1
+%         data_temp = nldat_temp.dataSet;
+%         data_hold = cat(1, clean_ACCEL.dataSet, data_temp);
+%         clean_ACCEL.dataSet = data_hold;
+%     else
+%         clean_ACCEL = nldat_temp;
+%     end
+% 
+%     T1=T1+WindowJump;
+%     T2=T2+WindowJump;
+% end
 
 
-end
+% end
