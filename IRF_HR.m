@@ -36,7 +36,7 @@ set(nldat_sys, 'domainIncr', ts, 'domainValues', NaN, 'domainStart',0);
 set(nldat_sys_dec, 'domainIncr', ts_dec, 'domainValues', NaN, 'domainStart', 0);
 
 %%
-IR_length = 1;
+IR_length = 0.4
 nLags = IR_length/ts_dec;
 % T1=1;
 % T2=20/ts_dec;
@@ -52,16 +52,18 @@ nLags = IR_length/ts_dec;
 %     end
     I = irf(nldat_sys_dec, 'nLags', nLags, 'nSides', 2);
     figure()
-    plot(I)
-%     I_smooth = I;
+%     plot(I)
+    I_smooth = I;
 %     hold on 
-%     I_smooth.dataSet = smooth(I_smooth.dataSet);
-%     plot(I_smooth)
+    I_smooth.dataSet = smooth(I_smooth.dataSet);
+    plot(I_smooth)
 
-    figure()
-    nldat_temp = nlid_resid(I, nldat_sys_dec);
+    
+
 %     figure()
-%     nldat_temp_smooth = nlid_resid(I_smooth, nldat_sys_dec);
+%     nldat_temp = nlid_resid(I, nldat_sys_dec);
+    figure()
+    nldat_temp_smooth = nlid_resid(I_smooth, nldat_sys_dec);
 %     if n > 1
 %         data_temp = nldat_temp.dataSet;
 %         data_hold = cat(1, clean_ACCEL.dataSet, data_temp);
