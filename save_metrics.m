@@ -12,6 +12,10 @@ Ntrials = length(trials);
 directions = ["X", "Y", "Z"];
 nDir = length(directions);
 
+nb = ["001", "008", "011", "017", "020", "023"];
+vb = ["002", "009", "012", "018", "021", "024"];
+ob = ["003", "010", "013", "019", "022", "025"];
+
 for n = 1:Ntrials
 
     ntrial = trials{n};
@@ -22,10 +26,6 @@ for n = 1:Ntrials
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
     end
-
-    nb = ["001", "008", "011", "017", "020", "023"];
-    vb = ["002", "009", "012", "018", "021", "024"];
-    ob = ["003", "010", "013", "019", "022", "025"];
 
     if ismember(ntrial, nb)
         descrip_path ='normalBreathing'; description = 'normal breathing';

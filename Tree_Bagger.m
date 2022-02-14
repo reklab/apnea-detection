@@ -45,3 +45,9 @@ bar(imp);
 title('Out-of-Bag Permuted Predictor Importance Estimates');
 ylabel('Estimates');
 xlabel('Predictors');
+
+%% Organizing Metrics based on importance
+label_tables= cell2table(reshape(LABELS(:,1:66), [66,1]), 'VariableNames',{'Metric'});
+label_tables.imp=reshape(imp, [66,1]);
+label_tables.MetricNum=reshape([1:66], [66,1]);
+label_tables=sortrows(label_tables,2,'descend');
