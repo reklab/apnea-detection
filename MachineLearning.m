@@ -8,7 +8,7 @@ for i=1:length(trials)
     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
     load(baseDir1)
 %     baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
-    baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v2/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2);
     ID=strings(length(ID_array),1);
     for n=1:length(ID_array)
