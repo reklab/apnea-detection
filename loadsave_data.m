@@ -37,7 +37,7 @@ trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", 
 Ntrials = length(trials);
 
 %%
-for n = 1:Ntrials
+for n = 11 %:Ntrials
     clc
     clear all_data 
     %ntrial=convertStringsToChars(trials(n));

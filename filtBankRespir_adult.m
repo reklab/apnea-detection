@@ -87,7 +87,7 @@ function [TotPWR_RR,TotPWR_MV,MaxPWR_MV,MaxPWR_RR,FMAX,FMAXi] = filtBankRespir_a
     xlen=length(X);
 
     % Define the cut-off frequencies
-    dF=0.05;
+    dF=0.15;
     Fl=[0:0.1:1.5]';
     Fh=Fl+dF;
     Freqs=mean([Fl Fh],2);

@@ -36,7 +36,7 @@ set(nldat_sys, 'domainIncr', ts, 'domainValues', NaN, 'domainStart',0);
 set(nldat_sys_dec, 'domainIncr', ts_dec, 'domainValues', NaN, 'domainStart', 0);
 
 %%
-IR_length = 0.4
+IR_length = 0.4;
 nLags = IR_length/ts_dec;
 % T1=1;
 % T2=20/ts_dec;
@@ -60,7 +60,7 @@ nLags = IR_length/ts_dec;
 
     
 
-%     figure()
+    figure()
 %     nldat_temp = nlid_resid(I, nldat_sys_dec);
     figure()
     nldat_temp_smooth = nlid_resid(I_smooth, nldat_sys_dec);
