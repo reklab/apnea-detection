@@ -1,23 +1,14 @@
 %% New Machine Learning with 
 clear all
 
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
-% addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
-% addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/METRICS/')
-% addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-% addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/MATLAB tools/github_repo/')
-
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
-%     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+%     baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+    baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
     load(baseDir1)
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v2/features_stats_trial'], trials(i), ['.mat']);
-%     baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+%     baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v2/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2);
     ID=strings(length(ID_array),1);
     for n=1:length(ID_array)
@@ -49,100 +40,6 @@ IndexAT=IndexA+IndexT;
 
 T1=T(IndexAT==0,:);
 
-%% Training with 80% of data
-Index_Train=zeros(height(T1),1);
-R=randi(5,height(T1),1);
-Table_Test=T1((R==5),:);
-Table_Train=T1(not(R==5),:);
-
-%% Training with 80% of breathholds and ___% of NB
-ID_array=table2array(T1(:,67));
-% IndexN = strfind(ID_array,'N');
-% IndexN = not(cellfun('isempty',IndexN));
-% IndexO = strfind(ID_array,'O');
-% IndexO = not(cellfun('isempty',IndexO));
-% IndexV = strfind(ID_array,'V');
-% IndexV = not(cellfun('isempty',IndexV));
-
-KeepArray=zeros(length(ID_array),1);
-
-for i=1:length(ID_array)
-    if ID_array(i)=="V"|| ID_array(i)=="O"
-        R=randi(5);
-        if ismember(R,[1:4])
-            KeepArray(i)=1;
-        end
-    elseif ID_array(i)=="N"
-        R=randi(19);
-        if ismember(R,[1:3])
-            KeepArray(i)=1;
-        end
-    else
-        display('Not N,V,or O')
-    end
-end
-
-Table_Train=T1((KeepArray==1),:);
-Table_Test=T1(not(KeepArray==1),:);
-%%
-yfit=trainedModel.predictFcn(Table_Test);
-ID_Test_Array=Table_Test.ID;
-yfit_S=string(yfit);
-C=confusionmat(ID_Test_Array,yfit_S);
-Right=C(1,1)+C(2,2)+C(3,3);
-
-Acc=Right/height(Table_Test);
-
-%% Train without Laura's Trials
-
-trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
-for i=length(trials)-3:length(trials)
-%for i=1:length(trials)-3
-    ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
-%     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
-    load(baseDir1)
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
-%     baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
-    load(baseDir2);
-    ID=strings(length(ID_array),1);
-    for n=1:length(ID_array)
-    ID(n)=convertCharsToStrings(ID_array(n));
-    end
-    stat.ID=ID;
-    
-    T=struct2table(stat);
-    if i==1
-        %needed to make struct right format
-        hold_struct=table2struct(T);
-    else
-        hold_struct2=table2struct(T);
-        hold_struct(end+1:end+length(hold_struct2))=hold_struct2;
-    end
-
-end
-T=struct2table(hold_struct);
-X=table2array(T(:,1));
-locs=isnan(X);
-T(locs==1,:)=[];
-
-ID_array=table2array(T(:,67));
-IndexA = strfind(ID_array,'A');
-IndexA = not(cellfun('isempty',IndexA));
-IndexT = strfind(ID_array,'T');
-IndexT = not(cellfun('isempty',IndexT));
-IndexAT=IndexA+IndexT;
-
-T_Test=T(IndexAT==0,:);
-
-%%
-yfit2=trainedModel2.predictFcn(T_Test);
-ID_Test_Array2=T_Test.ID;
-yfit_S2=string(yfit2);
-C2=confusionmat(ID_Test_Array2,yfit_S2);
-Right2=C2(1,1)+C2(2,2)+C2(3,3);
-
-Acc2=Right2/height(T_Test)
 %% OLD Machine Learning
 trials={'002', '003', '009', '010', '012', '013'};
 OB_trials={'002', '009', '012'};
