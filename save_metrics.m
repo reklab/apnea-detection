@@ -57,13 +57,13 @@ for n = 1:Ntrials
         data_abd = nldat_abd_ACCEL_clean.dataSet;
         accel_abd = data_abd(:,v);
 
-        eval(['[stat.TotPWR_RR_A_' dir ', stat.TotPWR_MV_A_' dir ',stat.MaxPWR_MV_A_' dir ',stat.MaxPWR_RR_A_' dir ',stat.FMAX_A_' dir ',stat.FMAXi_A_' dir '] = filtBankRespir_adult(accel_chest,N,Fs);']);
-        eval(['[stat.TotPWR_RR_C_' dir ', stat.TotPWR_MV_C_' dir ',stat.MaxPWR_MV_C_' dir ',stat.MaxPWR_RR_C_' dir ',stat.FMAX_C_' dir ',stat.FMAXi_C_' dir '] = filtBankRespir_adult(accel_abd,N,Fs);']);
+        eval(['[stat.TotPWR_RR_A_' dir ', stat.TotPWR_MV_A_' dir ',stat.MaxPWR_MV_A_' dir ',stat.MaxPWR_RR_A_' dir ',stat.FMAX_A_' dir ',stat.FMAXi_A_' dir '] = filtBankRespir_adult(accel_abd,N,Fs);']);
+        eval(['[stat.TotPWR_RR_C_' dir ', stat.TotPWR_MV_C_' dir ',stat.MaxPWR_MV_C_' dir ',stat.MaxPWR_RR_C_' dir ',stat.FMAX_C_' dir ',stat.FMAXi_C_' dir '] = filtBankRespir_adult(accel_chest,N,Fs);']);
 
-        eval(['[stat.PHI_' dir ',stat.FMAXi_ABD_' dir '] = asynchStat(accel_chest,accel_abd,N,Fs);']);
-        eval(['[stat.RMS_ABD_' dir '] = rmsStat(accel_abd,accel_abd,Nr,Fs);']);    
-        eval(['[stat.RMS_CHT_' dir '] = rmsStat(accel_chest,accel_chest,Nr,Fs);']);    
-        eval(['[stat.RMS_ABDCHT_' dir '] = rmsStat(accel_abd,accel_chest,Nr,Fs);']);    
+        eval(['[stat.PHI_' dir ',stat.FMAXi_AC_' dir '] = asynchStat(accel_chest,accel_abd,N,Fs);']);
+        eval(['[stat.RMS_A_' dir '] = rmsStat(accel_abd,accel_abd,Nr,Fs);']);    
+        eval(['[stat.RMS_C_' dir '] = rmsStat(accel_chest,accel_chest,Nr,Fs);']);    
+        eval(['[stat.RMS_AC_' dir '] = rmsStat(accel_abd,accel_chest,Nr,Fs);']);    
         eval(['[stat.BRC_' dir ',stat.BAB_' dir ',stat.BSU_' dir ',stat.BDI_' dir ',stat.BPH_' dir '] = breathStat(accel_chest,accel_abd,Nb,Nmu1,Navg,Fs);'])
 
     end
