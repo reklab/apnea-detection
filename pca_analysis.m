@@ -36,6 +36,19 @@ end
 % biplot(coeff(:,1:3),'Scores',score(:,1:3),'Varlabels',categories);
 % mapcaplot(input,labels);
 
+%%
+
+a=table2array(T1);
+a=str2double(a);
+
+pca_top9=zeros(66,9);
+
+for i=1:9
+    pca_top9(:,i)=(a(i,1:66))'.*coeff(:,i);
+end
+
+%%
+
 principal_metrics=zeros(10,6);
 
 for i=1:6
