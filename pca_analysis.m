@@ -21,13 +21,13 @@ categories=fieldnames(T);
 categories=categories(1:66);
 
 groups=zeros(length(labels),1);
-for i=1:length(labels)
-    if labels(i)=='N'
-        groups(i)=1;
-    elseif labels(i)=='V'
-        groups(i)=2;
-    elseif labels(i)=='O'
-        groups(i)=3;
+for t=1:length(labels)
+    if labels(t)=='N'
+        groups(t)=1;
+    elseif labels(t)=='V'
+        groups(t)=2;
+    elseif labels(t)=='O'
+        groups(t)=3;
     end
 end
 
@@ -41,23 +41,31 @@ end
 a=table2array(T1);
 a=str2double(a);
 
-pca_top9=zeros(66,9);
+%%
 
-%computes values for each term for each PC 
-%selected top 9 PCs based on % variance accounted for (cut-off = 2%)
+pca_terms=zeros(66,9);
 
-for i=1:9
-    pca_top9(:,i)=(a(i,1:66))'.*coeff(:,i);
+pca_top9=zeros(length(a),9);
+
+for n=1:length(a)
+    
+    %computes values for each term for each PC 
+    %selected top 9 PCs based on % variance accounted for (cut-off = 2%)
+    
+    for t=1:9
+        pca_terms(:,t)=(a(n,1:66))'.*coeff(:,t);
+    end
+    
+    %computes values for each PC
+    
+    pca_top9(n,:)=sum(pca_terms,1);
+
 end
-
-%computes values for each PC
-
-pca_values=sum(pca_top9,1);
 
 %%
 
 principal_metrics=zeros(10,6);
 
-for i=1:6
-    [~,principal_metrics(:,i)]=maxk(coeff(:,i),10,'ComparisonMethod','abs');
+for t=1:6
+    [~,principal_metrics(:,t)]=maxk(coeff(:,t),10,'ComparisonMethod','abs');
 end
