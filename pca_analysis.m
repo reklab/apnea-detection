@@ -43,9 +43,16 @@ a=str2double(a);
 
 pca_top9=zeros(66,9);
 
+%computes values for each term for each PC 
+%selected top 9 PCs based on % variance accounted for (cut-off = 2%)
+
 for i=1:9
     pca_top9(:,i)=(a(i,1:66))'.*coeff(:,i);
 end
+
+%computes values for each PC
+
+pca_values=sum(pca_top9,1);
 
 %%
 
