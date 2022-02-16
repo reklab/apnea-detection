@@ -28,17 +28,17 @@ for n = 1:Ntrials
 
     if ismember(ntrial,["001","002","003"])
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
-        startN_idx = [1, 42.5, 82.5, 122.5, 162.5].*fs_d;
+        startN_idx = [0.02, 42.5, 82.5, 122.5, 162.5].*fs_d;
         startH_idx = [22.5; 62.5; 102.5; 142.5].*fs_d;
         stopH_idx = [37.5, 77.5, 117.5, 157.5].*fs_d;
         stopN_idx = [17.5, 57.5, 97.5, 137.5,180].*fs_d;
         tapStatus = 'taps';
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
-        startN_idx = [1, 40, 80, 120, 160].*fs_d;
+        startN_idx = [0.02, 40, 80, 120, 160].*fs_d;
         startH_idx = [20; 60; 100; 140].*fs_d;
-        stopN_idx = [19.98, 59.98, 99.98, 139.98, 180].*fs_d;
-        stopH_idx = [39.98, 79.98, 119.98, 159.98].*fs_d;
+        stopN_idx = [999, 2999, 4999, 6999, 9000];
+        stopH_idx = [1999, 3999, 5999, 7999];
         tapStatus = 'noTaps';
     end
 

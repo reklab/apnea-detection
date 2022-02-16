@@ -63,7 +63,7 @@ for n = 1:Ntrials
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-    savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v2/';
+    savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
     %     savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
     %     % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
     if ~exist(savepath, 'file')
@@ -227,7 +227,6 @@ for n = 1:Ntrials
         end
     end
 
-
     nldat_abd_ACCEL.domainValues=TIME1;
     nldat_chest_ACCEL.domainValues=TIME2;
     nldat_chest_ECG.domainValues=TIME3;
@@ -279,13 +278,18 @@ for n = 1:Ntrials
     stopN = [19.98, 59.98, 99.98, 139.98].*fs_d;
     stopH = [39.98, 79.98, 119.98, 159.98].*fs_d;
     startH= [20; 60; 100; 140].*fs_d;
-    startN= [40, 80, 120, 160].*fs_d;
+    startN= [40, 80, 120, 160].*fs_d;    
+    
+    stopN_A = [17.5, 57.5, 97.5, 137.5].*fs_d;
+    stopH_A = [37.5, 77.5, 117.5, 157.5].*fs_d;
+    startH_A = [22.5; 62.5; 102.5; 142.5].*fs_d;
+    startN_A = [42.5, 82.5, 122.5, 162.5].*fs_d;
 
     %VOLUNTARY BREATHING TRIALS
     if ntrial == "002" || ntrial == "009" || ntrial=="012"
         ID_array(1:end)='A';
-        ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N';
-        ID_array([startH(1):stopH(1), startH(2):stopH(2), startH(3):stopH(3), startH(4):stopH(4)]) = 'V';
+        ID_array([1:stopN_A(1),startN_A(1):stopN_A(2), startN_A(2):stopN_A(3), startN_A(3):stopN_A(4), startN_A(4):end]) = 'N';
+        ID_array([startH_A(1):stopH_A(1), startH_A(2):stopH_A(2), startH_A(3):stopH_A(3), startH_A(4):stopH_A(4)]) = 'V';
 
     elseif ntrial == "018" || ntrial =="021" || ntrial=="024"
         ID_array(1:end)='T';
@@ -297,8 +301,8 @@ for n = 1:Ntrials
     %OBSTRUCTIVE BREATHING TRIALS
     if ntrial == "003" || ntrial == "010" ||ntrial=="013"
         ID_array(1:end)='A';
-        ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N';
-        ID_array([startH(1):stopH(1), startH(2):stopH(2), startH(3):stopH(3), startH(4):stopH(4)]) = 'O';
+        ID_array([1:stopN_A(1),startN_A(1):stopN_A(2), startN_A(2):stopN_A(3), startN_A(3):stopN_A(4), startN_A(4):end]) = 'N';
+        ID_array([startH_A(1):stopH_A(1), startH_A(2):stopH_A(2), startH_A(3):stopH_A(3), startH_A(4):stopH_A(4)]) = 'O';
 
     elseif ntrial == "019" || ntrial =="022" || ntrial=="025"
         ID_array(1:end)='T';
@@ -308,7 +312,6 @@ for n = 1:Ntrials
     end
 
     %% 7. save everything
-    savepath= '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v2/';
     save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG', 'ID_array')
     fprintf('file saved \n')
 
