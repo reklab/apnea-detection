@@ -4,7 +4,7 @@ clear all
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
+    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
 %     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['.mat']);
     load(baseDir1)
     baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
@@ -89,13 +89,14 @@ Acc=Right/height(Table_Test);
 
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 % change for loop depending on if creating train or test models
-%for i=length(trials)-3:length(trials)
-for i=1:length(trials)-3
+j=0;
+for i=18
+%for i=1:length(trials)-3
     ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
 %     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
     load(baseDir1)
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
 %     baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2);
     ID=strings(length(ID_array),1);
@@ -105,15 +106,16 @@ for i=1:length(trials)-3
     stat.ID=ID;
     
     T=struct2table(stat);
-    if i==1
+    if j==0
         %needed to make struct right format
         hold_struct=table2struct(T);
     else
         hold_struct2=table2struct(T);
         hold_struct(end+1:end+length(hold_struct2))=hold_struct2;
     end
-
+    j=j+1;
 end
+
 T=struct2table(hold_struct);
 X=table2array(T(:,1));
 locs=isnan(X);

@@ -3,7 +3,7 @@
 clc
 clear all 
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/';
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/';
 
 trials = ["001", "002", "003", "017", "018", "019"];
 Ntrials = length(trials);
@@ -14,7 +14,7 @@ nb = ["001", "017"];
 vb = ["002", "018"];
 ob = ["003", "019"];
 
-savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
+savepath = 'trials_data_nldat_v3/eseq/';
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
@@ -28,16 +28,16 @@ for n = 1:Ntrials
 
     if ismember(ntrial,["001","002","003"])
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
-        startN_idx = [0.02, 42.5, 82.5, 122.5, 162.5].*fs_d;
+        startN_idx = [2.52, 42.5, 82.5, 122.5, 162.5].*fs_d;
         startH_idx = [22.5; 62.5; 102.5; 142.5].*fs_d;
         stopH_idx = [37.5, 77.5, 117.5, 157.5].*fs_d;
-        stopN_idx = [17.5, 57.5, 97.5, 137.5,180].*fs_d;
+        stopN_idx = [17.5, 57.5, 97.5, 137.5,177.5].*fs_d;
         tapStatus = 'taps';
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
-        startN_idx = [0.02, 40, 80, 120, 160].*fs_d;
+        startN_idx = [2.52, 40, 80, 120, 160].*fs_d;
         startH_idx = [20; 60; 100; 140].*fs_d;
-        stopN_idx = [999, 2999, 4999, 6999, 9000];
+        stopN_idx = [999, 2999, 4999, 6999, 8875];
         stopH_idx = [1999, 3999, 5999, 7999];
         tapStatus = 'noTaps';
     end

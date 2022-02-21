@@ -1,4 +1,4 @@
-function [trainedClassifier, validationAccuracy] = trainClassifier(trainingData, UseMetric)
+function [trainedClassifier, validationAccuracy] = Tree_Trainer(trainingData, UseMetric)
 % [trainedClassifier, validationAccuracy] = trainClassifier(trainingData)
 % returns a trained classifier and its accuracy. This code recreates the
 % classification model trained in Classification Learner app. Use the
@@ -44,7 +44,7 @@ function [trainedClassifier, validationAccuracy] = trainClassifier(trainingData,
 % This code processes the data into the right shape for training the
 % model.
 inputTable = trainingData;
-predictorNames = {'TotPWR_RR_A_X', 'TotPWR_MV_A_X', 'MaxPWR_MV_A_X', 'MaxPWR_RR_A_X', 'FMAX_A_X', 'FMAXi_A_X', 'TotPWR_RR_C_X', 'TotPWR_MV_C_X', 'MaxPWR_MV_C_X', 'MaxPWR_RR_C_X', 'FMAX_C_X', 'FMAXi_C_X', 'PHI_X', 'FMAXi_ABD_X', 'RMS_ABD_X', 'RMS_CHT_X', 'RMS_ABDCHT_X', 'BRC_X', 'BAB_X', 'BSU_X', 'BDI_X', 'BPH_X', 'TotPWR_RR_A_Y', 'TotPWR_MV_A_Y', 'MaxPWR_MV_A_Y', 'MaxPWR_RR_A_Y', 'FMAX_A_Y', 'FMAXi_A_Y', 'TotPWR_RR_C_Y', 'TotPWR_MV_C_Y', 'MaxPWR_MV_C_Y', 'MaxPWR_RR_C_Y', 'FMAX_C_Y', 'FMAXi_C_Y', 'PHI_Y', 'FMAXi_ABD_Y', 'RMS_ABD_Y', 'RMS_CHT_Y', 'RMS_ABDCHT_Y', 'BRC_Y', 'BAB_Y', 'BSU_Y', 'BDI_Y', 'BPH_Y', 'TotPWR_RR_A_Z', 'TotPWR_MV_A_Z', 'MaxPWR_MV_A_Z', 'MaxPWR_RR_A_Z', 'FMAX_A_Z', 'FMAXi_A_Z', 'TotPWR_RR_C_Z', 'TotPWR_MV_C_Z', 'MaxPWR_MV_C_Z', 'MaxPWR_RR_C_Z', 'FMAX_C_Z', 'FMAXi_C_Z', 'PHI_Z', 'FMAXi_ABD_Z', 'RMS_ABD_Z', 'RMS_CHT_Z', 'RMS_ABDCHT_Z', 'BRC_Z', 'BAB_Z', 'BSU_Z', 'BDI_Z', 'BPH_Z'};
+predictorNames = {'TotPWR_RR_A_X', 'TotPWR_MV_A_X', 'MaxPWR_MV_A_X', 'MaxPWR_RR_A_X', 'FMAX_A_X', 'FMAXi_A_X', 'TotPWR_RR_C_X', 'TotPWR_MV_C_X', 'MaxPWR_MV_C_X', 'MaxPWR_RR_C_X', 'FMAX_C_X', 'FMAXi_C_X', 'PHI_X', 'FMAXi_AC_X', 'RMS_A_X', 'RMS_C_X', 'RMS_AC_X', 'BRC_X', 'BAB_X', 'BSU_X', 'BDI_X', 'BPH_X', 'TotPWR_RR_A_Y', 'TotPWR_MV_A_Y', 'MaxPWR_MV_A_Y', 'MaxPWR_RR_A_Y', 'FMAX_A_Y', 'FMAXi_A_Y', 'TotPWR_RR_C_Y', 'TotPWR_MV_C_Y', 'MaxPWR_MV_C_Y', 'MaxPWR_RR_C_Y', 'FMAX_C_Y', 'FMAXi_C_Y', 'PHI_Y', 'FMAXi_AC_Y', 'RMS_A_Y', 'RMS_C_Y', 'RMS_AC_Y', 'BRC_Y', 'BAB_Y', 'BSU_Y', 'BDI_Y', 'BPH_Y', 'TotPWR_RR_A_Z', 'TotPWR_MV_A_Z', 'MaxPWR_MV_A_Z', 'MaxPWR_RR_A_Z', 'FMAX_A_Z', 'FMAXi_A_Z', 'TotPWR_RR_C_Z', 'TotPWR_MV_C_Z', 'MaxPWR_MV_C_Z', 'MaxPWR_RR_C_Z', 'FMAX_C_Z', 'FMAXi_C_Z', 'PHI_Z', 'FMAXi_AC_Z', 'RMS_A_Z', 'RMS_C_Z', 'RMS_AC_Z', 'BRC_Z', 'BAB_Z', 'BSU_Z', 'BDI_Z', 'BPH_Z'};
 predictors = inputTable(:, predictorNames);
 response = inputTable.ID;
 isCategoricalPredictor = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
@@ -59,10 +59,12 @@ isCategoricalPredictor = isCategoricalPredictor(UseMetric);
 %%
 % Train a classifier
 % This code specifies all the classifier options and trains the classifier.
+    %'SplitCriterion', 'gdi', ...
+    %'SplitCriterion', 'twoing', ...
 classificationTree = fitctree(...
     predictors, ...
     response, ...
-    'SplitCriterion', 'gdi', ...
+    'SplitCriterion', 'deviance', ...
     'MaxNumSplits', 100, ...
     'Surrogate', 'off', ...
     'ClassNames', {'N'; 'O'; 'V'});
@@ -74,7 +76,7 @@ treePredictFcn = @(x) predict(classificationTree, x);
 trainedClassifier.predictFcn = @(x) treePredictFcn(featureSelectionFcn(predictorExtractionFcn(x)));
 %%
 % Add additional fields to the result struct
-trainedClassifier.RequiredVariables = {'BAB_X', 'BAB_Y', 'BAB_Z', 'BDI_X', 'BDI_Y', 'BDI_Z', 'BPH_X', 'BPH_Y', 'BPH_Z', 'BRC_X', 'BRC_Y', 'BRC_Z', 'BSU_X', 'BSU_Y', 'BSU_Z', 'FMAX_A_X', 'FMAX_A_Y', 'FMAX_A_Z', 'FMAX_C_X', 'FMAX_C_Y', 'FMAX_C_Z', 'FMAXi_ABD_X', 'FMAXi_ABD_Y', 'FMAXi_ABD_Z', 'FMAXi_A_X', 'FMAXi_A_Y', 'FMAXi_A_Z', 'FMAXi_C_X', 'FMAXi_C_Y', 'FMAXi_C_Z', 'MaxPWR_MV_A_X', 'MaxPWR_MV_A_Y', 'MaxPWR_MV_A_Z', 'MaxPWR_MV_C_X', 'MaxPWR_MV_C_Y', 'MaxPWR_MV_C_Z', 'MaxPWR_RR_A_X', 'MaxPWR_RR_A_Y', 'MaxPWR_RR_A_Z', 'MaxPWR_RR_C_X', 'MaxPWR_RR_C_Y', 'MaxPWR_RR_C_Z', 'PHI_X', 'PHI_Y', 'PHI_Z', 'RMS_ABDCHT_X', 'RMS_ABDCHT_Y', 'RMS_ABDCHT_Z', 'RMS_ABD_X', 'RMS_ABD_Y', 'RMS_ABD_Z', 'RMS_CHT_X', 'RMS_CHT_Y', 'RMS_CHT_Z', 'TotPWR_MV_A_X', 'TotPWR_MV_A_Y', 'TotPWR_MV_A_Z', 'TotPWR_MV_C_X', 'TotPWR_MV_C_Y', 'TotPWR_MV_C_Z', 'TotPWR_RR_A_X', 'TotPWR_RR_A_Y', 'TotPWR_RR_A_Z', 'TotPWR_RR_C_X', 'TotPWR_RR_C_Y', 'TotPWR_RR_C_Z'};
+trainedClassifier.RequiredVariables = {'BAB_X', 'BAB_Y', 'BAB_Z', 'BDI_X', 'BDI_Y', 'BDI_Z', 'BPH_X', 'BPH_Y', 'BPH_Z', 'BRC_X', 'BRC_Y', 'BRC_Z', 'BSU_X', 'BSU_Y', 'BSU_Z', 'FMAX_A_X', 'FMAX_A_Y', 'FMAX_A_Z', 'FMAX_C_X', 'FMAX_C_Y', 'FMAX_C_Z', 'FMAXi_AC_X', 'FMAXi_AC_Y', 'FMAXi_AC_Z', 'FMAXi_A_X', 'FMAXi_A_Y', 'FMAXi_A_Z', 'FMAXi_C_X', 'FMAXi_C_Y', 'FMAXi_C_Z', 'MaxPWR_MV_A_X', 'MaxPWR_MV_A_Y', 'MaxPWR_MV_A_Z', 'MaxPWR_MV_C_X', 'MaxPWR_MV_C_Y', 'MaxPWR_MV_C_Z', 'MaxPWR_RR_A_X', 'MaxPWR_RR_A_Y', 'MaxPWR_RR_A_Z', 'MaxPWR_RR_C_X', 'MaxPWR_RR_C_Y', 'MaxPWR_RR_C_Z', 'PHI_X', 'PHI_Y', 'PHI_Z', 'RMS_AC_X', 'RMS_AC_Y', 'RMS_AC_Z', 'RMS_A_X', 'RMS_A_Y', 'RMS_A_Z', 'RMS_C_X', 'RMS_C_Y', 'RMS_C_Z', 'TotPWR_MV_A_X', 'TotPWR_MV_A_Y', 'TotPWR_MV_A_Z', 'TotPWR_MV_C_X', 'TotPWR_MV_C_Y', 'TotPWR_MV_C_Z', 'TotPWR_RR_A_X', 'TotPWR_RR_A_Y', 'TotPWR_RR_A_Z', 'TotPWR_RR_C_X', 'TotPWR_RR_C_Y', 'TotPWR_RR_C_Z'};
 trainedClassifier.ClassificationTree = classificationTree;
 trainedClassifier.About = 'This struct is a trained model exported from Classification Learner R2019b.';
 trainedClassifier.HowToPredict = sprintf('To make predictions on a new table, T, use: \n  yfit = c.predictFcn(T) \nreplacing ''c'' with the name of the variable that is this struct, e.g. ''trainedModel''. \n \nThe table, T, must contain the variables returned by: \n  c.RequiredVariables \nVariable formats (e.g. matrix/vector, datatype) must match the original training data. \nAdditional variables are ignored. \n \nFor more information, see <a href="matlab:helpview(fullfile(docroot, ''stats'', ''stats.map''), ''appclassification_exportmodeltoworkspace'')">How to predict using an exported model</a>.');
@@ -83,7 +85,7 @@ trainedClassifier.HowToPredict = sprintf('To make predictions on a new table, T,
 % This code processes the data into the right shape for training the
 % model.
 inputTable = trainingData;
-predictorNames = {'TotPWR_RR_A_X', 'TotPWR_MV_A_X', 'MaxPWR_MV_A_X', 'MaxPWR_RR_A_X', 'FMAX_A_X', 'FMAXi_A_X', 'TotPWR_RR_C_X', 'TotPWR_MV_C_X', 'MaxPWR_MV_C_X', 'MaxPWR_RR_C_X', 'FMAX_C_X', 'FMAXi_C_X', 'PHI_X', 'FMAXi_ABD_X', 'RMS_ABD_X', 'RMS_CHT_X', 'RMS_ABDCHT_X', 'BRC_X', 'BAB_X', 'BSU_X', 'BDI_X', 'BPH_X', 'TotPWR_RR_A_Y', 'TotPWR_MV_A_Y', 'MaxPWR_MV_A_Y', 'MaxPWR_RR_A_Y', 'FMAX_A_Y', 'FMAXi_A_Y', 'TotPWR_RR_C_Y', 'TotPWR_MV_C_Y', 'MaxPWR_MV_C_Y', 'MaxPWR_RR_C_Y', 'FMAX_C_Y', 'FMAXi_C_Y', 'PHI_Y', 'FMAXi_ABD_Y', 'RMS_ABD_Y', 'RMS_CHT_Y', 'RMS_ABDCHT_Y', 'BRC_Y', 'BAB_Y', 'BSU_Y', 'BDI_Y', 'BPH_Y', 'TotPWR_RR_A_Z', 'TotPWR_MV_A_Z', 'MaxPWR_MV_A_Z', 'MaxPWR_RR_A_Z', 'FMAX_A_Z', 'FMAXi_A_Z', 'TotPWR_RR_C_Z', 'TotPWR_MV_C_Z', 'MaxPWR_MV_C_Z', 'MaxPWR_RR_C_Z', 'FMAX_C_Z', 'FMAXi_C_Z', 'PHI_Z', 'FMAXi_ABD_Z', 'RMS_ABD_Z', 'RMS_CHT_Z', 'RMS_ABDCHT_Z', 'BRC_Z', 'BAB_Z', 'BSU_Z', 'BDI_Z', 'BPH_Z'};
+predictorNames = {'TotPWR_RR_A_X', 'TotPWR_MV_A_X', 'MaxPWR_MV_A_X', 'MaxPWR_RR_A_X', 'FMAX_A_X', 'FMAXi_A_X', 'TotPWR_RR_C_X', 'TotPWR_MV_C_X', 'MaxPWR_MV_C_X', 'MaxPWR_RR_C_X', 'FMAX_C_X', 'FMAXi_C_X', 'PHI_X', 'FMAXi_AC_X', 'RMS_A_X', 'RMS_C_X', 'RMS_AC_X', 'BRC_X', 'BAB_X', 'BSU_X', 'BDI_X', 'BPH_X', 'TotPWR_RR_A_Y', 'TotPWR_MV_A_Y', 'MaxPWR_MV_A_Y', 'MaxPWR_RR_A_Y', 'FMAX_A_Y', 'FMAXi_A_Y', 'TotPWR_RR_C_Y', 'TotPWR_MV_C_Y', 'MaxPWR_MV_C_Y', 'MaxPWR_RR_C_Y', 'FMAX_C_Y', 'FMAXi_C_Y', 'PHI_Y', 'FMAXi_AC_Y', 'RMS_A_Y', 'RMS_C_Y', 'RMS_AC_Y', 'BRC_Y', 'BAB_Y', 'BSU_Y', 'BDI_Y', 'BPH_Y', 'TotPWR_RR_A_Z', 'TotPWR_MV_A_Z', 'MaxPWR_MV_A_Z', 'MaxPWR_RR_A_Z', 'FMAX_A_Z', 'FMAXi_A_Z', 'TotPWR_RR_C_Z', 'TotPWR_MV_C_Z', 'MaxPWR_MV_C_Z', 'MaxPWR_RR_C_Z', 'FMAX_C_Z', 'FMAXi_C_Z', 'PHI_Z', 'FMAXi_AC_Z', 'RMS_A_Z', 'RMS_C_Z', 'RMS_AC_Z', 'BRC_Z', 'BAB_Z', 'BSU_Z', 'BDI_Z', 'BPH_Z'};
 predictors = inputTable(:, predictorNames);
 response = inputTable.ID;
 isCategoricalPredictor = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
