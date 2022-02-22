@@ -1,4 +1,4 @@
-%% Analysis 4: call filtBankRespir with N = 251
+
 clear all 
 clc
 
@@ -19,7 +19,7 @@ ob = ["003", "010", "013", "019", "022", "025"];
 for n = 1:Ntrials
 
     ntrial = trials{n};
-    load([baseDir, 'trials_data_nldat/ANNE_data_trial' ntrial])
+    load([baseDir, 'trials_data_nldat_v3/ANNE_data_trial' ntrial '_clean'])
 
     if ismember(ntrial,["001","002","003","008","009","010"])
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
@@ -38,7 +38,7 @@ for n = 1:Ntrials
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-    savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v2/'];
+    savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
     if ~exist(savepath, 'file')
         mkdir(savepath)
     end
@@ -52,9 +52,9 @@ for n = 1:Ntrials
 
     for v = 1:nDir
         dir = directions{v};
-        data_chest = nldat_chest_ACCEL_clean.dataSet;
+        data_chest = ACCEL_chest_clean.dataSet;
         accel_chest = data_chest(:,v);
-        data_abd = nldat_abd_ACCEL_clean.dataSet;
+        data_abd = ACCEL_abd_clean.dataSet;
         accel_abd = data_abd(:,v);
 
         eval(['[stat.TotPWR_RR_A_' dir ', stat.TotPWR_MV_A_' dir ',stat.MaxPWR_MV_A_' dir ',stat.MaxPWR_RR_A_' dir ',stat.FMAX_A_' dir ',stat.FMAXi_A_' dir '] = filtBankRespir_adult(accel_abd,N,Fs);']);
