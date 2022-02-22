@@ -20,6 +20,7 @@ labels=table2array(T1(:,67));
 categories=fieldnames(T);
 categories=categories(1:66);
 
+%define labels for data types for colour coding in biplotG
 groups=zeros(length(labels),1);
 for t=1:length(labels)
     if labels(t)=='N'
@@ -31,6 +32,11 @@ for t=1:length(labels)
     end
 end
 
+%visualize data: biplotG, biplot provide plots of PCs against data points
+%to assess clustering
+%mapcaplot provides an interactive interface to plot individual PCs against
+%each other
+
 % biplotG(coeff, score, 'Groups', groups, 'Varlabels', categories)
 % figure()
 % biplot(coeff(:,1:3),'Scores',score(:,1:3),'Varlabels',categories);
@@ -38,14 +44,17 @@ end
 
 %%
 
+
+%convert T1 to doubles
 a=table2array(T1);
 a=str2double(a);
 
-%%
 
 pca_terms=zeros(66,9);
-
 pca_top9=zeros(length(a),9);
+
+%compute PC values by multiplying coefficients and corresponding metric
+%values, then summing all terms
 
 for n=1:length(a)
     
@@ -56,7 +65,7 @@ for n=1:length(a)
         pca_terms(:,t)=(a(n,1:66))'.*coeff(:,t);
     end
     
-    %computes values for each PC
+    %computes values for each PC by summing terms
     
     pca_top9(n,:)=sum(pca_terms,1);
 
