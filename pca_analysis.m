@@ -12,8 +12,8 @@ addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/biplotG/')
 
 %run section 1 of MachineLearning.m first
 
-input=table2array(T1(:,1:66));
-labels=table2array(T1(:,67));
+input=table2array(Table_Train(:,1:66));
+labels=table2array(Table_Train(:,67));
 
 [coeff,score,latent,~,explained]=pca(input);
 
@@ -46,30 +46,32 @@ end
 
 
 %convert T1 to doubles
-a=table2array(T1);
-a=str2double(a);
+a_test=table2array(Table_Test);
+a_test=str2double(a_test);
 
-
-pca_terms=zeros(66,9);
-pca_top9=zeros(length(a),9);
+pca_terms_test=zeros(66,66);
+pca_values=zeros(length(a_test),66);
 
 %compute PC values by multiplying coefficients and corresponding metric
 %values, then summing all terms
 
-for n=1:length(a)
+for n=1:length(a_test)
     
     %computes values for each term for each PC 
     %selected top 9 PCs based on % variance accounted for (cut-off = 2%)
     
-    for t=1:9
-        pca_terms(:,t)=(a(n,1:66))'.*coeff(:,t);
+    for t=1:66
+        pca_terms_test(:,t)=(a_test(n,1:66))'.*coeff(:,t);
     end
     
     %computes values for each PC by summing terms
     
-    pca_top9(n,:)=sum(pca_terms,1);
+    pca_values(n,:)=sum(pca_terms_test,1);
 
 end
+
+pca_values_balanced_test=array2table(pca_values);
+pca_values_balanced_test(:,67)=Table_Test(:,67);
 
 %%
 
