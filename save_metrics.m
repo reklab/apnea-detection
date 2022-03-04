@@ -2,12 +2,16 @@
 clear all 
 clc
 
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/';
+% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
+% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
+% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/';
 
-trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
+
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/';
+
+%trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
+trials = ["014", "015", "016"];
 Ntrials = length(trials);
 directions = ["X", "Y", "Z"];
 nDir = length(directions);
@@ -15,6 +19,7 @@ nDir = length(directions);
 nb = ["001", "008", "011", "017", "020", "023"];
 vb = ["002", "009", "012", "018", "021", "024"];
 ob = ["003", "010", "013", "019", "022", "025"];
+blind= ["014", "015", "016"];
 
 for n = 1:Ntrials
 
@@ -34,11 +39,13 @@ for n = 1:Ntrials
     elseif ismember(ntrial, ob)
         descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction';
     else
-        error('Unknown trial type')
+        descrip_path ='blindTest'; description = 'blind test';
+%         error('Unknown trial type')
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-    savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
+%     savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
+    savepath = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
     if ~exist(savepath, 'file')
         mkdir(savepath)
     end

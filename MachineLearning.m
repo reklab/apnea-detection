@@ -4,7 +4,7 @@ clear all
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat/ANNE_data_trial'], trials(i), ['.mat']);
+    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['.mat']);
 %     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['.mat']);
     load(baseDir1)
     baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
