@@ -1,4 +1,5 @@
 function [trainedClassifier, validationAccuracy] = Bag_Trainer(trainingData, M, N, UseMetric)
+% 
 %M= maximum number of splits
 %N=number of trees
 % [trainedClassifier, validationAccuracy] = trainClassifier(trainingData)

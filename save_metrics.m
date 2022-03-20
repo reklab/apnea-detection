@@ -11,14 +11,15 @@ clc
 baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/';
 
 %trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
-trials = ["014", "015", "016"];
+trials = ["026", "027", "028", "029", "030", "031", "032", "033"];
 Ntrials = length(trials);
 directions = ["X", "Y", "Z"];
 nDir = length(directions);
 
-nb = ["001", "008", "011", "017", "020", "023"];
-vb = ["002", "009", "012", "018", "021", "024"];
-ob = ["003", "010", "013", "019", "022", "025"];
+nb = ["001", "008", "011", "017", "020", "023","026", "030"];
+nb_m= ["029", "033"];
+vb = ["002", "009", "012", "018", "021", "024","027","031"];
+ob = ["003", "010", "013", "019", "022", "025","028", "032"];
 blind= ["014", "015", "016"];
 
 for n = 1:Ntrials
@@ -38,6 +39,8 @@ for n = 1:Ntrials
         descrip_path ='intermittentBreathing_voluntary'; description = 'intermittent breathing - voluntary';
     elseif ismember(ntrial, ob)
         descrip_path ='intermittentBreathing_obstruction'; description = 'interittent breathing - obstruction';
+    elseif ismember(ntrial, nb_m)
+        descrip_path ='normalBreathing_movement'; description = 'normal breathing -movement '; 
     else
         descrip_path ='blindTest'; description = 'blind test';
 %         error('Unknown trial type')

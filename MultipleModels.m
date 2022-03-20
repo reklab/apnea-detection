@@ -4,27 +4,44 @@
 %TrainClassifier Function
 n=5;
 UseMetric=false(1,height(label_tables));
+%N=height(label_tables;
+Max=65;
+Min=10;
+inc=10;
 
-clear Models
-
+% clear Models
+% 
 for i=1:1:height(label_tables)
     UseMetric(label_tables.MetricNum(i))=true;
     if rem(i,n)==0
     L=sprintf('Metric%d', i)
-    [holdTF, holdVA]=Bag_Trainer(Table_Train, 50, 25, UseMetric);
+    [holdTF, holdVA]=Bag_Trainer(Table_Train, 100, 25, UseMetric);
     Models.(L).TrainedClassifier=holdTF;
     Models.(L).ValidationAcc=holdVA;
     end
 end
+
+% for i=1:1:40
+%     UseMetric(label_tables.MetricNum(i))=true;
+% end
+% 
+% 
+% for i=Min:inc:Max
+%     L=sprintf('Metric%d', i)
+%     [holdTF, holdVA]=Bag_Trainer(Table_Train, i, 10, UseMetric);
+%     Models.(L).TrainedClassifier=holdTF;
+%     Models.(L).ValidationAcc=holdVA;
+% end
 %%
 clear CrossVal_Acc TestAcc Sensitivity Specificity WrongApnea
-CrossVal_Acc=zeros(1,height(label_tables));
-TestAcc=zeros(1,height(label_tables));
+CrossVal_Acc=zeros(1,Max);
+TestAcc=zeros(1,Max);
 ID_Test_Array=Table_Test.ID;
-Sensitivity=zeros(1,height(label_tables));
-Specificity=zeros(1,height(label_tables));
-CorrectApnea=zeros(1,height(label_tables));
-for i=n:n:height(label_tables)
+Sensitivity=zeros(1,Max);
+Specificity=zeros(1,Max);
+CorrectApnea=zeros(1,Max);
+%for i=n:n:height(label_tables)
+for i=Min:inc:Max   
     L=sprintf('Metric%d', i);
     CrossVal_Acc(i)=Models.(L).ValidationAcc;
     
@@ -63,15 +80,14 @@ N_string(1:end)='N';
 C_N=confusionmat(ID_Test_Array,N_string);
 Right=C_N(1,1)+C_N(2,2)+C_N(3,3);
 Acc=Right/height(Table_Test);
-N_Acc(1:66)=Acc;
+N_Acc(Min:Max)=Acc;
 
 figure()
 hold on
 plot(X,TestAcc);
 plot(X,CrossVal_Acc);
-plot(N_Acc);
 legend('Accuracy of Testing Group','Cross Validation Accuracy of Training Group', 'Accuracy if Model always predicts N')
-xlabel('Number of Metrics')
+xlabel('Number of Trees')
 ylabel('Percent')
 title('Accuracy of Testing and Training Group')
 
@@ -81,6 +97,6 @@ plot(X,Sensitivity);
 plot(X,Specificity);
 plot(X,CorrectApnea);
 legend('Sensitivity','Specificity', 'Percent Correct Apnea')
-xlabel('Number of Metrics')
+xlabel('Number of Trees')
 ylabel('Percent')
 title('Sensitivity and Specificity')
