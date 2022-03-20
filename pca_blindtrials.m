@@ -74,15 +74,15 @@ pca_values3=array2table(pca_values);
 
 %%
 
-yfit_Unknown1=coarse_knn_pca.predictFcn(pca_values1);
+yfit_Unknown1=fine_knn_pca.predictFcn(pca_values1);
 yfit_string_Unknown1=string(yfit_Unknown1);
 Eseq_Predict1=eseq(categorical(yfit_string_Unknown1), 0, 0.02);
 
-yfit_Unknown2=coarse_knn_pca.predictFcn(pca_values2);
+yfit_Unknown2=fine_knn_pca.predictFcn(pca_values2);
 yfit_string_Unknown2=string(yfit_Unknown2);
 Eseq_Predict2=eseq(categorical(yfit_string_Unknown2), 0, 0.02);
 
-yfit_Unknown3=coarse_knn_pca.predictFcn(pca_values3);
+yfit_Unknown3=fine_knn_pca.predictFcn(pca_values3);
 yfit_string_Unknown3=string(yfit_Unknown3);
 Eseq_Predict3=eseq(categorical(yfit_string_Unknown3), 0, 0.02);
 

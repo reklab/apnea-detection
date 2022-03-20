@@ -6,7 +6,6 @@ addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/METRICS/')
 addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
 addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/biplotG/')
-
 addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/nlid_util/')
 
 %%
@@ -71,6 +70,7 @@ for n=1:length(a)
 end
 
 pca_values_balanced=array2table(pca_values);
+pca_values_balanced(:,67)=Table_Train(:,67);
 
 %%
 
