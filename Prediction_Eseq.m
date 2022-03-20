@@ -1,9 +1,13 @@
 %% CHOOSE MODEL
-Models=Models_Bagged.Metric60.TrainedClassifier;
+%Models=Models_Bagged.Metric60.TrainedClassifier;
+Models=fine_knn_pca;
 timedelay=125;
 trial_length=9000;
-
-M=0;
+% 
+% M=0;
+%PCA=0;
+PCA=1 %Use if running a pca trial
+%coeff=
 %% Load expected eseq strings
 baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_obstruction_noTaps.mat']);
 baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_voluntary_noTaps.mat']);
@@ -46,6 +50,26 @@ for i=1:length(trials)
     load(baseDir2);
     Predict.(ntrial).T=struct2table(stat);
     Predict.(ntrial).T=Predict.(ntrial).T(timedelay+1:trial_length-timedelay,:);
+    if PCA==1
+        input1=table2array(Predict.(ntrial).T);
+
+        pca_terms1=zeros(66,66);
+        pca_values=zeros(length(input1),66);
+
+        %compute PC values by multiplying coefficients and corresponding metric
+        %values, then summing all terms
+
+        for n=1:length(input1)
+            for t=1:66
+                pca_terms1(:,t)=(input1(n,1:66))'.*coeff(:,t);  %computes values for each term for each PC 
+            end
+            pca_values(n,:)=sum(pca_terms1,1); %computes values for each PC by summing terms
+        end
+
+        pca_values1=array2table(pca_values);
+        Predict.(ntrial).pca_values=array2table(pca_values);
+    end
+    
     if contains(trials(i),"026") || contains(trials(i),"030")
         Predict.(ntrial).ID='N';
         Predict.(ntrial).expectedCSEQ=CSEQ_N;
@@ -69,7 +93,11 @@ end
 
 for i=1:length(trials)
     ntrial=strcat('Trial', trials(i));
-    Predict.(ntrial).yfit=Models.predictFcn(Predict.(ntrial).T);
+    if PCA==0
+        Predict.(ntrial).yfit=Models.predictFcn(Predict.(ntrial).T);
+    elseif PCA==1
+        Predict.(ntrial).yfit=Models.predictFcn(Predict.(ntrial).pca_values);
+    end
     Predict.(ntrial).yfit_string=string(Predict.(ntrial).yfit);
     Predict.(ntrial).PredictESEQ=eseq(categorical(Predict.(ntrial).yfit_string), 0, 0.02);
     
@@ -99,8 +127,7 @@ C=confusionchart(hold_c1,hold_c2);
 %% Time Correction
 
 n=50;
-%for i=1:length(trials)
-for i=3:3
+for i=1:length(trials)
     ntrial=strcat('Trial', trials(i));
     Predict.(ntrial).yfit_corrected=time_correction(Predict.(ntrial).yfit,n);
     Predict.(ntrial).yfit_string_corrected=string(Predict.(ntrial).yfit_corrected);
@@ -193,7 +220,7 @@ function E= correctESEQ(E, td, t_max)
     end
     if E(length(E),1).endIdx > (t_max-td)
         E(length(E),1).endIdx=t_max-td;
-        disp ('ESEQ too long')
+        %disp ('ESEQ too long')
     end
 end
 
