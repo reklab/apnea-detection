@@ -1,5 +1,5 @@
 
-trials=["014", "015", "016"];
+trials=["030", "031", "032"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
