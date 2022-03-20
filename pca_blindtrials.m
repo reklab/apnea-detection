@@ -1,15 +1,5 @@
-addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
-addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
-addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
-addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/METRICS/')
-addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
-addpath('/Users/jtam/Dropbox/AUREA_retrieved_v2/biplotG/')
 
-%%
-
-trials=["023", "024", "025"];
+trials=["014", "015", "016"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
     baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
