@@ -1,17 +1,17 @@
 %% CHOOSE MODEL
-Models=Boost_Trainer(Table_Train,'AdaBoostM2', 150, 50, 1, UseMetric);
-%Models=fine_knn_pca;
+% Models=Boost_Trainer(Table_Train,'AdaBoostM2', 150, 50, 1, UseMetric);
+Models=fine_knn_pca;
 timedelay=125;
 trial_length=9000;
 % 
 % M=0;
-PCA=0;
-%PCA=1 %Use if running a pca trial
+% PCA=0;
+PCA=1 %Use if running a pca trial
 %coeff=
 %% Load expected eseq strings
-baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_obstruction_noTaps.mat']);
-baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_voluntary_noTaps.mat']);
-baseDir3=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_normalBreathing_noTaps.mat']);
+baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_obstruction_noTaps.mat']);
+baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_voluntary_noTaps.mat']);
+baseDir3=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_normalBreathing_noTaps.mat']);
 
 load(baseDir1);
 ESEQ_O=e_trial;
@@ -45,9 +45,9 @@ trials=["026", "027", "028","030", "031", "032"];
 for i=1:length(trials)
 % for i=1:3
     ntrial=strcat('Trial', trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
+    baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
     load(baseDir1);
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2);
     Predict.(ntrial).T=struct2table(stat);
     Predict.(ntrial).T=Predict.(ntrial).T(timedelay+1:trial_length-timedelay,:);
