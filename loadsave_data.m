@@ -4,54 +4,60 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
-% addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
-%
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
-% addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\METRICS')
-% addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\Signal_Processing')
-% addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\CardioRespiratory_Analysis')
-
-addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+% addpath('.../jsonlab-2.0/')
+% addpath('.../GitHub/reklab_public/utility_tools/');
+% addpath('.../GitHub/reklab_public/nlid_tools/');
+% addpath('.../GitHub/reklab_public/nlid_tools/nlid_util');
+% addpath('.../AUREA_retrieved_v2/METRICS/')
+% addpath('.../AUREA_retrieved_v2/Signal_Processing/')
+% addpath('.../AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 %% 1. load raw data from the json file
 clc
 clear all
 
-% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
+% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % list = dir([baseDir 'trials_data_json/']);
 
+<<<<<<< HEAD
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027","028","029","030", "031", "032","033"];
 Ntrials = length(trials);
 
 for n = 19:Ntrials
+=======
+%trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
+trials = ["026", "027", "028", "029", "030", "031", "032", "033"];
+Ntrials = length(trials);
+
+for n = 1:Ntrials  
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
     clc
     clear all_data
     %ntrial=convertStringsToChars(trials(n));
     % ntrial = '018';
     ntrial = trials{n};
+<<<<<<< HEAD
     if ismember(ntrial,["001","002","003","008","009","010", "026"])
+=======
+    if ismember(ntrial,["001","002","003","008","009","010", "026", "027", "028", "029", "030", "031", "032", "033"])
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
     end
 
+<<<<<<< HEAD
     nb = ["001", "008", "011", "017", "020", "023", "026", "030"];
     vb = ["002", "009", "012", "018", "021", "024", "027", "031"];
     ob = ["003", "010", "013", "019", "022", "025", "028", "032"];
     tkmv = ["029", "033"];
+=======
+    nb = ["001", "008", "011", "017", "020", "023","026", "030"];
+    nb_m= ["029", "033"];
+    vb = ["002", "009", "012", "018", "021", "024","027","031"];
+    ob = ["003", "010", "013", "019", "022", "025","028", "032"];
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
 
     if ismember(ntrial, nb)
         descrip_path ='normalBreathing'; description = 'normal breathing';
@@ -59,15 +65,21 @@ for n = 19:Ntrials
         descrip_path ='intermittentBreathing_voluntary'; description = 'intermittent breathing - voluntary';
     elseif ismember(ntrial, ob)
         descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction';
+<<<<<<< HEAD
     elseif ismember(ntrial, tkmv)
         descrip_path = 'normalBreathing_movement'; description = 'movement and talking';
+=======
+    elseif ismember(ntrial, nb_m)
+        descrip_path ='normalBreathing_movement'; description = 'normal breathing -movement ';        
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
     else
-        error('Unknown trial type')
+        descrip_path ='blindTest'; description = 'blind test';
+        %error('Unknown trial type')
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-    savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
-    %     savepath= ['C:\Users\vstur\Dropbox\ApnexDetection_Project\Export\figures_v4\' ntrial '/'];
+%     savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
+        savepath= ['trials_data_nldat_v3/'];
     %     % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
     if ~exist(savepath, 'file')
         mkdir(savepath)
@@ -274,14 +286,19 @@ for n = 19:Ntrials
         ID_array(1:stopN) = "N";
         ID_array(stopN:end) = "A";
 
-    elseif ntrial == "017" || ntrial =="020" || ntrial=="023"
+    elseif ntrial == "017" || ntrial =="020" || ntrial=="023" || ntrial=="026" || ntrial=="029" || ntrial=="030" || ntrial=="033"
         ID_array(1:end)="N";
     end
 
-    stopN = [19.98, 59.98, 99.98, 139.98].*fs_d;
-    stopH = [39.98, 79.98, 119.98, 159.98].*fs_d;
-    startH= [20; 60; 100; 140].*fs_d;
-    startN= [40, 80, 120, 160].*fs_d;    
+    %stopN = [19.98, 59.98, 99.98, 139.98].*fs_d;
+    stopN= [999, 2999, 4999, 6999];
+    %stopH = [39.98, 79.98, 119.98, 159.98].*fs_d;
+    stopH= [1999,3999,5999,7999];
+    
+    %startH= [20; 60; 100; 140].*fs_d;
+    startH= [1000,3000,5000,7000];
+    %startN= [40, 80, 120, 160].*fs_d;    
+    startN= [2000,4000,6000,8000];
     
     stopN_A = [17.5, 57.5, 97.5, 137.5].*fs_d;
     stopH_A = [37.5, 77.5, 117.5, 157.5].*fs_d;
@@ -294,7 +311,7 @@ for n = 19:Ntrials
         ID_array([1:stopN_A(1),startN_A(1):stopN_A(2), startN_A(2):stopN_A(3), startN_A(3):stopN_A(4), startN_A(4):end]) = 'N';
         ID_array([startH_A(1):stopH_A(1), startH_A(2):stopH_A(2), startH_A(3):stopH_A(3), startH_A(4):stopH_A(4)]) = 'V';
 
-    elseif ntrial == "018" || ntrial =="021" || ntrial=="024"
+    elseif ntrial == "018" || ntrial =="021" || ntrial=="024" || ntrial=="027" || ntrial=="031"
         ID_array(1:end)='T';
         ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N';
         ID_array([startH(1):stopH(1), startH(2):stopH(2), startH(3):stopH(3), startH(4):stopH(4)]) = 'V';
@@ -307,7 +324,7 @@ for n = 19:Ntrials
         ID_array([1:stopN_A(1),startN_A(1):stopN_A(2), startN_A(2):stopN_A(3), startN_A(3):stopN_A(4), startN_A(4):end]) = 'N';
         ID_array([startH_A(1):stopH_A(1), startH_A(2):stopH_A(2), startH_A(3):stopH_A(3), startH_A(4):stopH_A(4)]) = 'O';
 
-    elseif ntrial == "019" || ntrial =="022" || ntrial=="025"
+    elseif ntrial == "019" || ntrial =="022" || ntrial=="025" || ntrial=="028" || ntrial=="032"
         ID_array(1:end)='T';
         ID_array([1:stopN(1),startN(1):stopN(2), startN(2):stopN(3), startN(3):stopN(4), startN(4):end]) = 'N';
         ID_array([startH(1):stopH(1), startH(2):stopH(2), startH(3):stopH(3), startH(4):stopH(4)]) = 'O';
@@ -315,7 +332,8 @@ for n = 19:Ntrials
     end
 
     %% 7. save everything
-    save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG', 'ID_array')
+    %save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG', 'ID_array')
+    save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG')
     fprintf('file saved \n')
 
 end

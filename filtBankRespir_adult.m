@@ -6,6 +6,10 @@ function [TotPWR_RR,TotPWR_MV,MaxPWR_MV,MaxPWR_RR,FMAX,FMAXi] = filtBankRespir_a
 %       in the Respiratory Rate Band (MaxPWR_RR), and the
 %       respiratory frequency with the maximum power.
 %
+%   UPDATES
+%   changes were made to the filter bank to adjust the filters to be better
+%   suited for the breathing frequencies in adults 
+%
 %   INPUT
 %   X is an M-by-1 vector with either a ribcage or
 %       abdomen respiratory inductive plethysmography (RIP)

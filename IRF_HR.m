@@ -1,6 +1,8 @@
 
-%% ==================
-% function that 1. removes outliers from ACCEL data to account for the tapping
+%% IRF_HR
+% function that 
+% 1. interpolates the data to make sure the ECG and the chest and abdomen acceleration
+%    are the same length 
 % 2. decimates ECG and ACCEL data to 50Hz
 % 3. uses IRF to remove HR effects in ACCEL data
 
