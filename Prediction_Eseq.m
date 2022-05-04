@@ -1,17 +1,17 @@
 %% CHOOSE MODEL
-%Models=Models_Bagged.Metric60.TrainedClassifier;
+% Models=Boost_Trainer(Table_Train,'AdaBoostM2', 150, 50, 1, UseMetric);
 Models=fine_knn_pca;
 timedelay=125;
 trial_length=9000;
 % 
 % M=0;
-%PCA=0;
+% PCA=0;
 PCA=1 %Use if running a pca trial
 %coeff=
 %% Load expected eseq strings
-baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_obstruction_noTaps.mat']);
-baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_voluntary_noTaps.mat']);
-baseDir3=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_normalBreathing_noTaps.mat']);
+baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_obstruction_noTaps.mat']);
+baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_intermittentBreathing_voluntary_noTaps.mat']);
+baseDir3=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/eseq/eseq_normalBreathing_noTaps.mat']);
 
 load(baseDir1);
 ESEQ_O=e_trial;
@@ -43,10 +43,11 @@ CSEQ_V=CSEQ_V(timedelay+1:trial_length-timedelay);
 
 trials=["026", "027", "028","030", "031", "032"];
 for i=1:length(trials)
+% for i=1:3
     ntrial=strcat('Trial', trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
+    baseDir1=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
     load(baseDir1);
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2);
     Predict.(ntrial).T=struct2table(stat);
     Predict.(ntrial).T=Predict.(ntrial).T(timedelay+1:trial_length-timedelay,:);
@@ -92,6 +93,7 @@ end
 %% Predict and Plot
 
 for i=1:length(trials)
+% for i=1:3
     ntrial=strcat('Trial', trials(i));
     if PCA==0
         Predict.(ntrial).yfit=Models.predictFcn(Predict.(ntrial).T);
@@ -125,9 +127,10 @@ C=confusionchart(hold_c1,hold_c2);
 
 
 %% Time Correction
-
-n=50;
+% N represents the length of the time correction window
+n=100;
 for i=1:length(trials)
+% for i=1:3
     ntrial=strcat('Trial', trials(i));
     Predict.(ntrial).yfit_corrected=time_correction(Predict.(ntrial).yfit,n);
     Predict.(ntrial).yfit_string_corrected=string(Predict.(ntrial).yfit_corrected);
@@ -142,6 +145,7 @@ end
 %% ReRun Confussion Matrix
 
 for i=1:length(trials)
+% for i=1:3
     ntrial=strcat('Trial', trials(i));
     c1=cellstr(char(Predict.(ntrial).expectedCSEQ));
     c2=Predict.(ntrial).yfit_corrected;
@@ -153,11 +157,13 @@ for i=1:length(trials)
         hold_c2=[hold_c2;c2];
     end
 end
-C=confusionchart(hold_c1,hold_c2);
+C=confusionchart(hold_c1,hold_c2,'RowSummary','row-normalized', 'ColumnSummary','column-normalized')
 
 %% Correct Detections
 %What defines correct detection? 5 or 10 seconds of apnea
 %This should act as some type of alarm system
+ApneaLength_Time=20;
+ApneaLength_Samples=20/0.02;
 
 ApneaDetectionLength_Time=10;
 ApneaDetectionLength_Samples=ApneaDetectionLength_Time*50;
@@ -165,44 +171,61 @@ ApneaDetectionLength_Samples=ApneaDetectionLength_Time*50;
 %will need to adjust function if lower than 10*50
 
 for i=1:length(trials)
+%for i=1
     ntrial=strcat('Trial', trials(i));
-    ESEQ_hold=Intersect(Predict.(ntrial).expectedESEQ,Predict.(ntrial).PredictESEQ_corrected);
-    sz = [length(ESEQ_hold) 3];
-    varTypes = {'categorical','double','double'};
-    varNames = {'Apnea','Length','Start'};
-    Predict.(ntrial).ApneaTable= table('Size',sz,'VariableTypes',varTypes,'VariableNames',varNames);
-    for j=1:length(ESEQ_hold)
-        if ESEQ_hold(j).type=='V' || ESEQ_hold(j).type=='O'
-            Predict.(ntrial).ApneaTable(j,1)={ESEQ_hold(j).type};
-            Predict.(ntrial).ApneaTable(j,2)={ESEQ_hold(j).nSamp};
-            Predict.(ntrial).ApneaTable(j,3)={ESEQ_hold(j).startIdx};
+    %if i==2||i==3||i==5||i==6
+        ESEQ_hold1=Predict.(ntrial).PredictESEQ_corrected;
+        ESEQ_hold2=Intersect(Predict.(ntrial).expectedESEQ,Predict.(ntrial).PredictESEQ_corrected);
+        sz1 = [length(ESEQ_hold1) 3];
+        varTypes = {'categorical','double','double'};
+        varNames = {'Apnea','Length','Start'};
+        Predict.(ntrial).ApneaTable1= table('Size',sz1,'VariableTypes',varTypes,'VariableNames',varNames);
+        for j=1:length(ESEQ_hold1)
+            if ESEQ_hold1(j).type=='V' || ESEQ_hold1(j).type=='O'
+                Predict.(ntrial).ApneaTable1(j,1)={ESEQ_hold1(j).type};
+                Predict.(ntrial).ApneaTable1(j,2)={ESEQ_hold1(j).nSamp};
+                Predict.(ntrial).ApneaTable1(j,3)={ESEQ_hold1(j).startIdx};
+            end
+        end 
+        Predict.(ntrial).ApneaTable1=Predict.(ntrial).ApneaTable1(not(Predict.(ntrial).ApneaTable1.Length==0),:);
+        S_N=100*(trial_length-2*timedelay-sum(Predict.(ntrial).ApneaTable1.Length))/(trial_length-2*timedelay);
+        
+        
+        sz2 = [length(ESEQ_hold2) 3];
+        Predict.(ntrial).ApneaTable2= table('Size',sz2,'VariableTypes',varTypes,'VariableNames',varNames);
+        for j=1:length(ESEQ_hold2)
+            if ESEQ_hold2(j).type=='V' || ESEQ_hold2(j).type=='O'
+                Predict.(ntrial).ApneaTable2(j,1)={ESEQ_hold2(j).type};
+                Predict.(ntrial).ApneaTable2(j,2)={ESEQ_hold2(j).nSamp};
+                Predict.(ntrial).ApneaTable2(j,3)={ESEQ_hold2(j).startIdx};
+            end
+        end 
+        Predict.(ntrial).ApneaTable2=Predict.(ntrial).ApneaTable2(not(Predict.(ntrial).ApneaTable2.Length==0),:);
+
+
+         Predict.(ntrial).ApneaTable2.Percent=100*Predict.(ntrial).ApneaTable2.Length/ApneaLength_Samples;
+         S1=sum(Predict.(ntrial).ApneaTable2.Percent)/4;
+% 
+        Predict.(ntrial).ApneaTable2=Predict.(ntrial).ApneaTable2(find(Predict.(ntrial).ApneaTable2.Length>ApneaDetectionLength_Samples),:);
+        S2=0;
+        S3=0;
+        if height(Predict.(ntrial).ApneaTable2)~=0
+            S2=sum(Predict.(ntrial).ApneaTable2.Percent)/4;
+            S3=sum(Predict.(ntrial).ApneaTable2.Percent)/height(Predict.(ntrial).ApneaTable);
         end
-    end 
-    Predict.(ntrial).ApneaTable=Predict.(ntrial).ApneaTable(not(Predict.(ntrial).ApneaTable.Length==0),:);
-    % still need a way to take info from table, confirm correct position,
-    % and calculate # correct and % time
-    
-    %Could instead do with a intersect ESEQ
-    Predict.(ntrial).ApneaTable.Percent=Predict.(ntrial).ApneaTable.Length/ApneaDetectionLength_Time;
-    S1=sum(Predict.(ntrial).ApneaTable.Percent)/4;
-    
-    Predict.(ntrial).ApneaTable=Predict.(ntrial).ApneaTable(find(Predict.(ntrial).ApneaTable.Length>ApneaDetectionLength_Samples),:);
-    S2=0;
-    S3=0;
-    if height(Predict.(ntrial).ApneaTable)~=0
-        S2=sum(Predict.(ntrial).ApneaTable.Percent)/4;
-        S3=sum(Predict.(ntrial).ApneaTable.Percent)/height(Predict.(ntrial).ApneaTable);
-    end
-%     
-    fprintf('For %s\nThe percent of apnea correctly predicted is %.3f\n',ntrial, S1);
-    fprintf('Using a threshold of continuous predictions for %d seconds,\nThe percent of apnea identified is %.3f\n', ApneaDetectionLength_Time, S2);
-    fprintf('The number of correctly predicted apnea events is %d\n', height(Predict.(ntrial).ApneaTable));
-    if height(Predict.(ntrial).ApneaTable)==1
-        fprintf('And a period of continuous predictions accounts for %.3f of that %d event\n', S3, height(Predict.(ntrial).ApneaTable))
-    elseif height(Predict.(ntrial).ApneaTable)>1
-        fprintf('And periods of continuous predictions account for %.3f of those %d events\n', S3, height(Predict.(ntrial).ApneaTable))
-    end
-        fprintf(' \n')
+        if i==1||i==4
+            fprintf('For %s (a normal breathing-only trial)\nNormal breathing was predicted for %.3f percent of the trial\n',ntrial, S_N);
+        else
+            fprintf('For %s\nThe percent of apnea correctly predicted is %.3f\n',ntrial, S1);
+            fprintf('Using a threshold of continuous predictions for %d seconds,\nThe percent of apnea identified is %.3f\n', ApneaDetectionLength_Time, S2);
+            fprintf('The number of correctly predicted apnea events is %d\n', height(Predict.(ntrial).ApneaTable));
+            if height(Predict.(ntrial).ApneaTable)==1
+                fprintf('And a period of continuous predictions accounts for %.3f of that %d event\n', S3, height(Predict.(ntrial).ApneaTable))
+            elseif height(Predict.(ntrial).ApneaTable)>1
+                fprintf('And periods of continuous predictions account for %.3f of those %d events\n', S3, height(Predict.(ntrial).ApneaTable))
+            end
+        end
+     fprintf(' \n')
 end
 
 
@@ -224,8 +247,8 @@ function E= correctESEQ(E, td, t_max)
     end
 end
 
-function c2=time_correction(c1,n)
-    c2=c1;
+function c1=time_correction(c1,n)
+    %c2=c1;
     for j=n+1:length(c1)-n
         window=c1(j-n:j+n);
         window=categorical(window);
@@ -233,14 +256,14 @@ function c2=time_correction(c1,n)
         B=countcats(window);
         L=find(B==max(B));
             if length(L)==1
-                c2(j)=A(L);
+                c1(j)=A(L);
                 
             elseif length(L)==2
                 if ismember (char(c1(j)),B(L))
 %                     disp ('Max tied (2)- leave as is')
                 else
-%                     disp ('Error: Max tied (2)')
-                    c2(j)=c2(j-1);
+%                     disp ('Neither max is the same as prediction(j)')
+                    c1(j)=c1(j-1);
                 end
             elseif length(L)==3
                 disp ('Max tied (3) -leave as is')
@@ -275,9 +298,9 @@ function Eseq_Plot (e1,e2,n)
     E5=eseq(C5,0, 0.02);
     int25=Intersect(e2, E5);
     
-    subplot (4,1,1); eseq_plot(e1, 'b');
-    subplot (4,1,2); eseq_plot(e2, 'b'); 
-    subplot (4,1,3); eseq_plot(e3, 'g');
+    subplot (4,1,1); eseq_plot(e1, 'b'); xlabel('Time (seconds)');
+    subplot (4,1,2); eseq_plot(e2, 'b'); xlabel('Time (seconds)');
+    subplot (4,1,3); eseq_plot(e3, 'g'); xlabel('Time (seconds)');
     hold on; eseq_plot(int14, 'r'); hold off
     subplot (4,1,4); eseq_plot(int14, 'g');
     hold on; eseq_plot(int25, 'r'); xlim([0 180]); hold off
