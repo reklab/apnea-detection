@@ -1,12 +1,12 @@
-%% IRF_HR v2
-
+%% IRF_HR estimation
 %% ==================
-% function that 1. removes outliers from ACCEL data to account for the tapping
-% 2. decimates ECG and ACCEL data to 50Hz
-% 3. uses IRF to remove HR effects in ACCEL data
-
-% function [ACCEL_output_dec,clean_ACCEL]=IRF_HR(ACCEL_output, ECG_input,ts)
-% load data to estimate the IRF - use normal breathing trial
+% script to evaluate the model performance when a single IRF is estimated
+% 1.    estimate a single IRF using the z-direction of one trial and then
+%       apply it to all directions of all other trials
+% 2.    estimate a specific IRF using the z-direction of each trial and
+%       apply it to all directions of the same trial
+% 3.    estimate a specific IRF for each direction of each trial and apply
+%       it only to that direction and trial 
 
 clear all
 clc
@@ -28,6 +28,8 @@ d=10; ts_dec = d*ts;
 IR_length = 0.4;
 nLags = IR_length/ts_dec;
 
+%%  generate the training IRF using one specific trial
+% can choose any trial as the training trial
 trainingTrial = '020';
 
 load([baseDir, 'trials_data_nldat/ANNE_data_trial' trainingTrial '_raw'])
@@ -56,7 +58,12 @@ for v = 1:nDir
 
 end
 
-%% try using one I on the other models to see if the model performance stays the same
+%% evaluate the performance of the in three different conditions
+%   1. IRF from the training trial applied to all other trials
+%   2. IRF estimated using the Z direction of each trial individually and
+%      applied to all three directions
+%   3. IRF estimated on each direction and applied to only that direction
+
 vaf_specific = zeros(nTrials, nDir);
 vaf_std_X = zeros(nTrials, nDir);
 vaf_std_Y = zeros(nTrials, nDir);
@@ -98,15 +105,12 @@ for n=1:nTrials
         [~, vaf_dirSpecific(n,v), ~] = nlid_resid(I_std.(dir), nldat_sys_dec);
 
     end
-
-    % trial that applies direction specific curve to each direction still
-    % trained with trial 17
     
 end
 
 
 close all
-%%
+%% generate a boxplot that compares the performance in the three different directions and the three conditions
 
 mean_specific = mean(vaf_specific, "all"); std_specific = std(vaf_specific, [], 'all'); se_specific = std_specific/sqrt(27);
 mean_dirSpecific = mean(vaf_dirSpecific, "all"); std_dirSpecific = std(vaf_dirSpecific, [], 'all'); se_dirSpecific = std_dirSpecific/sqrt(27);

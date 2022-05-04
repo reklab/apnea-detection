@@ -4,26 +4,13 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
-% addpath('/Users/jtam/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/apnea-detection/Untitled')
-%
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools\nlid_util');
-addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\METRICS')
-addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\Signal_Processing')
-addpath('C:\Users\vstur\Dropbox\AUREA_retrieved_v2\CardioRespiratory_Analysis')
-
-% addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
-% addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/nlid_util');
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+% addpath('.../jsonlab-2.0/')
+% addpath('.../GitHub/reklab_public/utility_tools/');
+% addpath('.../GitHub/reklab_public/nlid_tools/');
+% addpath('.../GitHub/reklab_public/nlid_tools/nlid_util');
+% addpath('.../AUREA_retrieved_v2/METRICS/')
+% addpath('.../AUREA_retrieved_v2/Signal_Processing/')
+% addpath('.../AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 %% 1. load raw data from the json file
 clc
 clear all
@@ -33,26 +20,44 @@ baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_dat
 % baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 % list = dir([baseDir 'trials_data_json/']);
 
+<<<<<<< HEAD
+trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027","028","029","030", "031", "032","033"];
+Ntrials = length(trials);
+
+for n = 19:Ntrials
+=======
 %trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 trials = ["026", "027", "028", "029", "030", "031", "032", "033"];
 Ntrials = length(trials);
 
 for n = 1:Ntrials  
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
     clc
     clear all_data
     %ntrial=convertStringsToChars(trials(n));
     % ntrial = '018';
     ntrial = trials{n};
+<<<<<<< HEAD
+    if ismember(ntrial,["001","002","003","008","009","010", "026"])
+=======
     if ismember(ntrial,["001","002","003","008","009","010", "026", "027", "028", "029", "030", "031", "032", "033"])
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
     end
 
+<<<<<<< HEAD
+    nb = ["001", "008", "011", "017", "020", "023", "026", "030"];
+    vb = ["002", "009", "012", "018", "021", "024", "027", "031"];
+    ob = ["003", "010", "013", "019", "022", "025", "028", "032"];
+    tkmv = ["029", "033"];
+=======
     nb = ["001", "008", "011", "017", "020", "023","026", "030"];
     nb_m= ["029", "033"];
     vb = ["002", "009", "012", "018", "021", "024","027","031"];
     ob = ["003", "010", "013", "019", "022", "025","028", "032"];
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
 
     if ismember(ntrial, nb)
         descrip_path ='normalBreathing'; description = 'normal breathing';
@@ -60,8 +65,13 @@ for n = 1:Ntrials
         descrip_path ='intermittentBreathing_voluntary'; description = 'intermittent breathing - voluntary';
     elseif ismember(ntrial, ob)
         descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction';
+<<<<<<< HEAD
+    elseif ismember(ntrial, tkmv)
+        descrip_path = 'normalBreathing_movement'; description = 'movement and talking';
+=======
     elseif ismember(ntrial, nb_m)
         descrip_path ='normalBreathing_movement'; description = 'normal breathing -movement ';        
+>>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
     else
         descrip_path ='blindTest'; description = 'blind test';
         %error('Unknown trial type')
@@ -281,7 +291,7 @@ for n = 1:Ntrials
     end
 
     %stopN = [19.98, 59.98, 99.98, 139.98].*fs_d;
-    stopN= [999, 2999, 4999, 6999]
+    stopN= [999, 2999, 4999, 6999];
     %stopH = [39.98, 79.98, 119.98, 159.98].*fs_d;
     stopH= [1999,3999,5999,7999];
     
