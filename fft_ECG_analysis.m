@@ -1,14 +1,10 @@
-% ECG analysis
+%% ECG analysis
+% input is nldat_ECG and output is figures of the magnitude and phase of
+% the ECG spectrum 
+% calculates the HR and determines if there are points where the HR is too
+% high or too low
+
 function fft_ECG_analysis(nldat_ECG, ntrial, seg, savepath, savefigs)
-
-% nldat_ECG = nldat_C3898_ECG;
-
-% fs = 250;
-% d = 5;
-% ts2 = 1/(fs/d);
-% 
-% nldat_ECG_dec = decimate(nldat_ECG,d);
-% set(nldat_ECG_dec, 'domainIncr', ts2, 'domainValues', NaN, 'chanNames', "ECG", 'comment', "decimated ECG data")
 
 fft_ECG = fft(nldat_ECG);
 L = length(fft_ECG.dataSet);
@@ -90,7 +86,7 @@ H=0;
 Low_HR=struct([]);
 High_HR=struct([]);
 
-%Determines when single heat rate is too high or low
+%Determines when single heart rate is too high or low
 for i=1:length(HR_diff)
     if HR_diff(i)<62
         L=L+1;
