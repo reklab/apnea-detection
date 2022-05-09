@@ -8,6 +8,10 @@ labels=table2array(Table_Train(:,67));
 
 coeff=pca(input);
 
+%save coefficient matrix for later generation of eseqs
+
+save(pca_coeff,coeff);
+
 %%
 
 %convert T1 to doubles
