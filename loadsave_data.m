@@ -8,56 +8,31 @@
 % addpath('.../GitHub/reklab_public/utility_tools/');
 % addpath('.../GitHub/reklab_public/nlid_tools/');
 % addpath('.../GitHub/reklab_public/nlid_tools/nlid_util');
-% addpath('.../AUREA_retrieved_v2/METRICS/')
-% addpath('.../AUREA_retrieved_v2/Signal_Processing/')
-% addpath('.../AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+% addpath('.../Dropbox/AUREA_retrieved_v2/METRICS/')
+% addpath('.../Dropbox/AUREA_retrieved_v2/Signal_Processing/')
+% addpath('.../Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 %% 1. load raw data from the json file
 clc
 clear all
 
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/jtam/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% list = dir([baseDir 'trials_data_json/']);
+baseDir = '.../ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
-<<<<<<< HEAD
 trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027","028","029","030", "031", "032","033"];
 Ntrials = length(trials);
 
-for n = 19:Ntrials
-=======
-%trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
-trials = ["026", "027", "028", "029", "030", "031", "032", "033"];
-Ntrials = length(trials);
-
 for n = 1:Ntrials  
->>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
-    clc
-    clear all_data
-    %ntrial=convertStringsToChars(trials(n));
-    % ntrial = '018';
+
     ntrial = trials{n};
-<<<<<<< HEAD
-    if ismember(ntrial,["001","002","003","008","009","010", "026"])
-=======
+
     if ismember(ntrial,["001","002","003","008","009","010", "026", "027", "028", "029", "030", "031", "032", "033"])
->>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
     end
-
-<<<<<<< HEAD
     nb = ["001", "008", "011", "017", "020", "023", "026", "030"];
     vb = ["002", "009", "012", "018", "021", "024", "027", "031"];
     ob = ["003", "010", "013", "019", "022", "025", "028", "032"];
     tkmv = ["029", "033"];
-=======
-    nb = ["001", "008", "011", "017", "020", "023","026", "030"];
-    nb_m= ["029", "033"];
-    vb = ["002", "009", "012", "018", "021", "024","027","031"];
-    ob = ["003", "010", "013", "019", "022", "025","028", "032"];
->>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
 
     if ismember(ntrial, nb)
         descrip_path ='normalBreathing'; description = 'normal breathing';
@@ -65,22 +40,19 @@ for n = 1:Ntrials
         descrip_path ='intermittentBreathing_voluntary'; description = 'intermittent breathing - voluntary';
     elseif ismember(ntrial, ob)
         descrip_path ='intermittentBreathing_obstruction'; description = 'intermittent breathing - obstruction';
-<<<<<<< HEAD
+
     elseif ismember(ntrial, tkmv)
         descrip_path = 'normalBreathing_movement'; description = 'movement and talking';
-=======
     elseif ismember(ntrial, nb_m)
         descrip_path ='normalBreathing_movement'; description = 'normal breathing -movement ';        
->>>>>>> 06c1835c232351ac39d66ac9e3b280abc90141cf
     else
         descrip_path ='blindTest'; description = 'blind test';
         %error('Unknown trial type')
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-%     savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
-        savepath= ['trials_data_nldat_v3/'];
-    %     % savepath = ['/Users/jtam/Dropbox/ApnexDetection_Project/Export/figures_v4/' ntrial '/'];
+        savepath= ['.../trials_data_nldat_v3/'];
+
     if ~exist(savepath, 'file')
         mkdir(savepath)
     end

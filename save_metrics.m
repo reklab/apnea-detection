@@ -1,17 +1,21 @@
 
+%% save_metrics
+% this script runs through all the trial and calculates different metrics
+% based on the acceleration signals
+% metrics are based on AUREA and parameters chosen based on those
+% implemented in the AUREA RIP analysis
+% saves a structure that contains the metrics as an Nx1 vector for each trial
+
+
 clear all 
 clc
 
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/METRICS/')
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-% addpath('/Users/lauracarlton/Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
-% baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/';
+addpath('.../Dropbox/AUREA_retrieved_v2/METRICS/')
+addpath('.../Dropbox/AUREA_retrieved_v2/Signal_Processing/')
+addpath('.../Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+baseDir = '.../Dropbox/ApnexDetection_Project/';
 
-
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/';
-
-%trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
-trials = ["026", "027", "028", "029", "030", "031", "032", "033"];
+trials = ["001", "002", "003", "008", "009", "010", "011", "012", "013", "017", "018", "019", "020", "021", "022", "023", "024", "025"];
 Ntrials = length(trials);
 directions = ["X", "Y", "Z"];
 nDir = length(directions);
@@ -43,12 +47,10 @@ for n = 1:Ntrials
         descrip_path ='normalBreathing_movement'; description = 'normal breathing -movement '; 
     else
         descrip_path ='blindTest'; description = 'blind test';
-%         error('Unknown trial type')
     end
 
     filename = string([baseDir ntrial '_' descrip_path '.json']);
-%     savepath = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
-    savepath = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
+    savepath = '.../Dropbox/ApnexDetection_Project/trials_data_nldat_v3/';
     if ~exist(savepath, 'file')
         mkdir(savepath)
     end
@@ -77,7 +79,7 @@ for n = 1:Ntrials
         eval(['[stat.BRC_' dir ',stat.BAB_' dir ',stat.BSU_' dir ',stat.BDI_' dir ',stat.BPH_' dir '] = breathStat(accel_chest,accel_abd,Nb,Nmu1,Navg,Fs);'])
 
     end
-% 
+
     save([savepath 'features_stats_trial' ntrial], 'stat')
 end
 
