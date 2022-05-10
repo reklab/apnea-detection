@@ -2,7 +2,7 @@
 codes related to the apnea detection project 
 
 
-Steps for Model Generation and Evaluation
+Steps for Decision Tree Model Generation and Evaluation
 1) Run generate eseq to save expected eseqs for each trial type
 2) Run loadsave_Data 
 3) Run save metrics
