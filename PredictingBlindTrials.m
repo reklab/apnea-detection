@@ -1,13 +1,16 @@
-%Predicting Ehsan's unknown data
+%% Predicting Ehsan's unknown trials (trial 14,15,16)
+
+%% Select Model
+Models=Bag_Trainer(Table_Train, 150, 50, UseMetric);
 
 %% Load Blind Data
 
 trials=["014", "015", "016"];
 for i=1:length(trials)
     ntrial=convertStringsToChars(trials(i));
-    baseDir1=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
+    baseDir1=strcat(['.../Dropbox/ApnexDetection_Project/trials_data_nldat_v3/ANNE_data_trial'], trials(i), ['_clean.mat']);
     load(baseDir1)
-    baseDir2=strcat(['/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
+    baseDir2=strcat(['.../Dropbox/ApnexDetection_Project/trials_data_nldat_v3/features_stats_trial'], trials(i), ['.mat']);
     load(baseDir2)
     Table=struct2table(stat);
     X=table2array(Table(:,1));
@@ -23,21 +26,20 @@ for i=1:length(trials)
 end
 
 %%
-yfit_Unknown1=Models.Metric20.TrainedClassifier.predictFcn(Table_Unknown1);
+yfit_Unknown1=Models.predictFcn(Table_Unknown1);
 yfit_string_Unknown1=string(yfit_Unknown1);
 Eseq_Predict1=eseq(categorical(yfit_string_Unknown1), 0, 0.02);
 
-yfit_Unknown2=Models.Metric20.TrainedClassifier.predictFcn(Table_Unknown2);
+yfit_Unknown2=Models.predictFcn(Table_Unknown2);
 yfit_string_Unknown2=string(yfit_Unknown2);
 Eseq_Predict2=eseq(categorical(yfit_string_Unknown2), 0, 0.02);
 
-yfit_Unknown3=Models.Metric20.TrainedClassifier.predictFcn(Table_Unknown3);
+yfit_Unknown3=Models.predictFcn(Table_Unknown3);
 yfit_string_Unknown3=string(yfit_Unknown3);
 Eseq_Predict3=eseq(categorical(yfit_string_Unknown3), 0, 0.02);
 
 
-%for loop occurs because we had to cut of 125 samples from beginning due to
-%5 sec sliding window
+%Need to cut of 125 samples from beginning due to 5 sec sliding window
 for i=1:length(Eseq_Predict1)
     Eseq_Predict1(i,1).startIdx=Eseq_Predict1(i,1).startIdx+125;
     Eseq_Predict1(i,1).endIdx=Eseq_Predict1(i,1).endIdx+125;
