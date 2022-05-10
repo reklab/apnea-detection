@@ -10,7 +10,8 @@ coeff=pca(input);
 
 %save coefficient matrix for later generation of eseqs
 
-save(pca_coeff,coeff);
+savepath = '.../Dropbox/ApnexDetection_Project/Export/PCA/';
+save('pca_coeff.mat','coeff');
 
 %%
 
