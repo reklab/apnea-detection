@@ -4,8 +4,12 @@ Models=Boost_Trainer(Table_Train,'AdaBoostM2', 150, 50, 1, UseMetric);
 % Models=fine_knn_pca;
 
 PCA=0;
-%PCA=1 %Use if running a pca trial
-%coeff= %CHECK WITH JASMINE ON THIS
+
+%use the following 4 lines if running a PCA model:
+%PCA=1;
+baseDir = '.../Dropbox/ApnexDetection_Project/';
+load([baseDir,'Export/PCA/pca_coeff'])
+%coeff=pca_coeff;
 
 %% Parameters
 timedelay=125; %based on lengths of sliding windows used to calculate metrics
