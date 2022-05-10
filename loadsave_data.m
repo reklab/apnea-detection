@@ -4,13 +4,13 @@
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-% addpath('.../jsonlab-2.0/')
-% addpath('.../GitHub/reklab_public/utility_tools/');
-% addpath('.../GitHub/reklab_public/nlid_tools/');
-% addpath('.../GitHub/reklab_public/nlid_tools/nlid_util');
-% addpath('.../Dropbox/AUREA_retrieved_v2/METRICS/')
-% addpath('.../Dropbox/AUREA_retrieved_v2/Signal_Processing/')
-% addpath('.../Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
+addpath('.../jsonlab-2.0/')
+addpath('.../GitHub/reklab_public/utility_tools/');
+addpath('.../GitHub/reklab_public/nlid_tools/');
+addpath('.../GitHub/reklab_public/nlid_tools/nlid_util');
+addpath('.../Dropbox/AUREA_retrieved_v2/METRICS/')
+addpath('.../Dropbox/AUREA_retrieved_v2/Signal_Processing/')
+addpath('.../Dropbox/AUREA_retrieved_v2/CardioRespiratory_Analysis/')
 %% 1. load raw data from the json file
 clc
 clear all
@@ -304,8 +304,7 @@ for n = 1:Ntrials
     end
 
     %% 7. save everything
-    %save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG', 'ID_array')
-    save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG')
+    save([savepath, 'ANNE_data_trial' ntrial '_clean'], 'ACCEL_abd_clean', 'ACCEL_chest_clean', 'ECG', 'ID_array')
     fprintf('file saved \n')
 
 end
