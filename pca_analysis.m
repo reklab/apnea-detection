@@ -3,6 +3,9 @@
 %run sections 1&3 of MachineLearning.m first to load training and testing
 %data
 
+%if using to test a previously generated PCA model, change all instances of
+%Table_Train to Table_Test (or another testing data set)
+
 input=table2array(Table_Train(:,1:66));
 labels=table2array(Table_Train(:,67));
 
