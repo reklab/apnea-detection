@@ -3,13 +3,15 @@
 Models=Boost_Trainer(Table_Train,'AdaBoostM2', 150, 50, 1, UseMetric);
 % Models=fine_knn_pca;
 
+timedelay=125;
+trial_length=9000;
+ 
+M=0;
+
+
 PCA=0;
 %PCA=1 %Use if running a pca trial
 %coeff= %CHECK WITH JASMINE ON THIS
-
-%% Parameters
-timedelay=125; %based on lengths of sliding windows used to calculate metrics
-trial_length=9000;
 
 % N represents the length of the time correction window
 N=100;
@@ -39,18 +41,20 @@ ESEQ_N=e_trial;
 ESEQ_N.endIdx=8875;
 
 
+ESEQ_N=correctESEQ(ESEQ_N, timedelay,trial_length);
+
 
 %%
 CSEQ_N=Eseq2Cseq(ESEQ_N);
 CSEQ_O=Eseq2Cseq(ESEQ_O);
 CSEQ_V=Eseq2Cseq(ESEQ_V);
-%%
+
 CSEQ_N=CSEQ_N(timedelay+1:trial_length-timedelay);
 CSEQ_O=CSEQ_O(timedelay+1:trial_length-timedelay);
 CSEQ_V=CSEQ_V(timedelay+1:trial_length-timedelay);
 
 
-%% For Each trial, load features and assign expected ESEQ
+%% Load features from 6 trials
 
 trials=["026", "027", "028","030", "031", "032"];
 for i=1:length(trials)
@@ -227,8 +231,10 @@ end
 
 
 
+%% TEST CODE SECTION
 
-%% 
+
+%%
 
 function E= correctESEQ(E, td, t_max)
     for i=1:length(E)

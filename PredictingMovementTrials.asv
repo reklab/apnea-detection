@@ -40,7 +40,7 @@ Eseq_Plot(ESEQ_N, Eseq_Predict1, 'N')
 
 
 
-%% Additional Functions
+%% Functions
 function Eseq_Plot (e1,e2,n)
     figure()
     e3=intersect(e1,e2);
