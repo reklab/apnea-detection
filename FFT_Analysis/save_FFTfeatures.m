@@ -7,7 +7,6 @@
 % the chest and abdomen at that frequency
 % saves these features for each segment of each trial in a structure
 
-
 clear all
 clc
 
@@ -86,6 +85,7 @@ for n = 1:Ntrials
 
     save([savepath 'spectrum_pks_phase_clean_' ntrial], 'sensor_chest', 'sensor_abd')
 
+    
 end
 
 

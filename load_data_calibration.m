@@ -1,26 +1,18 @@
 %% NOTES BEFORE RUNNING
+% loading data from the series of calibration trials to visualize 
 % Make sure current folder is DropBox 
 % Make sure to add all folders in ApnexDetection_Project
 % Make sure to add nlid_tools and utility_tools from reklab public
 
-%addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/utility_tools/')
-%addpath('/Users/jtam/Desktop/school/BIEN470/GITHUB/reklab_public/nlid_tools/')
-% 
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\apnea-detection')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\nlid_tools')
-% addpath('C:\Users\vstur\OneDrive\Desktop\GitHub\reklab_public\utility_tools')
-
-addpath('/Users/lauracarlton/Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/utility_tools/');
-addpath('/Users/lauracarlton/Documents/GitHub/reklab_public/nlid_tools/');
+addpath('.../Dropbox/ApnexDetection_Project/MATLAB tools/jsonlab-2.0/jsonlab-2.0/')
+addpath('.../GitHub/reklab_public/utility_tools/');
+addpath('.../GitHub/reklab_public/nlid_tools/');
 
 %% load raw data from the json file 
 clc
 clear all
 
-baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-% baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/trials_data_json/ANNE_data_trial';
-
+baseDir = '.../ApnexDetection_Project/trials_data_json/ANNE_data_trial';
 
 % chose the desired trial
 % descrip_path = 'calibrationC3898_test01'; ntrial = '004';
@@ -29,8 +21,7 @@ baseDir = '/Users/lauracarlton/Dropbox/ApnexDetection_Project/trials_data_json/A
 descrip_path = 'calibrationC3892_test02'; ntrial = '007';
 
 filename = string([baseDir ntrial '_' descrip_path '.json']);
-savepath = ['/Users/lauracarlton/Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
-% savepath= ['C:\Users\vstur\OneDrive\Desktop\BIEN 470 DATA\Images\trial002'];
+savepath = ['.../Dropbox/ApnexDetection_Project/Export/figures_v3/' ntrial '/'];
 if ~exist(savepath, 'file')
     mkdir(savepath)
 end
@@ -136,7 +127,6 @@ for n = 1:length(sensor_list)
             hold_time = hold_time/1000;
             
             hold_nldat = nldat(hold_data);
-%             set(hold_nldat, 'domainValues', hold_time,'domainName', "Time (ms)", 'chanNames', string(var), 'comment', [sensor ' ' datatype])
 
             if v > 1
                 eval(['nldat_' sensor '_' datatype '=cat(2, nldat_' sensor '_' datatype ', hold_nldat);'])
@@ -153,17 +143,6 @@ fs = 416;
 names = {"ACCEL X", "ACCEL Y", "ACCEL Z"};
 set(nldat_C3898_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN, 'chanNames',names )
 set(nldat_C3892_ACCEL, 'domainIncr', 1/fs, 'domainValues', NaN, 'chanNames', names)
-%% analysis 1: gap and duplicate counting 
-
-
-% [gaps_C3898_ACCEL, interval_C3898_ACCEL] = data_gaps(nldat_C3898_ACCEL, savefigs, savepath);
-% [gaps_C3892_ACCEL, interval_C3892_ACCEL] = data_gaps(nldat_C3892_ACCEL, savefigs, savepath);
-% [gaps_C3898_ECG, interval_C3898_ECG] = data_gaps(nldat_C3898_ECG, savefigs, savepath);
-% [gaps_C3892_ECG, interval_C3892_ECG] = data_gaps(nldat_C3892_ECG, savefigs, savepath);
-% [gaps_C3898_Temp, interval_C3898_Temp] = data_gaps(nldat_C3898_Temp, savefigs, savepath);
-% [gaps_C3892_Temp, interval_C3892_Temp] = data_gaps(nldat_C3892_Temp, savefigs, savepath);
-% [gaps_L3572_Temp, interval_L3572_Temp] = data_gaps(nldat_L3572_Temp, savefigs, savepath);
-% [gaps_L3572_PPG, interval_L3572_PPG] = data_gaps(nldat_L3572_PPG, savefigs, savepath);
 
 %% analysis 2: generate figues
 
@@ -188,5 +167,5 @@ end
 
 set(figure(1), 'Units', 'normalized', 'outerposition', [0 0 1 1])
 savefig(figure(1), [savepath, 'accel_' ntrial])
-% fft_analysis(nldat_C3898_ACCEL, nldat_C3892_ACCEL, ntrial, 1, savepath, savefigs, fs2)
+
 close all
