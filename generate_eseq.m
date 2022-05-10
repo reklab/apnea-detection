@@ -1,9 +1,14 @@
 
 % turn ID_array into an eseq
+% Saves an eseq for nb, ob, and vb trials with and without taps
+%each eseq contains a start and stop index, a type (N,V,O), and a domain increment 
 clc
 clear all 
 
-baseDir = '/Users/vstur/Dropbox/ApnexDetection_Project/';
+baseDir = '.../Dropbox/ApnexDetection_Project/';
+fs_d = 50;
+time_delay=2.5; %from length of sliding window when calculating metrics
+
 
 trials = ["001", "002", "003", "017", "018", "019"];
 Ntrials = length(trials);
@@ -19,25 +24,27 @@ if ~exist(savepath, 'file')
     mkdir(savepath)
 end
 
-fs_d = 50;
+
 
 for n = 1:Ntrials
 
     ntrial = trials{n};
-    load([baseDir, 'trials_data_nldat_v3/ANNE_data_trial' ntrial '_clean'])
+    %load([baseDir, 'trials_data_nldat_v3/ANNE_data_trial' ntrial '_clean'])
 
     if ismember(ntrial,["001","002","003"])
         ChestSensor = 'C3898'; AbdSensor = 'C3892'; DigitSensor = 'L3572';
-        startN_idx = [2.52, 42.5, 82.5, 122.5, 162.5].*fs_d;
+        % for trials with taps, we ignored all data within 2.5 sec of the tap 
+        % start and stop N/H refer to indeces where the normal breathing or breath holds start and stop
+        startN_idx = [time_delay, 42.5, 82.5, 122.5, 162.5].*fs_d;
         startH_idx = [22.5; 62.5; 102.5; 142.5].*fs_d;
         stopH_idx = [37.5, 77.5, 117.5, 157.5].*fs_d;
-        stopN_idx = [17.5, 57.5, 97.5, 137.5,177.5].*fs_d;
+        stopN_idx = [17.5, 57.5, 97.5, 137.5,180].*fs_d;
         tapStatus = 'taps';
     else
         ChestSensor = 'C3900'; AbdSensor = 'C3895'; DigitSensor = 'L3569';
-        startN_idx = [2.52, 40, 80, 120, 160].*fs_d;
+        startN_idx = [time_delay, 40, 80, 120, 160].*fs_d;
         startH_idx = [20; 60; 100; 140].*fs_d;
-        stopN_idx = [999, 2999, 4999, 6999, 8875];
+        stopN_idx = [999, 2999, 4999, 6999, 8999];
         stopH_idx = [1999, 3999, 5999, 7999];
         tapStatus = 'noTaps';
     end
@@ -47,7 +54,7 @@ for n = 1:Ntrials
 
     if ismember(ntrial, nb)
         descrip_path ='normalBreathing'; description = 'normal breathing';
-        e_trial.startIdx = 1;
+        e_trial.startIdx = time_delay*fs_d;
         e_trial.endIdx = 180*fs_d;
         e_trial(1,1).type='N';
         e_trial(1,1).domainIncr = 1/fs_d;
