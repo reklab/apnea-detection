@@ -1,6 +1,10 @@
 # apnea-detection
 codes related to the apnea detection project 
 
+Steps for FFT analysis 
+1) Run loadsave_Data
+2) Run save_FFTfeatures
+3) Run mean_freq_pk_phasediff to generate boxplots that compare the FFT features across breathing types
 
 Steps for Decision Tree Model Generation and Evaluation
 1) Run generate eseq to save expected eseqs for each trial type
